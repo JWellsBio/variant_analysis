@@ -564,3 +564,292 @@ pat_8_met_pool <- c(pat_8_axillary_mutect_trusight$location, pat_8_breast_1_mute
 pat_8_met_pool <- unique(pat_8_met_pool) #65
 
 pat_8_plasma_link <- pat_8_plasma_mutect_trusight[pat_8_plasma_mutect_trusight$location %in% pat_8_met_pool, ] #10 mutations in 8 genes
+
+
+
+
+
+
+
+## PATIENT EMA ----
+## heart----
+# import data
+pat_ema_heart_ug <- read.delim('/Volumes/Samsung_T5/pat_ema/pat_ema_heart_ann_ug_vcf.txt', header = TRUE, stringsAsFactors = FALSE) #8352
+pat_ema_heart_varscan <- read.delim('/Volumes/Samsung_T5/pat_ema/pat_ema_heart_ann_varscan_vcf.txt', header = TRUE, stringsAsFactors = FALSE) #3585
+pat_ema_heart_freebayes <- read.delim('/Volumes/Samsung_T5/pat_ema/pat_ema_heart_ann_freebayes_vcf.txt', header = TRUE, stringsAsFactors = FALSE) #69805
+
+pat_ema_heart_mutect <- read.delim('/Volumes/Samsung_T5/pat_ema/pat_ema_heart_ann_mutect_vcf.txt', header = TRUE, stringsAsFactors = FALSE) #100948
+
+# dummy variable for matching
+pat_ema_heart_ug$location <- paste0(pat_ema_heart_ug$CHROM, ':', pat_ema_heart_ug$POS)
+pat_ema_heart_varscan$location <- paste0(pat_ema_heart_varscan$CHROM, ':', pat_ema_heart_varscan$POS)
+pat_ema_heart_freebayes$location <- paste0(pat_ema_heart_freebayes$CHROM, ':', pat_ema_heart_freebayes$POS)
+
+pat_ema_heart_mutect$location <- paste0(pat_ema_heart_mutect$CHROM, ':', pat_ema_heart_mutect$POS)
+
+#pairwise intersections for the 3
+pat_ema_heart_ug_fb <- intersect(pat_ema_heart_ug$location, pat_ema_heart_freebayes$location) #7371
+pat_ema_heart_ug_vs <- intersect(pat_ema_heart_ug$location, pat_ema_heart_varscan$location) #2070
+pat_ema_heart_vs_fb <- intersect(pat_ema_heart_varscan$location, pat_ema_heart_freebayes$location) #1997
+
+#intersect b/w mutect calls and two out of the 3 others
+pat_ema_heart_mutect_ug_fb <- intersect(pat_ema_heart_mutect$location, pat_ema_heart_ug_fb) #2964
+pat_ema_heart_mutect_ug_vs <- intersect(pat_ema_heart_mutect$location, pat_ema_heart_ug_vs) #365
+pat_ema_heart_mutect_vs_fb <- intersect(pat_ema_heart_mutect$location, pat_ema_heart_vs_fb) #324
+
+#combine them
+pat_ema_heart_all <- c(pat_ema_heart_mutect_ug_fb, pat_ema_heart_mutect_ug_vs, pat_ema_heart_mutect_vs_fb)
+
+#subset mutect calls
+pat_ema_heart_mutect_short <- pat_ema_heart_mutect[pat_ema_heart_mutect$location %in% pat_ema_heart_all, ] #2039
+
+#trim to trusight gene calls
+pat_ema_heart_mutect_trusight <- trusight_from_mutect(pat_ema_heart_mutect_short) #15
+
+## oment 1----
+# import data
+pat_ema_oment_1_ug <- read.delim('/Volumes/Samsung_T5/pat_ema/pat_ema_oment_1_ann_ug_vcf.txt', header = TRUE, stringsAsFactors = FALSE) #13204
+pat_ema_oment_1_varscan <- read.delim('/Volumes/Samsung_T5/pat_ema/pat_ema_oment_1_ann_varscan_vcf.txt', header = TRUE, stringsAsFactors = FALSE) #4602
+pat_ema_oment_1_freebayes <- read.delim('/Volumes/Samsung_T5/pat_ema/pat_ema_oment_1_ann_freebayes_vcf.txt', header = TRUE, stringsAsFactors = FALSE) #143272
+
+pat_ema_oment_1_mutect <- read.delim('/Volumes/Samsung_T5/pat_ema/pat_ema_oment_1_ann_mutect_vcf.txt', header = TRUE, stringsAsFactors = FALSE) #181967
+
+# dummy variable for matching
+pat_ema_oment_1_ug$location <- paste0(pat_ema_oment_1_ug$CHROM, ':', pat_ema_oment_1_ug$POS)
+pat_ema_oment_1_varscan$location <- paste0(pat_ema_oment_1_varscan$CHROM, ':', pat_ema_oment_1_varscan$POS)
+pat_ema_oment_1_freebayes$location <- paste0(pat_ema_oment_1_freebayes$CHROM, ':', pat_ema_oment_1_freebayes$POS)
+
+pat_ema_oment_1_mutect$location <- paste0(pat_ema_oment_1_mutect$CHROM, ':', pat_ema_oment_1_mutect$POS)
+
+#pairwise intersections for the 3
+pat_ema_oment_1_ug_fb <- intersect(pat_ema_oment_1_ug$location, pat_ema_oment_1_freebayes$location) #11915
+pat_ema_oment_1_ug_vs <- intersect(pat_ema_oment_1_ug$location, pat_ema_oment_1_varscan$location) #2318
+pat_ema_oment_1_vs_fb <- intersect(pat_ema_oment_1_varscan$location, pat_ema_oment_1_freebayes$location) #2191
+
+#intersect b/w mutect calls and two out of the 3 others
+pat_ema_oment_1_mutect_ug_fb <- intersect(pat_ema_oment_1_mutect$location, pat_ema_oment_1_ug_fb) #6734
+pat_ema_oment_1_mutect_ug_vs <- intersect(pat_ema_oment_1_mutect$location, pat_ema_oment_1_ug_vs) #539
+pat_ema_oment_1_mutect_vs_fb <- intersect(pat_ema_oment_1_mutect$location, pat_ema_oment_1_vs_fb) #484
+
+#combine them
+pat_ema_oment_1_all <- c(pat_ema_oment_1_mutect_ug_fb, pat_ema_oment_1_mutect_ug_vs, pat_ema_oment_1_mutect_vs_fb)
+
+#subset mutect calls
+pat_ema_oment_1_mutect_short <- pat_ema_oment_1_mutect[pat_ema_oment_1_mutect$location %in% pat_ema_oment_1_all, ] #6863
+
+#trim to trusight gene calls
+pat_ema_oment_1_mutect_trusight <- trusight_from_mutect(pat_ema_oment_1_mutect_short) #13
+
+## oment 2----
+# import data
+pat_ema_oment_2_ug <- read.delim('/Volumes/Samsung_T5/pat_ema/pat_ema_oment_2_ann_ug_vcf.txt', header = TRUE, stringsAsFactors = FALSE) #11632
+pat_ema_oment_2_varscan <- read.delim('/Volumes/Samsung_T5/pat_ema/pat_ema_oment_2_ann_varscan_vcf.txt', header = TRUE, stringsAsFactors = FALSE) #5282
+pat_ema_oment_2_freebayes <- read.delim('/Volumes/Samsung_T5/pat_ema/pat_ema_oment_2_ann_freebayes_vcf.txt', header = TRUE, stringsAsFactors = FALSE) #106115
+
+pat_ema_oment_2_mutect <- read.delim('/Volumes/Samsung_T5/pat_ema/pat_ema_oment_2_ann_mutect_vcf.txt', header = TRUE, stringsAsFactors = FALSE) #174243
+
+# dummy variable for matching
+pat_ema_oment_2_ug$location <- paste0(pat_ema_oment_2_ug$CHROM, ':', pat_ema_oment_2_ug$POS)
+pat_ema_oment_2_varscan$location <- paste0(pat_ema_oment_2_varscan$CHROM, ':', pat_ema_oment_2_varscan$POS)
+pat_ema_oment_2_freebayes$location <- paste0(pat_ema_oment_2_freebayes$CHROM, ':', pat_ema_oment_2_freebayes$POS)
+
+pat_ema_oment_2_mutect$location <- paste0(pat_ema_oment_2_mutect$CHROM, ':', pat_ema_oment_2_mutect$POS)
+
+#pairwise intersections for the 3
+pat_ema_oment_2_ug_fb <- intersect(pat_ema_oment_2_ug$location, pat_ema_oment_2_freebayes$location) #10483
+pat_ema_oment_2_ug_vs <- intersect(pat_ema_oment_2_ug$location, pat_ema_oment_2_varscan$location) #2554
+pat_ema_oment_2_vs_fb <- intersect(pat_ema_oment_2_varscan$location, pat_ema_oment_2_freebayes$location) #2536
+
+#intersect b/w mutect calls and two out of the 3 others
+pat_ema_oment_2_mutect_ug_fb <- intersect(pat_ema_oment_2_mutect$location, pat_ema_oment_2_ug_fb) #5333
+pat_ema_oment_2_mutect_ug_vs <- intersect(pat_ema_oment_2_mutect$location, pat_ema_oment_2_ug_vs) #568
+pat_ema_oment_2_mutect_vs_fb <- intersect(pat_ema_oment_2_mutect$location, pat_ema_oment_2_vs_fb) #500
+
+#combine them
+pat_ema_oment_2_all <- c(pat_ema_oment_2_mutect_ug_fb, pat_ema_oment_2_mutect_ug_vs, pat_ema_oment_2_mutect_vs_fb)
+
+#subset mutect calls
+pat_ema_oment_2_mutect_short <- pat_ema_oment_2_mutect[pat_ema_oment_2_mutect$location %in% pat_ema_oment_2_all, ] #5473
+
+#trim to trusight gene calls
+pat_ema_oment_2_mutect_trusight <- trusight_from_mutect(pat_ema_oment_2_mutect_short) #16
+
+## liver 1----
+# import data
+pat_ema_liver_1_ug <- read.delim('/Volumes/Samsung_T5/pat_ema/pat_ema_liver_1_ann_ug_vcf.txt', header = TRUE, stringsAsFactors = FALSE) #11065
+pat_ema_liver_1_varscan <- read.delim('/Volumes/Samsung_T5/pat_ema/pat_ema_liver_1_ann_varscan_vcf.txt', header = TRUE, stringsAsFactors = FALSE) #4095
+pat_ema_liver_1_freebayes <- read.delim('/Volumes/Samsung_T5/pat_ema/pat_ema_liver_1_ann_freebayes_vcf.txt', header = TRUE, stringsAsFactors = FALSE) #147774
+
+pat_ema_liver_1_mutect <- read.delim('/Volumes/Samsung_T5/pat_ema/pat_ema_liver_1_ann_mutect_vcf.txt', header = TRUE, stringsAsFactors = FALSE) #130183
+
+# dummy variable for matching
+pat_ema_liver_1_ug$location <- paste0(pat_ema_liver_1_ug$CHROM, ':', pat_ema_liver_1_ug$POS)
+pat_ema_liver_1_varscan$location <- paste0(pat_ema_liver_1_varscan$CHROM, ':', pat_ema_liver_1_varscan$POS)
+pat_ema_liver_1_freebayes$location <- paste0(pat_ema_liver_1_freebayes$CHROM, ':', pat_ema_liver_1_freebayes$POS)
+
+pat_ema_liver_1_mutect$location <- paste0(pat_ema_liver_1_mutect$CHROM, ':', pat_ema_liver_1_mutect$POS)
+
+#pairwise intersections for the 3
+pat_ema_liver_1_ug_fb <- intersect(pat_ema_liver_1_ug$location, pat_ema_liver_1_freebayes$location) #9793
+pat_ema_liver_1_ug_vs <- intersect(pat_ema_liver_1_ug$location, pat_ema_liver_1_varscan$location) #1549
+pat_ema_liver_1_vs_fb <- intersect(pat_ema_liver_1_varscan$location, pat_ema_liver_1_freebayes$location) #1489
+
+#intersect b/w mutect calls and two out of the 3 others
+pat_ema_liver_1_mutect_ug_fb <- intersect(pat_ema_liver_1_mutect$location, pat_ema_liver_1_ug_fb) #5489
+pat_ema_liver_1_mutect_ug_vs <- intersect(pat_ema_liver_1_mutect$location, pat_ema_liver_1_ug_vs) #382
+pat_ema_liver_1_mutect_vs_fb <- intersect(pat_ema_liver_1_mutect$location, pat_ema_liver_1_vs_fb) #312
+
+#combine them
+pat_ema_liver_1_all <- c(pat_ema_liver_1_mutect_ug_fb, pat_ema_liver_1_mutect_ug_vs, pat_ema_liver_1_mutect_vs_fb)
+
+#subset mutect calls
+pat_ema_liver_1_mutect_short <- pat_ema_liver_1_mutect[pat_ema_liver_1_mutect$location %in% pat_ema_liver_1_all, ] #5585
+
+#trim to trusight gene calls
+pat_ema_liver_1_mutect_trusight <- trusight_from_mutect(pat_ema_liver_1_mutect_short) #5
+
+## liver 2----
+# import data
+pat_ema_liver_2_ug <- read.delim('/Volumes/Samsung_T5/pat_ema/pat_ema_liver_2_ann_ug_vcf.txt', header = TRUE, stringsAsFactors = FALSE) #10404
+pat_ema_liver_2_varscan <- read.delim('/Volumes/Samsung_T5/pat_ema/pat_ema_liver_2_ann_varscan_vcf.txt', header = TRUE, stringsAsFactors = FALSE) #5252
+pat_ema_liver_2_freebayes <- read.delim('/Volumes/Samsung_T5/pat_ema/pat_ema_liver_2_ann_freebayes_vcf.txt', header = TRUE, stringsAsFactors = FALSE) #114670
+
+pat_ema_liver_2_mutect <- read.delim('/Volumes/Samsung_T5/pat_ema/pat_ema_liver_2_ann_mutect_vcf.txt', header = TRUE, stringsAsFactors = FALSE) #137556
+
+# dummy variable for matching
+pat_ema_liver_2_ug$location <- paste0(pat_ema_liver_2_ug$CHROM, ':', pat_ema_liver_2_ug$POS)
+pat_ema_liver_2_varscan$location <- paste0(pat_ema_liver_2_varscan$CHROM, ':', pat_ema_liver_2_varscan$POS)
+pat_ema_liver_2_freebayes$location <- paste0(pat_ema_liver_2_freebayes$CHROM, ':', pat_ema_liver_2_freebayes$POS)
+
+pat_ema_liver_2_mutect$location <- paste0(pat_ema_liver_2_mutect$CHROM, ':', pat_ema_liver_2_mutect$POS)
+
+#pairwise intersections for the 3
+pat_ema_liver_2_ug_fb <- intersect(pat_ema_liver_2_ug$location, pat_ema_liver_2_freebayes$location) #9329
+pat_ema_liver_2_ug_vs <- intersect(pat_ema_liver_2_ug$location, pat_ema_liver_2_varscan$location) #2300
+pat_ema_liver_2_vs_fb <- intersect(pat_ema_liver_2_varscan$location, pat_ema_liver_2_freebayes$location) #2247
+
+#intersect b/w mutect calls and two out of the 3 others
+pat_ema_liver_2_mutect_ug_fb <- intersect(pat_ema_liver_2_mutect$location, pat_ema_liver_2_ug_fb) #4602
+pat_ema_liver_2_mutect_ug_vs <- intersect(pat_ema_liver_2_mutect$location, pat_ema_liver_2_ug_vs) #557
+pat_ema_liver_2_mutect_vs_fb <- intersect(pat_ema_liver_2_mutect$location, pat_ema_liver_2_vs_fb) #312
+
+#combine them
+pat_ema_liver_2_all <- c(pat_ema_liver_2_mutect_ug_fb, pat_ema_liver_2_mutect_ug_vs, pat_ema_liver_2_mutect_vs_fb)
+
+#subset mutect calls
+pat_ema_liver_2_mutect_short <- pat_ema_liver_2_mutect[pat_ema_liver_2_mutect$location %in% pat_ema_liver_2_all, ] #4729
+
+#trim to trusight gene calls
+pat_ema_liver_2_mutect_trusight <- trusight_from_mutect(pat_ema_liver_2_mutect_short) #13
+
+## left kidney----
+# import data
+pat_ema_l_kidney_ug <- read.delim('/Volumes/Samsung_T5/pat_ema/pat_ema_l_kidney_ann_ug_vcf.txt', header = TRUE, stringsAsFactors = FALSE) #11508
+pat_ema_l_kidney_varscan <- read.delim('/Volumes/Samsung_T5/pat_ema/pat_ema_l_kidney_ann_varscan_vcf.txt', header = TRUE, stringsAsFactors = FALSE) #4411
+pat_ema_l_kidney_freebayes <- read.delim('/Volumes/Samsung_T5/pat_ema/pat_ema_l_kidney_ann_freebayes_vcf.txt', header = TRUE, stringsAsFactors = FALSE) #122035
+
+pat_ema_l_kidney_mutect <- read.delim('/Volumes/Samsung_T5/pat_ema/pat_ema_l_kidney_ann_mutect_vcf.txt', header = TRUE, stringsAsFactors = FALSE) #151398
+
+# dummy variable for matching
+pat_ema_l_kidney_ug$location <- paste0(pat_ema_l_kidney_ug$CHROM, ':', pat_ema_l_kidney_ug$POS)
+pat_ema_l_kidney_varscan$location <- paste0(pat_ema_l_kidney_varscan$CHROM, ':', pat_ema_l_kidney_varscan$POS)
+pat_ema_l_kidney_freebayes$location <- paste0(pat_ema_l_kidney_freebayes$CHROM, ':', pat_ema_l_kidney_freebayes$POS)
+
+pat_ema_l_kidney_mutect$location <- paste0(pat_ema_l_kidney_mutect$CHROM, ':', pat_ema_l_kidney_mutect$POS)
+
+#pairwise intersections for the 3
+pat_ema_l_kidney_ug_fb <- intersect(pat_ema_l_kidney_ug$location, pat_ema_l_kidney_freebayes$location) #10483
+pat_ema_l_kidney_ug_vs <- intersect(pat_ema_l_kidney_ug$location, pat_ema_l_kidney_varscan$location) #2230
+pat_ema_l_kidney_vs_fb <- intersect(pat_ema_l_kidney_varscan$location, pat_ema_l_kidney_freebayes$location) #2128
+
+#intersect b/w mutect calls and two out of the 3 others
+pat_ema_l_kidney_mutect_ug_fb <- intersect(pat_ema_l_kidney_mutect$location, pat_ema_l_kidney_ug_fb) #5365
+pat_ema_l_kidney_mutect_ug_vs <- intersect(pat_ema_l_kidney_mutect$location, pat_ema_l_kidney_ug_vs) #512
+pat_ema_l_kidney_mutect_vs_fb <- intersect(pat_ema_l_kidney_mutect$location, pat_ema_l_kidney_vs_fb) #436
+
+#combine them
+pat_ema_l_kidney_all <- c(pat_ema_l_kidney_mutect_ug_fb, pat_ema_l_kidney_mutect_ug_vs, pat_ema_l_kidney_mutect_vs_fb)
+
+#subset mutect calls
+pat_ema_l_kidney_mutect_short <- pat_ema_l_kidney_mutect[pat_ema_l_kidney_mutect$location %in% pat_ema_l_kidney_all, ] #5495
+
+#trim to trusight gene calls
+pat_ema_l_kidney_mutect_trusight <- trusight_from_mutect(pat_ema_l_kidney_mutect_short) #8
+
+## right kidney----
+# import data
+pat_ema_r_kidney_ug <- read.delim('/Volumes/Samsung_T5/pat_ema/pat_ema_r_kidney_ann_ug_vcf.txt', header = TRUE, stringsAsFactors = FALSE) #6608
+pat_ema_r_kidney_varscan <- read.delim('/Volumes/Samsung_T5/pat_ema/pat_ema_r_kidney_ann_varscan_vcf.txt', header = TRUE, stringsAsFactors = FALSE) #2703
+pat_ema_r_kidney_freebayes <- read.delim('/Volumes/Samsung_T5/pat_ema/pat_ema_r_kidney_ann_freebayes_vcf.txt', header = TRUE, stringsAsFactors = FALSE) #69009
+
+pat_ema_r_kidney_mutect <- read.delim('/Volumes/Samsung_T5/pat_ema/pat_ema_r_kidney_ann_mutect_vcf.txt', header = TRUE, stringsAsFactors = FALSE) #65907
+
+# dummy variable for matching
+pat_ema_r_kidney_ug$location <- paste0(pat_ema_r_kidney_ug$CHROM, ':', pat_ema_r_kidney_ug$POS)
+pat_ema_r_kidney_varscan$location <- paste0(pat_ema_r_kidney_varscan$CHROM, ':', pat_ema_r_kidney_varscan$POS)
+pat_ema_r_kidney_freebayes$location <- paste0(pat_ema_r_kidney_freebayes$CHROM, ':', pat_ema_r_kidney_freebayes$POS)
+
+pat_ema_r_kidney_mutect$location <- paste0(pat_ema_r_kidney_mutect$CHROM, ':', pat_ema_r_kidney_mutect$POS)
+
+#pairwise intersections for the 3
+pat_ema_r_kidney_ug_fb <- intersect(pat_ema_r_kidney_ug$location, pat_ema_r_kidney_freebayes$location) #5874
+pat_ema_r_kidney_ug_vs <- intersect(pat_ema_r_kidney_ug$location, pat_ema_r_kidney_varscan$location) #1569
+pat_ema_r_kidney_vs_fb <- intersect(pat_ema_r_kidney_varscan$location, pat_ema_r_kidney_freebayes$location) #1508
+
+#intersect b/w mutect calls and two out of the 3 others
+pat_ema_r_kidney_mutect_ug_fb <- intersect(pat_ema_r_kidney_mutect$location, pat_ema_r_kidney_ug_fb) #2163
+pat_ema_r_kidney_mutect_ug_vs <- intersect(pat_ema_r_kidney_mutect$location, pat_ema_r_kidney_ug_vs) #259
+pat_ema_r_kidney_mutect_vs_fb <- intersect(pat_ema_r_kidney_mutect$location, pat_ema_r_kidney_vs_fb) #226
+
+#combine them
+pat_ema_r_kidney_all <- c(pat_ema_r_kidney_mutect_ug_fb, pat_ema_r_kidney_mutect_ug_vs, pat_ema_r_kidney_mutect_vs_fb)
+
+#subset mutect calls
+pat_ema_r_kidney_mutect_short <- pat_ema_r_kidney_mutect[pat_ema_r_kidney_mutect$location %in% pat_ema_r_kidney_all, ] #2210
+
+#trim to trusight gene calls
+pat_ema_r_kidney_mutect_trusight <- trusight_from_mutect(pat_ema_r_kidney_mutect_short) #1
+
+## plasma----
+# import data
+pat_ema_plasma_ug <- read.delim('/Volumes/Samsung_T5/pat_ema/pat_ema_plasma_ann_ug_vcf.txt', header = TRUE, stringsAsFactors = FALSE) #52949
+pat_ema_plasma_varscan <- read.delim('/Volumes/Samsung_T5/pat_ema/pat_ema_plasma_ann_varscan_vcf.txt', header = TRUE, stringsAsFactors = FALSE) #25333
+pat_ema_plasma_freebayes <- read.delim('/Volumes/Samsung_T5/pat_ema/pat_ema_plasma_ann_freebayes_vcf.txt', header = TRUE, stringsAsFactors = FALSE) #391305
+
+pat_ema_plasma_mutect <- read.delim('/Volumes/Samsung_T5/pat_ema/pat_ema_plasma_ann_mutect_vcf.txt', header = TRUE, stringsAsFactors = FALSE) #693029
+
+# dummy variable for matching
+pat_ema_plasma_ug$location <- paste0(pat_ema_plasma_ug$CHROM, ':', pat_ema_plasma_ug$POS)
+pat_ema_plasma_varscan$location <- paste0(pat_ema_plasma_varscan$CHROM, ':', pat_ema_plasma_varscan$POS)
+pat_ema_plasma_freebayes$location <- paste0(pat_ema_plasma_freebayes$CHROM, ':', pat_ema_plasma_freebayes$POS)
+
+pat_ema_plasma_mutect$location <- paste0(pat_ema_plasma_mutect$CHROM, ':', pat_ema_plasma_mutect$POS)
+
+#pairwise intersections for the 3
+pat_ema_plasma_ug_fb <- intersect(pat_ema_plasma_ug$location, pat_ema_plasma_freebayes$location) #44276
+pat_ema_plasma_ug_vs <- intersect(pat_ema_plasma_ug$location, pat_ema_plasma_varscan$location) #6107
+pat_ema_plasma_vs_fb <- intersect(pat_ema_plasma_varscan$location, pat_ema_plasma_freebayes$location) #5950
+
+#intersect b/w mutect calls and two out of the 3 others
+pat_ema_plasma_mutect_ug_fb <- intersect(pat_ema_plasma_mutect$location, pat_ema_plasma_ug_fb) #32579
+pat_ema_plasma_mutect_ug_vs <- intersect(pat_ema_plasma_mutect$location, pat_ema_plasma_ug_vs) #2997
+pat_ema_plasma_mutect_vs_fb <- intersect(pat_ema_plasma_mutect$location, pat_ema_plasma_vs_fb) #2763
+
+#combine them
+pat_ema_plasma_all <- c(pat_ema_plasma_mutect_ug_fb, pat_ema_plasma_mutect_ug_vs, pat_ema_plasma_mutect_vs_fb)
+
+#subset mutect calls
+pat_ema_plasma_mutect_short <- pat_ema_plasma_mutect[pat_ema_plasma_mutect$location %in% pat_ema_plasma_all, ] #33023
+
+#trim to trusight gene calls
+pat_ema_plasma_mutect_trusight <- trusight_from_mutect(pat_ema_plasma_mutect_short) #78
+
+## looking at how well plasma detects tumor mutations ----
+
+#pool mutations from 3 mets
+pat_ema_met_pool <- c(pat_ema_heart_mutect_trusight$location, pat_ema_oment_1_mutect_trusight$location, pat_ema_oment_2_mutect_trusight$location, 
+                      pat_ema_liver_1_mutect_trusight$location, pat_ema_liver_2_mutect_trusight$location, 
+                      pat_ema_l_kidney_mutect_trusight$location, pat_ema_r_kidney_mutect_trusight$location)
+pat_ema_met_pool <- unique(pat_ema_met_pool) #31
+
+pat_ema_plasma_link <- pat_ema_plasma_mutect_trusight[pat_ema_plasma_mutect_trusight$location %in% pat_ema_met_pool, ] #18 mutations in 7 genes
