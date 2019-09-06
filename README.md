@@ -14,3 +14,7 @@ Lymph Node (met)
 Omental (met)
 Ovary (met)
 Plasma
+
+#### Patient 2
+2 Liver mets
+2 Breast primaries
