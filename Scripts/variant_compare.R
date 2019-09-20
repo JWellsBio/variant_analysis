@@ -118,6 +118,10 @@ trusight_from_mutect <- function(mutect_short) {
   mutect_trusight$location <- paste0(mutect_trusight$CHROM, ':', mutect_trusight$POS)
   mutect_trusight <- mutect_trusight[, -which(names(mutect_trusight) %in% c('ANN', 'gene_id', 'feature_id', 'cdna_pos'))]
   mutect_trusight <- mutect_trusight[mutect_trusight$effect != 'intron_variant', ]
+  mutect_trusight <- mutect_trusight[nchar(mutect_trusight$REF) == 1, ]
+  mutect_trusight <- mutect_trusight[nchar(mutect_trusight$ALT) == 1, ]
+  mutect_trusight <- mutect_trusight[mutect_trusight$hgvs_p != '', ]
+  mutect_trusight <- mutect_trusight[mutect_trusight$effect != 'synonymous_variant', ]
   return(mutect_trusight)
 }
 
@@ -306,38 +310,69 @@ par(mar=c(5.1,4.1,4.1,2.1))
 
 ## PATIENT 9 ----
 ## lymph node----
-pat_9_ln <- read.delim('../pat_9_ln_bwamem_bqsr_mutect_filtered_liftover_hg19_ann.txt', header = TRUE, stringsAsFactors = FALSE, sep = '\t')
-pat_9_ln <- trusight_from_mutect(pat_9_ln) #48
+pat_9_ln <- read.delim('../pat_9_ln_no_mnp_mutect_filtered_no_indel_hg19_lift_ann.txt', header = TRUE, stringsAsFactors = FALSE, sep = '\t')
+pat_9_ln <- trusight_from_mutect(pat_9_ln) #23
+pat_9_ln_fb <- read.delim('../pat_9_ln_freebayes_hg19_ann.txt', header = TRUE, stringsAsFactors = FALSE, sep = '\t')
+pat_9_ln_fb <- trusight_from_mutect(pat_9_ln_fb) #51
+intersect(pat_9_ln$location, pat_9_ln_fb$location) #8
+pat_9_ln_vs <- read.delim('../pat_9_ln_varscan_hg19_ann.txt', header = TRUE, stringsAsFactors = FALSE, sep = '\t')
+pat_9_ln_vs <- trusight_from_mutect(pat_9_ln_vs) #115
+intersect(pat_9_ln$location, pat_9_ln_vs$location) #7
+intersect(pat_9_ln_fb$location, pat_9_ln_vs$location) #11
+Reduce(intersect, list(pat_9_ln$location, pat_9_ln_fb$location, pat_9_ln_vs$location)) #4
+pat_9_ln_fb_term <- read.delim('../pat_9_ln_freebayes_term_hg19_lift_ann.txt', header = TRUE, stringsAsFactors = FALSE, sep = '\t')
+pat_9_ln_fb_term <- trusight_from_mutect(pat_9_ln_fb_term)
+pat_9_ln_vs_term <- read.delim('../pat_9_ln_varscan_term_hg19_lift_ann.txt', header = TRUE, stringsAsFactors = FALSE, sep = '\t')
+pat_9_ln_vs_term <- trusight_from_mutect(pat_9_ln_vs_term)
+length(intersect(pat_9_ln_fb$location, pat_9_ln_fb_term$location)) #SAME
 
 ## oment----
 # import data
-pat_9_oment <- read.delim('../pat_9_oment_bwamem_bqsr_mutect_filtered_liftover_hg19_ann.txt', header = TRUE, stringsAsFactors = FALSE, sep = '\t')
-pat_9_oment <- trusight_from_mutect(pat_9_oment) #47
+pat_9_oment <- read.delim('../pat_9_oment_no_mnp_mutect_filtered_no_indel_hg19_lift_ann.txt', header = TRUE, stringsAsFactors = FALSE, sep = '\t')
+pat_9_oment <- trusight_from_mutect(pat_9_oment) #12
+pat_9_oment_fb <- read.delim('../pat_9_oment_freebayes_hg19_ann.txt', header = TRUE, stringsAsFactors = FALSE, sep = '\t')
+pat_9_oment_fb <- trusight_from_mutect(pat_9_oment_fb) #16
+intersect(pat_9_oment$location, pat_9_oment_fb$location) #NONE
+pat_9_oment_vs <- read.delim('../pat_9_oment_varscan_hg19_ann.txt', header = TRUE, stringsAsFactors = FALSE, sep = '\t')
+pat_9_oment_vs <- trusight_from_mutect(pat_9_oment_vs) #70
+intersect(pat_9_oment$location, pat_9_oment_vs$location) #1
 
 ## ovary----
 # import data
-pat_9_ovary <- read.delim('../pat_9_ovary_bwamem_bqsr_mutect_filtered_liftover_hg19_ann.txt', header = TRUE, stringsAsFactors = FALSE, sep = '\t')
-pat_9_ovary <- trusight_from_mutect(pat_9_ovary) #34
+pat_9_ovary <- read.delim('../pat_9_ovary_no_mnp_mutect_filtered_no_indel_hg19_lift_ann.txt', header = TRUE, stringsAsFactors = FALSE, sep = '\t')
+pat_9_ovary <- trusight_from_mutect(pat_9_ovary) #10
+pat_9_ovary_fb <- read.delim('../pat_9_ovary_freebayes_hg19_ann.txt', header = TRUE, stringsAsFactors = FALSE, sep = '\t')
+pat_9_ovary_fb <- trusight_from_mutect(pat_9_ovary_fb) #11
+intersect(pat_9_ovary$location, pat_9_ovary_fb$location) #NONE
+pat_9_ovary_vs <- read.delim('../pat_9_ovary_varscan_hg19_ann.txt', header = TRUE, stringsAsFactors = FALSE, sep = '\t')
+pat_9_ovary_vs <- trusight_from_mutect(pat_9_ovary_vs) #146
+intersect(pat_9_ovary$location, pat_9_ovary_vs$location) #2
+
+
+## how much in common between samples? ----
+length(intersect(pat_9_ln$location, pat_9_oment$location)) #0
+length(intersect(pat_9_ln$location, pat_9_ovary$location)) #0
+length(intersect(pat_9_oment$location, pat_9_ovary$location)) #5
 
 
 ## plasma----
 # import data
-pat_9_plasma <- read.delim('../pat_9_plasma_bwamem_bqsr_mutect_ann_hg19.txt', header = TRUE, stringsAsFactors = FALSE, sep = '\t')
-pat_9_plasma <- trusight_from_mutect(pat_9_plasma) #230
+pat_9_plasma <- read.delim('../pat_9_plasma_no_mnp_mutect_filtered_no_indel_hg19_lift_ann.txt', header = TRUE, stringsAsFactors = FALSE, sep = '\t')
+pat_9_plasma <- trusight_from_mutect(pat_9_plasma) #121
 
 
 ## looking at how well plasma detects tumor mutations ----
 
-length(intersect(pat_9_ln$location, pat_9_plasma$location)) #8/48
-length(intersect(pat_9_oment$location, pat_9_plasma$location)) #20/47
-length(intersect(pat_9_ovary$location, pat_9_plasma$location)) #21/34
+length(intersect(pat_9_ln$location, pat_9_plasma$location)) #1/23
+length(intersect(pat_9_oment$location, pat_9_plasma$location)) #5/12
+length(intersect(pat_9_ovary$location, pat_9_plasma$location)) #6/10
 
 
 #pool mutations from 3 mets
-pat_9_met_pool <- unique(c(pat_9_ln$location, pat_9_oment$location, pat_9_ovary$location)) #108 unique mutations
+pat_9_met_pool <- unique(c(pat_9_ln$location, pat_9_oment$location, pat_9_ovary$location)) #40 unique mutations
 
 
-pat_9_plasma_found <- pat_9_plasma[pat_9_plasma$location %in% pat_9_met_pool, ] #30 mutations
+pat_9_plasma_found <- pat_9_plasma[pat_9_plasma$location %in% pat_9_met_pool, ] #7 mutations
 pat_9_plasma_found_vars <- (pat_9_plasma_found$location) # in 14 different genes
 pat_9_ln_not_found <- pat_9_ln[pat_9_ln$location %!in% pat_9_plasma_found_vars, ]
 pat_9_oment_not_found <- pat_9_oment[pat_9_oment$location %!in% pat_9_plasma_found_vars, ]
@@ -362,30 +397,14 @@ pat_9_ln_pooled$AF_ln <- as.numeric(pat_9_ln_pooled$AF_ln)
 
 pat_9_oment_pooled <- pat_9_oment_pooled[, c('location', 'AF')]
 colnames(pat_9_oment_pooled) <- c('location', 'AF_oment')
-pat_9_oment_pooled$AF_oment[11] <- 0.343
-pat_9_oment_pooled$AF_oment[13] <- 0.046
-pat_9_oment_pooled$AF_oment[16] <- 0.203
-pat_9_oment_pooled$AF_oment[19] <- 0.295
 pat_9_oment_pooled$AF_oment <- as.numeric(pat_9_oment_pooled$AF_oment)
 
 pat_9_ovary_pooled <- pat_9_ovary_pooled[, c('location', 'AF')]
 colnames(pat_9_ovary_pooled) <- c('location', 'AF_ovary')
-pat_9_ovary_pooled$AF_ovary[11] <- 0.330
-pat_9_ovary_pooled$AF_ovary[21] <- 0.165
-pat_9_ovary_pooled$AF_ovary[20] <- 0.209
-pat_9_ovary_pooled$AF_ovary[16] <- 0.246
-pat_9_ovary_pooled$AF_ovary[15] <- 0.465
-pat_9_ovary_pooled$AF_ovary[14] <- 0.143
 pat_9_ovary_pooled$AF_ovary <- as.numeric(pat_9_ovary_pooled$AF_ovary)
 
 pat_9_plasma_pooled <- pat_9_plasma_pooled[, c('location', 'AF')]
 colnames(pat_9_plasma_pooled) <- c('location', 'AF_plasma')
-pat_9_plasma_pooled$AF_plasma[5] <- 0.020 
-pat_9_plasma_pooled$AF_plasma[14] <- 0.333
-pat_9_plasma_pooled$AF_plasma[17] <- 0.057
-pat_9_plasma_pooled$AF_plasma[30] <- 0.177
-pat_9_plasma_pooled$AF_plasma[28] <- 0.209
-pat_9_plasma_pooled$AF_plasma[19:22] <- c(0.230, 0.332, 0.260, 0.281)
 pat_9_plasma_pooled$AF_plasma <- as.numeric(pat_9_plasma_pooled$AF_plasma)
 
 # put them together
@@ -407,7 +426,7 @@ pat_9_3 <- c(pat_9_muts_pooled$AF_ln, pat_9_muts_pooled$AF_oment, pat_9_muts_poo
 #set colors, plasma has its own reds, pooled tumors blues
 cell_cols<-rep("#000000",dim(pat_9_muts_pooled)[1] * dim(pat_9_muts_pooled)[2])
 # plasma reds
-cell_cols[91:120] <- color.scale(pat_9_muts_pooled[, 4], extremes = c('lightpink', 'red'), na.color = '#ffffff')
+cell_cols[22:28] <- color.scale(pat_9_muts_pooled[, 4], extremes = c('lightpink', 'red'), na.color = '#ffffff')
 # tumor blues
 cell_cols[1:90] <- color.scale(pat_9_3, extremes = c('lightblue', 'blue'), na.color = '#ffffff')
 cell_cols <- matrix(cell_cols, nrow = 30, byrow = FALSE)
@@ -1109,8 +1128,8 @@ par(mar=c(5.1,4.1,4.1,2.1))
 ## PATIENT EMA ----
 ## heart----
 # import data
-pat_ema_heart <- read.delim('../pat_ema_heart_bwamem_bqsr_mutect_filtered_liftover_hg19_ann.txt', header = TRUE, stringsAsFactors = FALSE, sep = '\t')
-pat_ema_heart <- trusight_from_mutect(pat_ema_heart) #13
+pat_ema_heart <- read.delim('../pat_ema_heart_no_mnp_mutect_filtered_no_indel_hg19_lift_ann.txt', header = TRUE, stringsAsFactors = FALSE, sep = '\t')
+pat_ema_heart <- trusight_from_mutect(pat_ema_heart) #1
 
 ## oment 1----
 # import data
@@ -1134,8 +1153,8 @@ pat_ema_liver_2 <- trusight_from_mutect(pat_ema_liver_2) #12
 
 ## left kidney----
 # import data
-pat_ema_l_kidney <- read.delim('../pat_ema_l_kidney_bwamem_bqsr_mutect_filtered_liftover_hg19_ann.txt', header = TRUE, stringsAsFactors = FALSE, sep = '\t')
-pat_ema_l_kidney <- trusight_from_mutect(pat_ema_l_kidney) #21
+pat_ema_l_kidney <- read.delim('../pat_ema_l_kidney_no_mnp_mutect_filtered_no_indel_hg19_lift_ann.txt', header = TRUE, stringsAsFactors = FALSE, sep = '\t')
+pat_ema_l_kidney <- trusight_from_mutect(pat_ema_l_kidney) #1
 
 ## right kidney----
 # import data
