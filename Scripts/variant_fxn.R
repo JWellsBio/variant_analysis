@@ -113,3 +113,115 @@ mutect_process <- function(mutect_calls) {
   #mutect_trusight <- mutect_trusight[mutect_trusight$effect != 'synonymous_variant', ]
   return(mutect_calls)
 }
+
+
+
+draw_tiles <- function(sample_1, sample_2, sample_3, sample_4 = FALSE, plasma_sample) { 
+  patient_met_pool <- unique(c(sample_1$location, sample_2$location, sample_3$location)) #get all of the locations found in the tumor samples
+  
+  if (!missing(sample_4)) { #add in sample_4 if given
+    patient_met_pool <- unique(c(patient_met_pool, sample_4$location))
+  }
+  
+  plasma_found <- plasma_sample[plasma_sample$location %in% patient_met_pool, ] #finds locations also found in plasma
+  plasma_found_vars <- (plasma_found$location) #these locations to be seen in tumor samples
+  
+  # subset to variants found in plasma and take a look
+  sample_1_pooled <- sample_1[sample_1$location %in% plasma_found_vars, ]
+  
+  sample_2_pooled <- sample_2[sample_2$location %in% plasma_found_vars, ]
+  
+  sample_3_pooled <- sample_3[sample_3$location %in% plasma_found_vars, ]
+  
+  if (!missing(sample_4)) { #add sample_4 if given
+    sample_4_pooled <- sample_4[sample_4$location %in% plasma_found_vars, ]
+  }
+  
+  plasma_sample_pooled <- plasma_sample[plasma_sample$location %in% plasma_found_vars, ]
+  
+  # subset these to just tumor AF for tile figure
+  sample_1_pooled <- sample_1_pooled[, c('location', 'AF')]
+  colnames(sample_1_pooled) <- c('location', 'AF_sample_1')
+
+  sample_2_pooled <- sample_2_pooled[, c('location', 'AF')]
+  colnames(sample_2_pooled) <- c('location', 'AF_sample_2')
+
+  sample_3_pooled <- sample_3_pooled[, c('location', 'AF')]
+  colnames(sample_3_pooled) <- c('location', 'AF_sample_3')
+  
+  if (!missing(sample_4)) {
+    sample_4_pooled <- sample_4_pooled[, c('location', 'AF')]
+    colnames(sample_4_pooled) <- c('location', 'AF_sample_4')
+  }
+
+  plasma_sample_pooled <- plasma_sample_pooled[, c('location', 'AF')]
+  colnames(plasma_sample_pooled) <- c('location', 'AF_plasma')
+  
+  # put them together in one dataframe
+  muts_pooled <- merge(sample_1_pooled, sample_2_pooled, by = 'location', all = TRUE)
+  muts_pooled <- merge(muts_pooled, sample_3_pooled, by = 'location', all = TRUE)
+  
+  if (!missing(sample_4)) {
+    muts_pooled <- merge(muts_pooled, sample_4_pooled, by = 'location', all = TRUE)
+  }
+  
+  muts_pooled <- merge(muts_pooled, plasma_sample_pooled, by = 'location', all = TRUE)
+  muts_pooled <- muts_pooled[order(muts_pooled$AF_plasma, decreasing = TRUE), ]
+  
+  rownames(muts_pooled) <- muts_pooled$location #make location the row names
+  row_muts <- rownames(muts_pooled)
+  muts_pooled <- muts_pooled[, -1] #remove location variable from df
+  
+  muts_pooled <- as.data.frame(muts_pooled)
+  rownames(muts_pooled) <- row_muts
+  
+  #plot 
+  
+  tumors <- c(muts_pooled$AF_sample_1, muts_pooled$AF_sample_2, muts_pooled$AF_sample_3) #everything but plasma
+  
+  if (!missing(sample_4)) {
+    tumors <- c(tumors, muts_pooled$AF_sample_4)
+  }
+  
+  #set colors, plasma has its own reds, pooled tumors blues
+  cell_cols<-rep("#000000",dim(muts_pooled)[1] * dim(muts_pooled)[2]) #create matrix to hold colors for graphing
+  
+  # plasma reds SET COLORS TO BE CHOSEN!!!!!!!!!!!!!!!!!!!!!!!
+  if (!missing(sample_4)) {
+    cell_cols[(length(plasma_found_vars)*4) + 1:(length(plasma_found_vars)*5)] <- color.scale(muts_pooled[, ncol(muts_pooled)], extremes = c('lightpink', 'red'), na.color = '#ffffff')
+  }
+  else {
+    cell_cols[(length(plasma_found_vars)*3) + 1:(length(plasma_found_vars)*4)] <- color.scale(muts_pooled[, ncol(muts_pooled)], extremes = c('lightpink', 'red'), na.color = '#ffffff')
+  }
+  
+  # tumor blues SET COLORS TO BE CHOSEN!!!!!!!!!!!!!!!!!
+  
+  if (!missing(sample_4)) {
+    cell_cols[1:(length(plasma_found_vars)*4)] <- color.scale(tumors, extremes = c('lightblue', 'blue'), na.color = '#ffffff')
+  }
+  else {
+    cell_cols[1:(length(plasma_found_vars)*3)] <- color.scale(tumors, extremes = c('lightblue', 'blue'), na.color = '#ffffff')
+  }
+  
+  cell_cols <- matrix(cell_cols, nrow = length(plasma_found_vars), byrow = FALSE) #put into matrix form
+  
+  pooled_t <- data.frame(t(muts_pooled))
+  pooled_t <- pooled_t[c(ncol(muts_pooled), 1:(ncol(muts_pooled) - 1)), ] #rearrange to put plasma on top SET TO BE TOP/BOTTOM!!!!!!!!!!!!!!!
+  
+  cell_cols <- t(cell_cols)
+  cell_cols <- cell_cols[c(ncol(muts_pooled), 1:(ncol(muts_pooled) - 1)), ] #rearrange colors as well SET TO BE TOP/BOTTOM!!!!!!!!!!!!!!!
+  
+  # plot it
+  # extra space
+  par(mar=c(6,5.5,6,2.1))
+  #par(mar=c(6,15.5,6,12.1))
+  color2D.matplot(pooled_t, cellcolors=cell_cols, xlab = '', ylab = '', border='black', axes = FALSE) #SET AXIS LABELS AS OPTIONS AND ADD MAIN TITLE OPTION
+  
+  # add column labels SET OPTIONS FOR THESE (ALL, PROTEIN ONLY, LOCATION, GENE ONLY)!!!!!!!!!!!!!!!!!!!!
+  # add row labels DEFAULT WOULD BE SAMPLE NAMES!!!!!!!!!!!!!!!!!!!!!!!!!!
+  mut_row_labels <- c('Plasma', 'Lymph\nMet', 'Omental\nMet', 'Ovary\nMet')
+  axis(2, at = c(0.6, 1.6, 2.6, 3.5), labels = rev(mut_row_labels), tick = FALSE, cex.axis = 1.1, las = 1, font = 2)
+  # add NA ALLOW CHOICES!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  # add legends HOW TO DO THIS???????????????????????????????????????????
+
+}
