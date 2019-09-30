@@ -1,10 +1,11 @@
 ## functions needed in variant processing
+
+## simple exclusion function ----
 '%!in%' <- function(x,y)!('%in%'(x,y))
-## function for trimming mutect calls to trusight genes ----
+
+## function for processing mutect calls ----
 
 mutect_process <- function(mutect_calls) {
-  #ann_idx <- mutect_short$ANN == '' # index of mutations without annotations
-  #mutect_shorter <- mutect_short[!ann_idx, ] # remove any without annotation
   
   mutect_info <- mutect_calls$ANN # just the annotation info from snpEff
   info_split <- strsplit(mutect_info, '\\|') # split them by | and now a list
@@ -115,8 +116,8 @@ mutect_process <- function(mutect_calls) {
 }
 
 
-
-draw_tiles <- function(sample_1, sample_2, sample_3, sample_4 = FALSE, plasma_sample) { 
+## function to draw tile figure ----
+draw_tiles <- function(sample_1, sample_2, sample_3, sample_4 = FALSE, plasma_sample, row_labels = NULL, fill_NA = FALSE) { 
   patient_met_pool <- unique(c(sample_1$location, sample_2$location, sample_3$location)) #get all of the locations found in the tumor samples
   
   if (!missing(sample_4)) { #add in sample_4 if given
@@ -219,9 +220,24 @@ draw_tiles <- function(sample_1, sample_2, sample_3, sample_4 = FALSE, plasma_sa
   
   # add column labels SET OPTIONS FOR THESE (ALL, PROTEIN ONLY, LOCATION, GENE ONLY)!!!!!!!!!!!!!!!!!!!!
   # add row labels DEFAULT WOULD BE SAMPLE NAMES!!!!!!!!!!!!!!!!!!!!!!!!!!
-  mut_row_labels <- c('Plasma', 'Lymph\nMet', 'Omental\nMet', 'Ovary\nMet')
-  axis(2, at = c(0.6, 1.6, 2.6, 3.5), labels = rev(mut_row_labels), tick = FALSE, cex.axis = 1.1, las = 1, font = 2)
+  #mut_row_labels <- c('Plasma', 'Lymph\nMet', 'Omental\nMet', 'Ovary\nMet')
+  axis(2, at = c(0.6, 1.6, 2.6, 3.5), labels = rev(row_labels), tick = FALSE, cex.axis = 1.1, las = 1, font = 2)
   # add NA ALLOW CHOICES!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  if (fill_NA == TRUE) {
+    #add points for NA values
+    # sample_1 points
+    points(x = which(is.na(muts_pooled$AF_sample_1)) - 0.5, 
+           y = rep(2.5, sum(is.na(muts_pooled$AF_sample_1))), 
+           pch = 16)
+    # sample_2 points
+    points(x = which(is.na(muts_pooled$AF_sample_2)) - 0.5, 
+           y = rep(1.5, sum(is.na(muts_pooled$AF_sample_2))), 
+           pch = 16)
+    # sample_3 points
+    points(x = which(is.na(muts_pooled$AF_sample_3)) - 0.5, 
+           y = rep(0.5, sum(is.na(muts_pooled$AF_sample_3))), 
+           pch = 16)
+  }
   # add legends HOW TO DO THIS???????????????????????????????????????????
 
 }
