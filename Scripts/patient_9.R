@@ -138,7 +138,7 @@ mut_col_labels[36:45] <- c('FGFR1 p.L703F', '', '', '', 'FGFR1 p.D705Y', '', '',
 mut_col_labels[46:49] <- c('EGFR p.A1118G', 'EGFR p.P1119A', 'EGFR p.S1120I', '')
 axis(3, at = (1:ncol(pat_9_pooled_t)) - 0.6, labels = mut_col_labels, tick = FALSE, cex.axis = 0.7, las = 2, font = 2)
 
-mut_row_labels <- c('Plasma', 'Lymph\nMet', 'Omental\nMet', 'Ovary\nMet')
+mut_row_labels <- c('Plasma', 'Lymph\nMet   ', 'Omental\nMet   ', 'Ovary\nMet  ')
 axis(2, at = c(0.6, 1.6, 2.6, 3.5), labels = rev(mut_row_labels), tick = FALSE, cex.axis = 1.1, las = 1, font = 2)
 
 #add points for NA values

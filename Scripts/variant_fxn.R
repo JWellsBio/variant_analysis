@@ -5,7 +5,7 @@
 
 ## function for processing mutect calls ----
 
-mutect_process <- function(mutect_calls) {
+mutect_process <- function(mutect_calls, sample_type = 'tumor') {
   
   mutect_info <- mutect_calls$ANN # just the annotation info from snpEff
   info_split <- strsplit(mutect_info, '\\|') # split them by | and now a list
@@ -103,21 +103,30 @@ mutect_process <- function(mutect_calls) {
   #all calls with trusight genes and add location and remove ANN column
   mutect_calls$X.CHROM <- gsub('chr', '', mutect_calls$X.CHROM)
   mutect_calls$location <- paste0(mutect_calls$X.CHROM, ':', mutect_calls$POS)
-  mutect_calls <- mutect_calls[, -which(names(mutect_calls) %in% c('ANN', 'FILTER', 'gene_id', 'feature_id', 'cdna_pos'))]
+  mutect_calls <- mutect_calls[, -which(names(mutect_calls) %in% c('ANN', 'QUAL', 'FILTER', 'TLOD', 'gene_id', 'feature_id', 'cdna_pos'))]
   mutect_calls <- mutect_calls[mutect_calls$effect != 'intron_variant', ]
   mutect_calls <- mutect_calls[mutect_calls$effect != 'intergenic_region', ]
   mutect_calls$AF <- as.numeric(mutect_calls$AF)
   mutect_calls <- mutect_calls[!is.na(mutect_calls$AF), ]
   mutect_calls <- mutect_calls[nchar(mutect_calls$REF) == 1, ]
   mutect_calls <- mutect_calls[nchar(mutect_calls$ALT) == 1, ]
-  #mutect_trusight <- mutect_trusight[mutect_trusight$hgvs_p != '', ]
-  #mutect_trusight <- mutect_trusight[mutect_trusight$effect != 'synonymous_variant', ]
+  #mutect_calls <- mutect_calls[mutect_calls$CONTQ >= 20, ]
+  #mutect_calls <- mutect_calls[mutect_calls$ECNT == 1, ]
+  #mutect_calls <- mutect_calls[mutect_calls$GERMQ >= 20, ]
+  #mutect_calls <- mutect_calls[mutect_calls$SEQQ >= 20, ]
+  #if (sample_type == 'plasma') {
+   # mutect_calls <- mutect_calls[mutect_calls$AF >= 0.01, ]
+  #}
+  #else {
+   # mutect_calls <- mutect_calls[mutect_calls$AF >= 0.05, ]
+  #}
   return(mutect_calls)
 }
 
 
 ## function to draw tile figure ----
-draw_tiles <- function(sample_1, sample_2, sample_3, sample_4 = FALSE, plasma_sample, row_labels = NULL, fill_NA = FALSE) { 
+draw_tiles <- function(sample_1, sample_2, sample_3, sample_4 = FALSE, plasma_sample, row_labels = NULL, fill_NA = FALSE, 
+                       color_scheme = c('green/purple', 'red/blue'), col_labels = c('LOCATION', 'GENE')) { 
   patient_met_pool <- unique(c(sample_1$location, sample_2$location, sample_3$location)) #get all of the locations found in the tumor samples
   
   if (!missing(sample_4)) { #add in sample_4 if given
@@ -187,30 +196,50 @@ draw_tiles <- function(sample_1, sample_2, sample_3, sample_4 = FALSE, plasma_sa
   #set colors, plasma has its own reds, pooled tumors blues
   cell_cols<-rep("#000000",dim(muts_pooled)[1] * dim(muts_pooled)[2]) #create matrix to hold colors for graphing
   
-  # plasma reds SET COLORS TO BE CHOSEN!!!!!!!!!!!!!!!!!!!!!!!
-  if (!missing(sample_4)) {
-    cell_cols[(length(plasma_found_vars)*4) + 1:(length(plasma_found_vars)*5)] <- color.scale(muts_pooled[, ncol(muts_pooled)], extremes = c('lightpink', 'red'), na.color = '#ffffff')
-  }
-  else {
-    cell_cols[(length(plasma_found_vars)*3) + 1:(length(plasma_found_vars)*4)] <- color.scale(muts_pooled[, ncol(muts_pooled)], extremes = c('lightpink', 'red'), na.color = '#ffffff')
+    
+  if (color_scheme == 'red/blue') {
+    # plasma colors
+    if (!missing(sample_4)) {
+      cell_cols[(length(plasma_found_vars)*4) + 1:(length(plasma_found_vars)*5)] <- color.scale(muts_pooled[, ncol(muts_pooled)], extremes = c('maroon1', 'maroon4'), na.color = '#ffffff')
+    }
+    else {
+      cell_cols[(length(plasma_found_vars)*3) + 1:(length(plasma_found_vars)*4)] <- color.scale(muts_pooled[, ncol(muts_pooled)], extremes = c('maroon1', 'maroon4'), na.color = '#ffffff')
+    }
+  
+    # tumor colors
+    if (!missing(sample_4)) {
+      cell_cols[1:(length(plasma_found_vars)*4)] <- color.scale(tumors, extremes = c('turquoise1', 'turquoise4'), na.color = '#ffffff')
+    }
+    else {
+      cell_cols[1:(length(plasma_found_vars)*3)] <- color.scale(tumors, extremes = c('turquoise1', 'turquoise4'), na.color = '#ffffff')
+    }
   }
   
-  # tumor blues SET COLORS TO BE CHOSEN!!!!!!!!!!!!!!!!!
-  
-  if (!missing(sample_4)) {
-    cell_cols[1:(length(plasma_found_vars)*4)] <- color.scale(tumors, extremes = c('lightblue', 'blue'), na.color = '#ffffff')
-  }
-  else {
-    cell_cols[1:(length(plasma_found_vars)*3)] <- color.scale(tumors, extremes = c('lightblue', 'blue'), na.color = '#ffffff')
+  else if (color_scheme == 'green/purple') {
+    # plasma colors
+    if (!missing(sample_4)) {
+      cell_cols[(length(plasma_found_vars)*4) + 1:(length(plasma_found_vars)*5)] <- color.scale(muts_pooled[, ncol(muts_pooled)], extremes = c('seagreen1', 'seagreen4'), na.color = '#ffffff')
+    }
+    else {
+      cell_cols[(length(plasma_found_vars)*3) + 1:(length(plasma_found_vars)*4)] <- color.scale(muts_pooled[, ncol(muts_pooled)], extremes = c('seagreen1', 'seagreen4'), na.color = '#ffffff')
+    }
+    
+    # tumor colors
+    if (!missing(sample_4)) {
+      cell_cols[1:(length(plasma_found_vars)*4)] <- color.scale(tumors, extremes = c('darkorchid1', 'darkorchid4'), na.color = '#ffffff')
+    }
+    else {
+      cell_cols[1:(length(plasma_found_vars)*3)] <- color.scale(tumors, extremes = c('darkorchid1', 'darkorchid4'), na.color = '#ffffff')
+    }
   }
   
   cell_cols <- matrix(cell_cols, nrow = length(plasma_found_vars), byrow = FALSE) #put into matrix form
   
   pooled_t <- data.frame(t(muts_pooled))
-  pooled_t <- pooled_t[c(ncol(muts_pooled), 1:(ncol(muts_pooled) - 1)), ] #rearrange to put plasma on top SET TO BE TOP/BOTTOM!!!!!!!!!!!!!!!
+  pooled_t <- pooled_t[c(ncol(muts_pooled), 1:(ncol(muts_pooled) - 1)), ] 
   
   cell_cols <- t(cell_cols)
-  cell_cols <- cell_cols[c(ncol(muts_pooled), 1:(ncol(muts_pooled) - 1)), ] #rearrange colors as well SET TO BE TOP/BOTTOM!!!!!!!!!!!!!!!
+  cell_cols <- cell_cols[c(ncol(muts_pooled), 1:(ncol(muts_pooled) - 1)), ] 
   
   # plot it
   # extra space
@@ -219,25 +248,55 @@ draw_tiles <- function(sample_1, sample_2, sample_3, sample_4 = FALSE, plasma_sa
   color2D.matplot(pooled_t, cellcolors=cell_cols, xlab = '', ylab = '', border='black', axes = FALSE) #SET AXIS LABELS AS OPTIONS AND ADD MAIN TITLE OPTION
   
   # add column labels SET OPTIONS FOR THESE (ALL, PROTEIN ONLY, LOCATION, GENE ONLY)!!!!!!!!!!!!!!!!!!!!
-  # add row labels DEFAULT WOULD BE SAMPLE NAMES!!!!!!!!!!!!!!!!!!!!!!!!!!
-  #mut_row_labels <- c('Plasma', 'Lymph\nMet', 'Omental\nMet', 'Ovary\nMet')
-  axis(2, at = c(0.6, 1.6, 2.6, 3.5), labels = rev(row_labels), tick = FALSE, cex.axis = 1.1, las = 1, font = 2)
-  # add NA ALLOW CHOICES!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  if (fill_NA == TRUE) {
-    #add points for NA values
-    # sample_1 points
-    points(x = which(is.na(muts_pooled$AF_sample_1)) - 0.5, 
-           y = rep(2.5, sum(is.na(muts_pooled$AF_sample_1))), 
-           pch = 16)
-    # sample_2 points
-    points(x = which(is.na(muts_pooled$AF_sample_2)) - 0.5, 
-           y = rep(1.5, sum(is.na(muts_pooled$AF_sample_2))), 
-           pch = 16)
-    # sample_3 points
-    points(x = which(is.na(muts_pooled$AF_sample_3)) - 0.5, 
-           y = rep(0.5, sum(is.na(muts_pooled$AF_sample_3))), 
-           pch = 16)
+  if (col_labels == 'LOCATION') {
+    axis(3, at = (1:ncol(pooled_t)) - 0.6, labels = rownames(muts_pooled), tick = FALSE, cex.axis = 0.7, las = 2, font = 2)
   }
-  # add legends HOW TO DO THIS???????????????????????????????????????????
-
+  
+  else if (col_labels == 'GENE') {
+    axis(3, at = (1:ncol(pooled_t)) - 0.6, labels = muts_pooled$gene_name[muts_pooled$locations == rownames(muts_pooled)], tick = FALSE, cex.axis = 0.7, las = 2, font = 2)
+  }
+  
+  # add row labels 
+  if (!missing(sample_4)) {
+    axis(2, at = c(0.5, 1.5, 2.5, 3.5, 4.5), labels = rev(row_labels), tick = FALSE, cex.axis = 1.1, las = 1, font = 2)
+  }
+  else {
+    axis(2, at = c(0.5, 1.5, 2.5, 3.5), labels = rev(row_labels), tick = FALSE, cex.axis = 1.1, las = 1, font = 2)
+  }
+  
+  # add NA markers
+  if (fill_NA == TRUE) {
+    if (!missing(sample_4)) {
+    # sample_1 points
+      points(x = which(is.na(muts_pooled$AF_sample_1)) - 0.5, 
+            y = rep(3.5, sum(is.na(muts_pooled$AF_sample_1))), 
+            pch = 16)
+    # sample_2 points
+      points(x = which(is.na(muts_pooled$AF_sample_2)) - 0.5, 
+            y = rep(2.5, sum(is.na(muts_pooled$AF_sample_2))), 
+            pch = 16)
+    # sample_3 points
+      points(x = which(is.na(muts_pooled$AF_sample_3)) - 0.5, 
+            y = rep(1.5, sum(is.na(muts_pooled$AF_sample_3))), 
+            pch = 16)
+    # sample_4 points
+      points(x = which(is.na(muts_pooled$AF_sample_4)) - 0.5, 
+             y = rep(0.5, sum(is.na(muts_pooled$AF_sample_4))), 
+             pch = 16)
+    }
+    else {
+      # sample_1 points
+      points(x = which(is.na(muts_pooled$AF_sample_1)) - 0.5, 
+             y = rep(2.5, sum(is.na(muts_pooled$AF_sample_1))), 
+             pch = 16)
+      # sample_2 points
+      points(x = which(is.na(muts_pooled$AF_sample_2)) - 0.5, 
+             y = rep(1.5, sum(is.na(muts_pooled$AF_sample_2))), 
+             pch = 16)
+      # sample_3 points
+      points(x = which(is.na(muts_pooled$AF_sample_3)) - 0.5, 
+             y = rep(0.5, sum(is.na(muts_pooled$AF_sample_3))), 
+             pch = 16)
+    }
+  }
 }
