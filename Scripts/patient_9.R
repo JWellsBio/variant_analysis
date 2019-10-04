@@ -424,8 +424,18 @@ p<-ggplot(data=pat_9_afs, aes(x=pat_9_labels, y=pat_9_afs, fill = bar_colors)) +
 p
 ###ADJUST COLORS AND FINALIZE THIS!!!!!!!!!!!!!!!
 
+#red/black figures to look at how far down plasma can detect
 
-
+pat_9_lymph_met_stats <- pat_9_ln[, c('location', 'AF')]
+pat_9_oment_met_stats <- pat_9_oment[, c('location', 'AF')]
+pat_9_ovary_met_stats <- pat_9_ovary[, c('location', 'AF')]
+pat_9_all <- rbind(pat_9_lymph_met_stats, pat_9_oment_met_stats)
+pat_9_all <- rbind(pat_9_all, pat_9_ovary_met_stats)
+pat_9_all$AF <- as.numeric(pat_9_all$AF)
+pat_9_all <- pat_9_all[order(pat_9_all$AF, decreasing = TRUE), ]
+pat_9_all$color <- ifelse(pat_9_all$location %in% pat_9_plasma$location, 'red', 'black')
+barplot(pat_9_all$AF, col = pat_9_all$color, ylab = 'Mutant Allele Frequency in Tumor', 
+        xlab = 'Variant', main = 'Patient 9\n(3 tumors)', ylim = c(0,1.0))
 
 
 
