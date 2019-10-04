@@ -151,3 +151,15 @@ points(x = which(is.na(pat_8_muts_pooled$AF_breast_2)) - 0.5,
 
 par(mar=c(5.1,4.1,4.1,2.1))
 
+#red/black figures to look at how far down plasma can detect
+
+pat_8_axillary_met_stats <- pat_8_axillary[, c('location', 'AF')]
+pat_8_breast_1_met_stats <- pat_8_breast_1[, c('location', 'AF')]
+pat_8_breast_2_met_stats <- pat_8_breast_2[, c('location', 'AF')]
+pat_8_all <- rbind(pat_8_axillary_met_stats, pat_8_breast_1_met_stats)
+pat_8_all <- rbind(pat_8_all, pat_8_breast_2_met_stats)
+pat_8_all$AF <- as.numeric(pat_8_all$AF)
+pat_8_all <- pat_8_all[order(pat_8_all$AF, decreasing = TRUE), ]
+pat_8_all$color <- ifelse(pat_8_all$location %in% pat_8_plasma$location, 'red', 'black')
+barplot(pat_8_all$AF, col = pat_8_all$color, ylab = 'Mutant Allele Frequency in Tumor', 
+        xlab = 'Variant', main = 'Patient 8\n(3 tumors)', ylim = c(0,1.0))

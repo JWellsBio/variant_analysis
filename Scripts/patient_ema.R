@@ -205,7 +205,26 @@ par(mar=c(5.1,4.1,4.1,2.1))
 
 
 
+#red/black figures to look at how far down plasma can detect
 
+pat_ema_heart_met_stats <- pat_ema_heart[, c('location', 'AF')]
+pat_ema_l_kidney_met_stats <- pat_ema_l_kidney[, c('location', 'AF')]
+pat_ema_r_kidney_met_stats <- pat_ema_r_kidney[, c('location', 'AF')]
+pat_ema_liver_1_met_stats <- pat_ema_liver_1[, c('location', 'AF')]
+pat_ema_liver_2_met_stats <- pat_ema_liver_2[, c('location', 'AF')]
+pat_ema_oment_1_met_stats <- pat_ema_oment_1[, c('location', 'AF')]
+pat_ema_oment_2_met_stats <- pat_ema_oment_2[, c('location', 'AF')]
+pat_ema_all <- rbind(pat_ema_heart_met_stats, pat_ema_l_kidney_met_stats)
+pat_ema_all <- rbind(pat_ema_all, pat_ema_r_kidney_met_stats)
+pat_ema_all <- rbind(pat_ema_all, pat_ema_liver_1_met_stats)
+pat_ema_all <- rbind(pat_ema_all, pat_ema_liver_2_met_stats)
+pat_ema_all <- rbind(pat_ema_all, pat_ema_oment_1_met_stats)
+pat_ema_all <- rbind(pat_ema_all, pat_ema_oment_2_met_stats)
+pat_ema_all$AF <- as.numeric(pat_ema_all$AF)
+pat_ema_all <- pat_ema_all[order(pat_ema_all$AF, decreasing = TRUE), ]
+pat_ema_all$color <- ifelse(pat_ema_all$location %in% pat_ema_plasma$location, 'red', 'black')
+barplot(pat_ema_all$AF, col = pat_ema_all$color, ylab = 'Mutant Allele Frequency in Tumor', 
+        xlab = 'Variant', main = 'Patient EMA\n(7 tumors)', ylim = c(0,1.0))
 
 
 
