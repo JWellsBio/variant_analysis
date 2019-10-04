@@ -110,16 +110,16 @@ mutect_process <- function(mutect_calls, sample_type = 'tumor') {
   mutect_calls <- mutect_calls[!is.na(mutect_calls$AF), ]
   mutect_calls <- mutect_calls[nchar(mutect_calls$REF) == 1, ]
   mutect_calls <- mutect_calls[nchar(mutect_calls$ALT) == 1, ]
-  #mutect_calls <- mutect_calls[mutect_calls$CONTQ >= 20, ]
+  mutect_calls <- mutect_calls[mutect_calls$CONTQ >= 20, ]
   #mutect_calls <- mutect_calls[mutect_calls$ECNT == 1, ]
-  #mutect_calls <- mutect_calls[mutect_calls$GERMQ >= 20, ]
-  #mutect_calls <- mutect_calls[mutect_calls$SEQQ >= 20, ]
-  #if (sample_type == 'plasma') {
-   # mutect_calls <- mutect_calls[mutect_calls$AF >= 0.01, ]
-  #}
-  #else {
-   # mutect_calls <- mutect_calls[mutect_calls$AF >= 0.05, ]
-  #}
+  mutect_calls <- mutect_calls[mutect_calls$GERMQ >= 20, ]
+  mutect_calls <- mutect_calls[mutect_calls$SEQQ >= 20, ]
+  if (sample_type == 'plasma') {
+    mutect_calls <- mutect_calls[mutect_calls$AF >= 0.01, ]
+  }
+  else {
+    mutect_calls <- mutect_calls[mutect_calls$AF >= 0.05, ]
+  }
   return(mutect_calls)
 }
 

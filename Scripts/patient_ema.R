@@ -12,15 +12,15 @@ library(stringr)
 ## PATIENT EMA ----
 pat_ema_heart <- read.delim('Data/Patient_EMA/pat_ema_heart_all_int_clean_hg19_ann.txt', header = TRUE, 
                             stringsAsFactors = FALSE, sep = '\t')
-pat_ema_heart <- mutect_process(pat_ema_heart, sample_type = 'plasma') #38
+pat_ema_heart <- mutect_process(pat_ema_heart, sample_type = 'plasma') #40
 
 pat_ema_l_kidney <- read.delim('Data/Patient_EMA/pat_ema_l_kidney_all_int_clean_hg19_ann.txt', header = TRUE, 
                                stringsAsFactors = FALSE, sep = '\t')
-pat_ema_l_kidney <- mutect_process(pat_ema_l_kidney, sample_type = 'plasma') #35
+pat_ema_l_kidney <- mutect_process(pat_ema_l_kidney, sample_type = 'plasma') #36
 
 pat_ema_r_kidney <- read.delim('Data/Patient_EMA/pat_ema_r_kidney_all_int_clean_hg19_ann.txt', header = TRUE, 
                                stringsAsFactors = FALSE, sep = '\t')
-pat_ema_r_kidney <- mutect_process(pat_ema_r_kidney, sample_type = 'plasma') #42
+pat_ema_r_kidney <- mutect_process(pat_ema_r_kidney, sample_type = 'plasma') #44
 
 pat_ema_liver_1 <- read.delim('Data/Patient_EMA/pat_ema_liver_1_all_int_clean_hg19_ann.txt', header = TRUE, 
                               stringsAsFactors = FALSE, sep = '\t')
@@ -28,29 +28,29 @@ pat_ema_liver_1 <- mutect_process(pat_ema_liver_1, sample_type = 'plasma') #38
 
 pat_ema_liver_2 <- read.delim('Data/Patient_EMA/pat_ema_liver_2_all_int_clean_hg19_ann.txt', header = TRUE, 
                               stringsAsFactors = FALSE, sep = '\t')
-pat_ema_liver_2 <- mutect_process(pat_ema_liver_2, sample_type = 'plasma') #29
+pat_ema_liver_2 <- mutect_process(pat_ema_liver_2, sample_type = 'plasma') #32
 
 pat_ema_oment_1 <- read.delim('Data/Patient_EMA/pat_ema_oment_1_all_int_clean_hg19_ann.txt', header = TRUE, 
                               stringsAsFactors = FALSE, sep = '\t')
-pat_ema_oment_1 <- mutect_process(pat_ema_oment_1, sample_type = 'plasma') #39
+pat_ema_oment_1 <- mutect_process(pat_ema_oment_1, sample_type = 'plasma') #41
 
 pat_ema_oment_2 <- read.delim('Data/Patient_EMA/pat_ema_oment_2_all_int_clean_hg19_ann.txt', header = TRUE, 
                               stringsAsFactors = FALSE, sep = '\t')
-pat_ema_oment_2 <- mutect_process(pat_ema_oment_2, sample_type = 'plasma') #42
+pat_ema_oment_2 <- mutect_process(pat_ema_oment_2, sample_type = 'plasma') #43
 
 pat_ema_plasma <- read.delim('Data/Patient_EMA/pat_ema_plasma_all_int_clean_hg19_ann.txt', header = TRUE, 
                              stringsAsFactors = FALSE, sep = '\t')
-pat_ema_plasma <- mutect_process(pat_ema_plasma, sample_type = 'plasma') #1088
+pat_ema_plasma <- mutect_process(pat_ema_plasma, sample_type = 'plasma') #1116
 
 ## looking at how well plasma detects tumor mutations ----
 
-length(intersect(pat_ema_heart$location, pat_ema_plasma$location)) #4/38
-length(intersect(pat_ema_l_kidney$location, pat_ema_plasma$location)) #3/35
-length(intersect(pat_ema_r_kidney$location, pat_ema_plasma$location)) #2/42
-length(intersect(pat_ema_liver_1$location, pat_ema_plasma$location)) #1/4
-length(intersect(pat_ema_liver_2$location, pat_ema_plasma$location)) #2/4
-length(intersect(pat_ema_oment_1$location, pat_ema_plasma$location)) #2/4
-length(intersect(pat_ema_oment_2$location, pat_ema_plasma$location)) #3/6
+length(intersect(pat_ema_heart$location, pat_ema_plasma$location)) #7/40
+length(intersect(pat_ema_l_kidney$location, pat_ema_plasma$location)) #5/36
+length(intersect(pat_ema_r_kidney$location, pat_ema_plasma$location)) #4/44
+length(intersect(pat_ema_liver_1$location, pat_ema_plasma$location)) #2/38
+length(intersect(pat_ema_liver_2$location, pat_ema_plasma$location)) #4/32
+length(intersect(pat_ema_oment_1$location, pat_ema_plasma$location)) #4/41
+length(intersect(pat_ema_oment_2$location, pat_ema_plasma$location)) #4/43
 
 #pool mutations from 3 mets
 pat_ema_met_pool <- unique(c(pat_ema_heart$location, pat_ema_l_kidney$location, pat_ema_r_kidney$location, 

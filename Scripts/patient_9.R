@@ -198,13 +198,13 @@ randomnumber <- round(runif(4, min = 0, max = 90))
 metadata <- as.data.frame(cbind(sets_order, randomnumber))
 names(metadata) <- c("sets", "randomnumber")
 
-blue_pal <- pal_material('blue', n = 6, alpha = 1, reverse = TRUE)
+blue_pal <- pal_material('blue', n = 8, alpha = 1, reverse = TRUE)
 blue_pal <- blue_pal(8)
 orange_pal <- pal_material('orange', n = 8, alpha = 1, reverse = TRUE)
 orange_pal <- orange_pal(8)
 purple_pal <- pal_material('purple', n= 4, alpha = 1, reverse = TRUE)
 purple_pal <- purple_pal(4)
-bar_colors <- c(blue_pal[c(1,3,4)], orange_pal[c(1:3, 5,5,5)], purple_pal[c(1,2,3,3)], 'darkgreen')
+bar_colors <- c(blue_pal[c(1,3,4)], orange_pal[c(1,2,3,3)], purple_pal[c(1,2,3)], 'darkgreen')
 
 upset(upset_df, set.metadata = list(data = metadata, 
                                     plots = list(list(type = 'matrix_rows', column = 'sets', 
@@ -213,16 +213,13 @@ upset(upset_df, set.metadata = list(data = metadata,
       intersections = list(list('Lymph_Met'), 
                            list('Ovary_Met'), 
                            list('Omental_Met'), 
-                           list('Ovary_Met', 'Plasma'), 
                            list('Omental_Met', 'Plasma'), 
                            list('Lymph_Met', 'Plasma'), 
                            list('Omental_Met', 'Ovary_Met'), 
                            list('Omental_Met', 'Lymph_Met'), 
-                           list('Ovary_Met', 'Lymph_Met'), 
                            list('Omental_Met', 'Ovary_Met', 'Plasma'), 
                            list('Omental_Met', 'Lymph_Met', 'Plasma'), 
                            list('Ovary_Met', 'Omental_Met', 'Lymph_Met'), 
-                           list('Ovary_Met', 'Lymph_Met', 'Plasma'), 
                            list(colnames(upset_df))),
       nsets = 4, nintersects = NA, sets = rev(sets_order), keep.order = FALSE, sets.x.label = 'Number of Mutations', 
       sets.bar.color = c('gray60', 'goldenrod4', 'aquamarine3', 'chocolate3'), matrix.color = 'midnightblue', matrix.dot.alpha = 0.8, 
@@ -404,16 +401,16 @@ pat_9_all_sd <- sd(pat_9_all_af)
 pat_9_all_af <- median(pat_9_all_af)
 
 
-pat_9_afs <- c(pat_9_ln_af, pat_9_om_af, pat_9_ov_af, pat_9_pl_ov_af, pat_9_pl_om_af, pat_9_pl_ly_af,  
-               pat_9_ov_om_af, pat_9_om_ly_af, pat_9_ov_ly_af, pat_9_pl_ov_om_af, pat_9_pl_ly_om_af, pat_9_ly_ov_om_af, 
-               pat_9_pl_ov_ly_af, pat_9_all_af)
-pat_9_sds <- c(pat_9_ln_sd, pat_9_om_sd, pat_9_ov_sd, pat_9_pl_ov_sd, pat_9_pl_om_sd, pat_9_pl_ly_sd,  
-               pat_9_ov_om_sd, pat_9_om_ly_sd, pat_9_ov_ly_sd, pat_9_pl_ov_om_sd, pat_9_pl_ly_om_sd, pat_9_ly_ov_om_sd, 
-               pat_9_pl_ov_ly_sd, pat_9_all_sd)
-pat_9_labels <- c('Lymph\nMet', 'Omental\nMet', 'Ovary\nMet', 'Ovary Met\n+ Plasma', 'Omental Met\n+ Plasma', 
-                  'Lymph Met\n+ Plasma', 'Omental Met\n+ Ovary Met', 'Omental Met\n+ Lymph Met', 
-                  'Ovary Met\n+ Lymph Met', 'Omental Met\n+ Ovary Met\n+ Plasma', 'Lymph Met\n+ Omental Met\n+ Plasma', 
-                  'Lymph Met\n+ Ovary Met\n+ Omental Met', 'Lymph Met\n+ Ovary Met\n+ Plasma', 'All Samples')
+pat_9_afs <- c(pat_9_ln_af, pat_9_om_af, pat_9_ov_af, pat_9_pl_ly_af, pat_9_pl_om_af,  
+               pat_9_ov_om_af, pat_9_om_ly_af, pat_9_pl_ly_om_af, pat_9_pl_ov_om_af, pat_9_ly_ov_om_af, 
+               pat_9_all_af)
+pat_9_sds <- c(pat_9_ln_sd, pat_9_om_sd, pat_9_ov_sd, pat_9_pl_ly_sd, pat_9_pl_om_sd,  
+               pat_9_ov_om_sd, pat_9_om_ly_sd, pat_9_pl_ly_om_sd, pat_9_pl_ov_om_sd, pat_9_ly_ov_om_sd, 
+               pat_9_all_sd)
+pat_9_labels <- c('Lymph\nMet', 'Omental\nMet', 'Ovary\nMet', 'Lymph Met\n+ Plasma', 'Omental Met\n+ Plasma', 
+                  'Omental Met\n+ Ovary Met', 'Omental Met\n+ Lymph Met', 
+                  'Lymph Met\n+ Omental Met\n+ Plasma', 'Omental Met\n+ Ovary Met\n+ Plasma', 
+                  'Lymph Met\n+ Ovary Met\n+ Omental Met', 'All Samples')
 pat_9_afs <- data.frame(pat_9_labels, pat_9_afs, pat_9_sds, bar_colors)
 p<-ggplot(data=pat_9_afs, aes(x=pat_9_labels, y=pat_9_afs, fill = bar_colors)) +
   geom_bar(stat="identity", width = 0.5, color = 'black') + scale_x_discrete(limits=pat_9_afs$pat_9_labels) + ylab('Median Mutant Allele Frequency') +

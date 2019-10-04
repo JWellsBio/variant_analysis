@@ -12,32 +12,32 @@ library(stringr)
 ## PATIENT 10 ----
 pat_10_liver_1 <- read.delim('Data/Patient_10/pat_10_liver_1_all_int_clean_hg19_ann.txt', header = TRUE, 
                              stringsAsFactors = FALSE, sep = '\t')
-pat_10_liver_1 <- mutect_process(pat_10_liver_1) #40
+pat_10_liver_1 <- mutect_process(pat_10_liver_1) #14
 
 pat_10_liver_2a <- read.delim('Data/Patient_10/pat_10_liver_2a_all_int_clean_hg19_ann.txt', header = TRUE, 
                               stringsAsFactors = FALSE, sep = '\t')
-pat_10_liver_2a <- mutect_process(pat_10_liver_2a) #39
+pat_10_liver_2a <- mutect_process(pat_10_liver_2a) #9
 
 pat_10_liver_5 <- read.delim('Data/Patient_10/pat_10_liver_5_all_int_clean_hg19_ann.txt', header = TRUE, 
                              stringsAsFactors = FALSE, sep = '\t')
-pat_10_liver_5 <- mutect_process(pat_10_liver_5) #50
+pat_10_liver_5 <- mutect_process(pat_10_liver_5) #10
 
 pat_10_plasma <- read.delim('Data/Patient_10/pat_10_plasma_all_int_clean_hg19_ann.txt', header = TRUE, 
                             stringsAsFactors = FALSE, sep = '\t')
-pat_10_plasma <- mutect_process(pat_10_plasma) #4299
+pat_10_plasma <- mutect_process(pat_10_plasma, sample_type = 'plasma') #3573
 
 ## looking at how well plasma detects tumor mutations ----
 
-length(intersect(pat_10_liver_1$location, pat_10_plasma$location)) #14/40
-length(intersect(pat_10_liver_2a$location, pat_10_plasma$location)) #11/39
-length(intersect(pat_10_liver_5$location, pat_10_plasma$location)) #13/50
+length(intersect(pat_10_liver_1$location, pat_10_plasma$location)) #7/14
+length(intersect(pat_10_liver_2a$location, pat_10_plasma$location)) #5/9
+length(intersect(pat_10_liver_5$location, pat_10_plasma$location)) #5/10
 
 
 #pool mutations from 3 mets
-pat_10_met_pool <- unique(c(pat_10_liver_1$location, pat_10_liver_2a$location, pat_10_liver_5$location)) #73 unique mutations
+pat_10_met_pool <- unique(c(pat_10_liver_1$location, pat_10_liver_2a$location, pat_10_liver_5$location)) #19 unique mutations
 
 
-pat_10_plasma_found <- pat_10_plasma[pat_10_plasma$location %in% pat_10_met_pool, ] #16 mutations
+pat_10_plasma_found <- pat_10_plasma[pat_10_plasma$location %in% pat_10_met_pool, ] #8 mutations
 pat_10_plasma_found_vars <- (pat_10_plasma_found$location) 
 
 
@@ -82,10 +82,10 @@ pat_10_3 <- c(pat_10_muts_pooled$AF_liver_1, pat_10_muts_pooled$AF_liver_2a, pat
 #set colors, plasma has its own reds, pooled tumors blues
 cell_cols<-rep("#000000",dim(pat_10_muts_pooled)[1] * dim(pat_10_muts_pooled)[2])
 # plasma reds
-cell_cols[49:64] <- color.scale(pat_10_muts_pooled[, 4], extremes = c('lightpink', 'red'), na.color = '#ffffff')
+cell_cols[25:32] <- color.scale(pat_10_muts_pooled[, 4], extremes = c('lightpink', 'red'), na.color = '#ffffff')
 # tumor blues
-cell_cols[1:48] <- color.scale(pat_10_3, extremes = c('lightblue', 'blue'), na.color = '#ffffff')
-cell_cols <- matrix(cell_cols, nrow = 16, byrow = FALSE)
+cell_cols[1:24] <- color.scale(pat_10_3, extremes = c('lightblue', 'blue'), na.color = '#ffffff')
+cell_cols <- matrix(cell_cols, nrow = 8, byrow = FALSE)
 pat_10_pooled_t <- data.frame(t(pat_10_muts_pooled))
 pat_10_pooled_t <- pat_10_pooled_t[c(4, 1:3), ]
 
@@ -101,14 +101,14 @@ color2D.matplot(pat_10_pooled_t, cellcolors=cell_cols, xlab = '', ylab = '', bor
 #add legends
 legval<-seq(min(pat_10_muts_pooled[, 4], na.rm = TRUE),max(pat_10_muts_pooled[, 4], na.rm = TRUE),length.out = 100)
 legcol<-color.scale(legval, extremes = c('lightpink', 'red'))
-color.legend(1,-0.9,11,-0.5,round(c(min(pat_10_muts_pooled[, 4], na.rm = TRUE), max(pat_10_muts_pooled[, 4], na.rm = TRUE)),2),rect.col=legcol)
-mtext('Plasma', side=1, line=2.4, at=2.2, cex = 1.1, font = 2)
+color.legend(0.5,-0.9,2.5,-0.5,round(c(min(pat_10_muts_pooled[, 4], na.rm = TRUE), max(pat_10_muts_pooled[, 4], na.rm = TRUE)),2),rect.col=legcol)
+mtext('Plasma', side=1, line=2.4, at=0.8, cex = 1.1, font = 2)
 
 # add tumor legend
 legval<-seq(min(pat_10_muts_pooled[, 1:3], na.rm = TRUE),max(pat_10_muts_pooled[, 1:3], na.rm = TRUE),length.out = 100)
 legcol<-color.scale(legval, extremes = c('lightblue', 'blue'))
-color.legend(12,-0.9,23,-0.5,round(c(min(pat_10_muts_pooled[, 1:3], na.rm = TRUE), max(pat_10_muts_pooled[, 1:3], na.rm = TRUE)),2),rect.col=legcol)
-mtext('Tumor', side=1, line=2.4, at=13, cex = 1.1, font = 2)
+color.legend(3,-0.9,5,-0.5,round(c(min(pat_10_muts_pooled[, 1:3], na.rm = TRUE), max(pat_10_muts_pooled[, 1:3], na.rm = TRUE)),2),rect.col=legcol)
+mtext('Tumor', side=1, line=2.4, at=3.25, cex = 1.1, font = 2)
 mtext('Mutant Allele Frequency', side = 1, line = 4.3, at = 11.5, cex = 1.1, font = 2)
 
 # add NA legend

@@ -12,39 +12,39 @@ library(stringr)
 ## Patient 2 ----
 pat_2_liver_1 <- read.delim('Data/Patient_2/pat_2_liver_1_all_int_clean_hg19_ann.txt', header = TRUE, 
                             stringsAsFactors = FALSE, sep = '\t')
-pat_2_liver_1 <- mutect_process(pat_2_liver_1) #56
+pat_2_liver_1 <- mutect_process(pat_2_liver_1) #20
 
 pat_2_liver_2 <- read.delim('Data/Patient_2/pat_2_liver_2_all_int_clean_hg19_ann.txt', header = TRUE, 
                             stringsAsFactors = FALSE, sep = '\t')
-pat_2_liver_2 <- mutect_process(pat_2_liver_2) #78
+pat_2_liver_2 <- mutect_process(pat_2_liver_2) #28
 
 pat_2_breast_1 <- read.delim('Data/Patient_2/pat_2_breast_1_all_int_clean_hg19_ann.txt', header = TRUE, 
                              stringsAsFactors = FALSE, sep = '\t')
-pat_2_breast_1 <- mutect_process(pat_2_breast_1) #76
+pat_2_breast_1 <- mutect_process(pat_2_breast_1) #34
 
 pat_2_breast_2 <- read.delim('Data/Patient_2/pat_2_breast_2_all_int_clean_hg19_ann.txt', header = TRUE, 
                              stringsAsFactors = FALSE, sep = '\t')
-pat_2_breast_2 <- mutect_process(pat_2_breast_2) #2917
+pat_2_breast_2 <- mutect_process(pat_2_breast_2) #485
 
 pat_2_plasma <- read.delim('Data/Patient_2/pat_2_plasma_all_int_clean_hg19_ann.txt', header = TRUE, 
                            stringsAsFactors = FALSE, sep = '\t')
-pat_2_plasma <- mutect_process(pat_2_plasma) #201
+pat_2_plasma <- mutect_process(pat_2_plasma, sample_type = 'plasma') #141
 
 
 ## looking at how well plasma detects tumor mutations ----
 
-length(intersect(pat_2_breast_1$location, pat_2_plasma$location)) #12/76
-#length(intersect(pat_2_breast_2$location, pat_2_plasma$location)) #66/2917
-length(intersect(pat_2_liver_1$location, pat_2_plasma$location)) #2/56
-length(intersect(pat_2_liver_2$location, pat_2_plasma$location)) #7/78
+length(intersect(pat_2_breast_1$location, pat_2_plasma$location)) #9/34
+length(intersect(pat_2_breast_2$location, pat_2_plasma$location)) #42/485
+length(intersect(pat_2_liver_1$location, pat_2_plasma$location)) #2/20
+length(intersect(pat_2_liver_2$location, pat_2_plasma$location)) #7/28
 
 
 
 #pool mutations from 3 mets
-pat_2_met_pool <- unique(c(pat_2_liver_1$location, pat_2_liver_2$location, pat_2_breast_1$location)) #150 unique mutations
+pat_2_met_pool <- unique(c(pat_2_liver_1$location, pat_2_liver_2$location, pat_2_breast_1$location)) #60 unique mutations
 
 
-pat_2_plasma_found <- pat_2_plasma[pat_2_plasma$location %in% pat_2_met_pool, ] #18 mutations
+pat_2_plasma_found <- pat_2_plasma[pat_2_plasma$location %in% pat_2_met_pool, ] #15 mutations
 pat_2_plasma_found_vars <- (pat_2_plasma_found$location)
 
 
@@ -98,10 +98,10 @@ pat_2_3 <- c(pat_2_muts_pooled$AF_liver_1, pat_2_muts_pooled$AF_liver_2, pat_2_m
 #set colors, plasma has its own reds, pooled tumors blues
 cell_cols<-rep("#000000",dim(pat_2_muts_pooled)[1] * dim(pat_2_muts_pooled)[2])
 # plasma reds
-cell_cols[55:72] <- color.scale(pat_2_muts_pooled[, 4], extremes = c('lightpink', 'red'), na.color = '#ffffff')
+cell_cols[46:60] <- color.scale(pat_2_muts_pooled[, 4], extremes = c('lightpink', 'red'), na.color = '#ffffff')
 # tumor blues
-cell_cols[1:54] <- color.scale(pat_2_3, extremes = c('lightblue', 'blue'), na.color = '#ffffff')
-cell_cols <- matrix(cell_cols, nrow = 18, byrow = FALSE)
+cell_cols[1:45] <- color.scale(pat_2_3, extremes = c('lightblue', 'blue'), na.color = '#ffffff')
+cell_cols <- matrix(cell_cols, nrow = 15, byrow = FALSE)
 pat_2_pooled_t <- data.frame(t(pat_2_muts_pooled))
 pat_2_pooled_t <- pat_2_pooled_t[c(4, 1:3), ]
 
@@ -115,17 +115,17 @@ par(mar=c(6,5.5,6,2.1))
 color2D.matplot(pat_2_pooled_t, cellcolors=cell_cols, xlab = '', ylab = '', border='black', axes = FALSE)
 
 #add legends
-legval<-seq(min(pat_2_muts_pooled[, 5], na.rm = TRUE),max(pat_2_muts_pooled[, 5], na.rm = TRUE),length.out = 100)
+legval<-seq(min(pat_2_muts_pooled[, 4], na.rm = TRUE),max(pat_2_muts_pooled[, 4], na.rm = TRUE),length.out = 100)
 legcol<-color.scale(legval, extremes = c('lightpink', 'red'))
-color.legend(0.5,-0.9,2.5,-0.5,round(c(min(pat_2_muts_pooled[, 4], na.rm = TRUE), max(pat_2_muts_pooled[, 4], na.rm = TRUE)),2),rect.col=legcol)
-mtext('Plasma', side=1, line=1.7, at=0.8, cex = 1.1, font = 2)
+color.legend(0.5,-0.9,4.5,-0.5,round(c(min(pat_2_muts_pooled[, 4], na.rm = TRUE), max(pat_2_muts_pooled[, 4], na.rm = TRUE)),2),rect.col=legcol)
+mtext('Plasma', side=1, line=2.3, at=1.0, cex = 1.1, font = 2)
 
 # add tumor legend
-legval<-seq(min(pat_2_muts_pooled[, 1:4], na.rm = TRUE),max(pat_2_muts_pooled[, 1:4], na.rm = TRUE),length.out = 100)
+legval<-seq(min(pat_2_muts_pooled[, 1:3], na.rm = TRUE),max(pat_2_muts_pooled[, 1:3], na.rm = TRUE),length.out = 100)
 legcol<-color.scale(legval, extremes = c('lightblue', 'blue'))
-color.legend(3,-0.9,5,-0.5,round(c(min(pat_2_muts_pooled[, 1:3], na.rm = TRUE), max(pat_2_muts_pooled[, 1:3], na.rm = TRUE)),2),rect.col=legcol)
-mtext('Tumor', side=1, line=1.7, at=3.3, cex = 1.1, font = 2)
-mtext('Mutant Allele Frequency', side = 1, line = 3.8, at=2.7, cex = 1.1, font = 2)
+color.legend(5,-0.9,9,-0.5,round(c(min(pat_2_muts_pooled[, 1:3], na.rm = TRUE), max(pat_2_muts_pooled[, 1:3], na.rm = TRUE)),2),rect.col=legcol)
+mtext('Tumor', side=1, line=2.3, at=5.5, cex = 1.1, font = 2)
+mtext('Mutant Allele Frequency', side = 1, line = 3.9, at=4.7, cex = 1.1, font = 2)
 
 # add NA legend
 color.legend(6.5, -0.9, 6.75, -0.5, legend = '', rect.col = '#ffffff')
@@ -143,20 +143,17 @@ axis(2, at = c(0.5, 1.5, 2.5, 3.5), labels = rev(mut_row_labels), tick = FALSE, 
 #add points for NA values
 # liver 1 points
 points(x = which(is.na(pat_2_muts_pooled$AF_liver_1)) - 0.5, 
-       y = rep(3.5, sum(is.na(pat_2_muts_pooled$AF_liver_1))), 
+       y = rep(2.5, sum(is.na(pat_2_muts_pooled$AF_liver_1))), 
        pch = 16)
 
 points(x = which(is.na(pat_2_muts_pooled$AF_liver_2)) - 0.5, 
-       y = rep(2.5, sum(is.na(pat_2_muts_pooled$AF_liver_2))), 
+       y = rep(1.5, sum(is.na(pat_2_muts_pooled$AF_liver_2))), 
        pch = 16)
 # liver 2 points
 points(x = which(is.na(pat_2_muts_pooled$AF_breast_1)) - 0.5, 
-       y = rep(1.5, sum(is.na(pat_2_muts_pooled$AF_breast_1))), 
+       y = rep(0.5, sum(is.na(pat_2_muts_pooled$AF_breast_1))), 
        pch = 16)
-# liver 5 points
-points(x = which(is.na(pat_2_muts_pooled$AF_breast_2)) - 0.5, 
-       y = rep(0.5, sum(is.na(pat_2_muts_pooled$AF_breast_2))), 
-       pch = 16)
+
 
 
 
