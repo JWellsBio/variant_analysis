@@ -112,14 +112,13 @@ mtext('Tumor', side=1, line=2.4, at=3.25, cex = 1.1, font = 2)
 mtext('Mutant Allele Frequency', side = 1, line = 4.3, at = 11.5, cex = 1.1, font = 2)
 
 # add NA legend
-color.legend(27, -0.9, 28, -0.5, legend = '', rect.col = '#ffffff')
-mtext('Mutation\n     Not Present', side=1, line=2.8, at=24.9, cex = 1.1, font = 2)
-legend(x=27.1,y=-0.47,legend='',pch=16,bty="n",xpd = NA)
+color.legend(6.7, -0.9, 7, -0.5, legend = '', rect.col = '#ffffff')
+mtext('Mutation\n     Not Present', side=1, line=2.8, at=6.1, cex = 1.1, font = 2)
+legend(x=6.75,y=-0.47,legend='',pch=16,bty="n",xpd = NA)
 
 #plot labels
 mut_col_labels <- rownames(pat_10_muts_pooled)
-mut_col_labels[1:10] <- c('', '', '', '', '', '', 'EP300 p.Q2223P', 'SLX4 p.N457K', 'FGFR4 p.G388R', '')
-mut_col_labels[11:16] <- c('SLX4 p.A952V', 'SLX4 p.A952T', '', '', '', '')
+mut_col_labels[1:8] <- c('ERG\nc.*2652G>A', 'ERBB3\np.R1116R', 'BARD1\nc.1518T>C', 'TP53\nc.-123C>G', 'FLT1\nc.*1999G>A', 'HNF1A\np.G288G', 'SLX4\np.N457K', 'AR\np.G457G')
 axis(3, at = (1:ncol(pat_10_pooled_t)) - 0.6, labels = mut_col_labels, tick = FALSE, cex.axis = 0.8, las = 2, font = 2)
 
 mut_row_labels <- c('Plasma', 'Liver 1', 'Liver 2a', 'Liver 5')
