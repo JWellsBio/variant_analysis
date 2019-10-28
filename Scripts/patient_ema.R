@@ -10,52 +10,51 @@ library(plotrix)
 library(stringr)
 
 ## PATIENT EMA ----
-pat_ema_heart <- read.delim('Data/Patient_EMA/pat_ema_heart_all_int_clean_hg19_ann.txt', header = TRUE, 
+pat_ema_heart <- read.delim('Data/Patient_EMA/pat_ema_heart_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
                             stringsAsFactors = FALSE, sep = '\t')
-pat_ema_heart <- mutect_process(pat_ema_heart, sample_type = 'plasma') #40
+pat_ema_heart <- mutect_process(pat_ema_heart) #39 or 11
 
-pat_ema_l_kidney <- read.delim('Data/Patient_EMA/pat_ema_l_kidney_all_int_clean_hg19_ann.txt', header = TRUE, 
+pat_ema_l_kidney <- read.delim('Data/Patient_EMA/pat_ema_l_kidney_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
                                stringsAsFactors = FALSE, sep = '\t')
-pat_ema_l_kidney <- mutect_process(pat_ema_l_kidney, sample_type = 'plasma') #36
+pat_ema_l_kidney <- mutect_process(pat_ema_l_kidney) #36 or 7
 
-pat_ema_r_kidney <- read.delim('Data/Patient_EMA/pat_ema_r_kidney_all_int_clean_hg19_ann.txt', header = TRUE, 
+pat_ema_r_kidney <- read.delim('Data/Patient_EMA/pat_ema_r_kidney_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
                                stringsAsFactors = FALSE, sep = '\t')
-pat_ema_r_kidney <- mutect_process(pat_ema_r_kidney, sample_type = 'plasma') #44
+pat_ema_r_kidney <- mutect_process(pat_ema_r_kidney) #43 or 6
 
-pat_ema_liver_1 <- read.delim('Data/Patient_EMA/pat_ema_liver_1_all_int_clean_hg19_ann.txt', header = TRUE, 
+pat_ema_liver_1 <- read.delim('Data/Patient_EMA/pat_ema_liver_1_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
                               stringsAsFactors = FALSE, sep = '\t')
-pat_ema_liver_1 <- mutect_process(pat_ema_liver_1, sample_type = 'plasma') #38
+pat_ema_liver_1 <- mutect_process(pat_ema_liver_1) #36 or 4
 
-pat_ema_liver_2 <- read.delim('Data/Patient_EMA/pat_ema_liver_2_all_int_clean_hg19_ann.txt', header = TRUE, 
+pat_ema_liver_2 <- read.delim('Data/Patient_EMA/pat_ema_liver_2_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
                               stringsAsFactors = FALSE, sep = '\t')
-pat_ema_liver_2 <- mutect_process(pat_ema_liver_2, sample_type = 'plasma') #32
+pat_ema_liver_2 <- mutect_process(pat_ema_liver_2) #29 or 4
 
-pat_ema_oment_1 <- read.delim('Data/Patient_EMA/pat_ema_oment_1_all_int_clean_hg19_ann.txt', header = TRUE, 
+pat_ema_oment_1 <- read.delim('Data/Patient_EMA/pat_ema_oment_1_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
                               stringsAsFactors = FALSE, sep = '\t')
-pat_ema_oment_1 <- mutect_process(pat_ema_oment_1, sample_type = 'plasma') #41
+pat_ema_oment_1 <- mutect_process(pat_ema_oment_1) #34 or 4
 
-pat_ema_oment_2 <- read.delim('Data/Patient_EMA/pat_ema_oment_2_all_int_clean_hg19_ann.txt', header = TRUE, 
+pat_ema_oment_2 <- read.delim('Data/Patient_EMA/pat_ema_oment_2_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
                               stringsAsFactors = FALSE, sep = '\t')
-pat_ema_oment_2 <- mutect_process(pat_ema_oment_2, sample_type = 'plasma') #43
+pat_ema_oment_2 <- mutect_process(pat_ema_oment_2) #42 or 6
 
-pat_ema_plasma <- read.delim('Data/Patient_EMA/pat_ema_plasma_all_int_clean_hg19_ann.txt', header = TRUE, 
+pat_ema_plasma <- read.delim('Data/Patient_EMA/pat_ema_plasma_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
                              stringsAsFactors = FALSE, sep = '\t')
-pat_ema_plasma <- mutect_process(pat_ema_plasma, sample_type = 'plasma') #1116
+pat_ema_plasma <- mutect_process(pat_ema_plasma, sample_type = 'plasma') #1104
 
 ## looking at how well plasma detects tumor mutations ----
-
-length(intersect(pat_ema_heart$location, pat_ema_plasma$location)) #7/40
-length(intersect(pat_ema_l_kidney$location, pat_ema_plasma$location)) #5/36
-length(intersect(pat_ema_r_kidney$location, pat_ema_plasma$location)) #4/44
-length(intersect(pat_ema_liver_1$location, pat_ema_plasma$location)) #2/38
-length(intersect(pat_ema_liver_2$location, pat_ema_plasma$location)) #4/32
-length(intersect(pat_ema_oment_1$location, pat_ema_plasma$location)) #4/41
-length(intersect(pat_ema_oment_2$location, pat_ema_plasma$location)) #4/43
+length(intersect(pat_ema_heart$location, pat_ema_plasma$location)) #4/39 or 4/11
+length(intersect(pat_ema_l_kidney$location, pat_ema_plasma$location)) #3/36 or 3/7
+length(intersect(pat_ema_r_kidney$location, pat_ema_plasma$location)) #2/43 or 2/6
+length(intersect(pat_ema_liver_1$location, pat_ema_plasma$location)) #1/36 or 1/4
+length(intersect(pat_ema_liver_2$location, pat_ema_plasma$location)) #2/29 or 2/4
+length(intersect(pat_ema_oment_1$location, pat_ema_plasma$location)) #2/34 or 2/4
+length(intersect(pat_ema_oment_2$location, pat_ema_plasma$location)) #3/42 or 3/6
 
 #pool mutations from 3 mets
 pat_ema_met_pool <- unique(c(pat_ema_heart$location, pat_ema_l_kidney$location, pat_ema_r_kidney$location, 
                              pat_ema_liver_1$location, pat_ema_liver_2$location, pat_ema_oment_1$location, 
-                             pat_ema_oment_2$location)) #72 unique mutations
+                             pat_ema_oment_2$location)) #74 unique mutations or 15
 
 
 pat_ema_plasma_found <- pat_ema_plasma[pat_ema_plasma$location %in% pat_ema_met_pool, ] #4 mutations
@@ -127,10 +126,10 @@ pat_ema_7 <- c(pat_ema_muts_pooled$AF_heart, pat_ema_muts_pooled$AF_l_kidney, pa
 #set colors, plasma has its own reds, pooled tumors blues
 cell_cols<-rep("#000000",dim(pat_ema_muts_pooled)[1] * dim(pat_ema_muts_pooled)[2])
 # plasma reds
-cell_cols[50:56] <- color.scale(pat_ema_muts_pooled[, 8], extremes = c('lightpink', 'red'), na.color = '#ffffff')
+cell_cols[29:32] <- color.scale(pat_ema_muts_pooled[, 8], extremes = c('lightpink', 'red'), na.color = '#ffffff')
 # tumor blues
-cell_cols[1:49] <- color.scale(pat_ema_7, extremes = c('lightblue', 'blue'), na.color = '#ffffff')
-cell_cols <- matrix(cell_cols, nrow = 7, byrow = FALSE)
+cell_cols[1:28] <- color.scale(pat_ema_7, extremes = c('lightblue', 'blue'), na.color = '#ffffff')
+cell_cols <- matrix(cell_cols, nrow = 4, byrow = FALSE)
 pat_ema_pooled_t <- data.frame(t(pat_ema_muts_pooled))
 pat_ema_pooled_t <- pat_ema_pooled_t[c(8, 1:7), ]
 
@@ -163,7 +162,7 @@ legend(x=6.165,y=-0.83,legend='',pch=16,bty="n",xpd = NA)
 
 #plot labels
 #mut_col_labels <- rownames(pat_ema_muts_pooled)
-mut_col_labels <- c('TP53\nc.-123C>G', 'FLT1\nc.*1999G>A', 'TSC2\np.D1734D', 'NRG1\np.M349T', 'MSH2\np.A305T', 'FLT3\np.D324N', 'FGFR2\nc.*303G>A')
+mut_col_labels <- c('TP53\nc.-123C>G', 'FLT1\nc.*1999G>A', 'FLT3\np.D324N', 'FGFR2\nc.*303G>A')
 axis(3, at = (1:ncol(pat_ema_pooled_t)) - 0.6, labels = mut_col_labels, tick = FALSE, cex.axis = 0.8, las = 2, font = 2)
 
 mut_row_labels <- c('Plasma', 'Heart', 'L Kidney', 'R Kidney', 'Liver 1', 'Liver 2', 'Omental 1', 'Omental 2')

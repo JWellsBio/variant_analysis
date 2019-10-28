@@ -10,32 +10,31 @@ library(plotrix)
 library(stringr)
 
 ## PATIENT 8 ----
-pat_8_axillary <- read.delim('Data/Patient_8/pat_8_axillary_all_int_clean_hg19_ann.txt', header = TRUE, 
+pat_8_axillary <- read.delim('Data/Patient_8/pat_8_axillary_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
                              stringsAsFactors = FALSE, sep = '\t')
-pat_8_axillary <- mutect_process(pat_8_axillary) #22
+pat_8_axillary <- mutect_process(pat_8_axillary) #23
 
-pat_8_breast_1 <- read.delim('Data/Patient_8/pat_8_breast_1_all_int_clean_hg19_ann.txt', header = TRUE, 
+pat_8_breast_1 <- read.delim('Data/Patient_8/pat_8_breast_1_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
                              stringsAsFactors = FALSE, sep = '\t')
-pat_8_breast_1 <- mutect_process(pat_8_breast_1) #34
+pat_8_breast_1 <- mutect_process(pat_8_breast_1) #35
 
-pat_8_breast_2 <- read.delim('Data/Patient_8/pat_8_breast_2_all_int_clean_hg19_ann.txt', header = TRUE, 
-                             stringsAsFactors = FALSE, sep = '\t') #485
+pat_8_breast_2 <- read.delim('Data/Patient_8/pat_8_breast_2_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
+                             stringsAsFactors = FALSE, sep = '\t') #512
 pat_8_breast_2 <- mutect_process(pat_8_breast_2)
 
-pat_8_plasma <- read.delim('Data/Patient_8/pat_8_plasma_all_int_clean_hg19_ann.txt', header = TRUE, 
+pat_8_plasma <- read.delim('Data/Patient_8/pat_8_plasma_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
                            stringsAsFactors = FALSE, sep = '\t')
 pat_8_plasma <- mutect_process(pat_8_plasma, sample_type = 'plasma') #141
 
 
 ## looking at how well plasma detects tumor mutations ----
-
-length(intersect(pat_8_axillary$location, pat_8_plasma$location)) #8/22
-length(intersect(pat_8_breast_1$location, pat_8_plasma$location)) #9/34
-length(intersect(pat_8_breast_2$location, pat_8_plasma$location)) #42/485
+length(intersect(pat_8_axillary$location, pat_8_plasma$location)) #7/23
+length(intersect(pat_8_breast_1$location, pat_8_plasma$location)) #8/35
+length(intersect(pat_8_breast_2$location, pat_8_plasma$location)) #42/512
 
 
 #pool mutations from 3 mets
-pat_8_met_pool <- unique(c(pat_8_axillary$location, pat_8_breast_1$location, pat_8_breast_2$location)) #498 unique mutations
+pat_8_met_pool <- unique(c(pat_8_axillary$location, pat_8_breast_1$location, pat_8_breast_2$location)) #525 unique mutations
 
 
 pat_8_plasma_found <- pat_8_plasma[pat_8_plasma$location %in% pat_8_met_pool, ] #44 mutations
@@ -134,15 +133,15 @@ mut_row_labels <- c('Plasma', 'Axillary', 'Breast 1', 'Breast 2')
 axis(2, at = c(0.5, 1.5, 2.5, 3.5), labels = rev(mut_row_labels), tick = FALSE, cex.axis = 1.1, las = 1, font = 2)
 
 #add points for NA values
-# liver 1 points
+# axillary points
 points(x = which(is.na(pat_8_muts_pooled$AF_axillary)) - 0.5, 
        y = rep(2.5, sum(is.na(pat_8_muts_pooled$AF_axillary))), 
        pch = 16)
-# liver 2 points
+# breast 1 points
 points(x = which(is.na(pat_8_muts_pooled$AF_breast_1)) - 0.5, 
        y = rep(1.5, sum(is.na(pat_8_muts_pooled$AF_breast_1))), 
        pch = 16)
-# liver 5 points
+# breast 2 points
 points(x = which(is.na(pat_8_muts_pooled$AF_breast_2)) - 0.5, 
        y = rep(0.5, sum(is.na(pat_8_muts_pooled$AF_breast_2))), 
        pch = 16)

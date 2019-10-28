@@ -10,41 +10,41 @@ library(plotrix)
 library(stringr)
 
 ## Patient 2 ----
-pat_2_liver_1 <- read.delim('Data/Patient_2/pat_2_liver_1_all_int_clean_hg19_ann.txt', header = TRUE, 
+pat_2_liver_1 <- read.delim('Data/Patient_2/pat_2_liver_1_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
                             stringsAsFactors = FALSE, sep = '\t')
 pat_2_liver_1 <- mutect_process(pat_2_liver_1) #20
 
-pat_2_liver_2 <- read.delim('Data/Patient_2/pat_2_liver_2_all_int_clean_hg19_ann.txt', header = TRUE, 
+pat_2_liver_2 <- read.delim('Data/Patient_2/pat_2_liver_2_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
                             stringsAsFactors = FALSE, sep = '\t')
-pat_2_liver_2 <- mutect_process(pat_2_liver_2) #28
+pat_2_liver_2 <- mutect_process(pat_2_liver_2) #27
 
-pat_2_breast_1 <- read.delim('Data/Patient_2/pat_2_breast_1_all_int_clean_hg19_ann.txt', header = TRUE, 
+pat_2_breast_1 <- read.delim('Data/Patient_2/pat_2_breast_1_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
                              stringsAsFactors = FALSE, sep = '\t')
-pat_2_breast_1 <- mutect_process(pat_2_breast_1) #34
+pat_2_breast_1 <- mutect_process(pat_2_breast_1) #25
 
-pat_2_breast_2 <- read.delim('Data/Patient_2/pat_2_breast_2_all_int_clean_hg19_ann.txt', header = TRUE, 
+pat_2_breast_2 <- read.delim('Data/Patient_2/pat_2_breast_2_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
                              stringsAsFactors = FALSE, sep = '\t')
-pat_2_breast_2 <- mutect_process(pat_2_breast_2) #485
+pat_2_breast_2 <- mutect_process(pat_2_breast_2) #23
 
-pat_2_plasma <- read.delim('Data/Patient_2/pat_2_plasma_all_int_clean_hg19_ann.txt', header = TRUE, 
+pat_2_plasma <- read.delim('Data/Patient_2/pat_2_plasma_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
                            stringsAsFactors = FALSE, sep = '\t')
-pat_2_plasma <- mutect_process(pat_2_plasma, sample_type = 'plasma') #141
+pat_2_plasma <- mutect_process(pat_2_plasma, sample_type = 'plasma') #88
 
 
 ## looking at how well plasma detects tumor mutations ----
-
-length(intersect(pat_2_breast_1$location, pat_2_plasma$location)) #9/34
-length(intersect(pat_2_breast_2$location, pat_2_plasma$location)) #42/485
-length(intersect(pat_2_liver_1$location, pat_2_plasma$location)) #2/20
-length(intersect(pat_2_liver_2$location, pat_2_plasma$location)) #7/28
+length(intersect(pat_2_breast_1$location, pat_2_plasma$location)) #7/25
+length(intersect(pat_2_breast_2$location, pat_2_plasma$location)) #7/23
+length(intersect(pat_2_liver_1$location, pat_2_plasma$location)) #4/20
+length(intersect(pat_2_liver_2$location, pat_2_plasma$location)) #4/27
 
 
 
 #pool mutations from 3 mets
-pat_2_met_pool <- unique(c(pat_2_liver_1$location, pat_2_liver_2$location, pat_2_breast_1$location)) #60 unique mutations
+#use breast 1 or breast 2
+pat_2_met_pool <- unique(c(pat_2_liver_1$location, pat_2_liver_2$location, pat_2_breast_2$location)) #44 unique mutations w br 1 or 37 w br 2 
 
 
-pat_2_plasma_found <- pat_2_plasma[pat_2_plasma$location %in% pat_2_met_pool, ] #15 mutations
+pat_2_plasma_found <- pat_2_plasma[pat_2_plasma$location %in% pat_2_met_pool, ] #7 mutations w br 1 or 7 w br 2
 pat_2_plasma_found_vars <- (pat_2_plasma_found$location)
 
 
@@ -53,9 +53,9 @@ pat_2_liver_1_pooled <- pat_2_liver_1[pat_2_liver_1$location %in% pat_2_plasma_f
 
 pat_2_liver_2_pooled <- pat_2_liver_2[pat_2_liver_2$location %in% pat_2_plasma_found_vars, ]
 
-pat_2_breast_1_pooled <- pat_2_breast_1[pat_2_breast_1$location %in% pat_2_plasma_found_vars, ]
+#pat_2_breast_1_pooled <- pat_2_breast_1[pat_2_breast_1$location %in% pat_2_plasma_found_vars, ]
 
-#pat_2_breast_2_pooled <- pat_2_breast_2[pat_2_breast_2$location %in% pat_2_plasma_found_vars, ]
+pat_2_breast_2_pooled <- pat_2_breast_2[pat_2_breast_2$location %in% pat_2_plasma_found_vars, ]
 
 pat_2_plasma_pooled <- pat_2_plasma[pat_2_plasma$location %in% pat_2_plasma_found_vars, ]
 
@@ -66,21 +66,19 @@ colnames(pat_2_liver_1_pooled) <- c('location', 'AF_liver_1')
 pat_2_liver_2_pooled <- pat_2_liver_2_pooled[, c('location', 'AF')]
 colnames(pat_2_liver_2_pooled) <- c('location', 'AF_liver_2')
 
-pat_2_breast_1_pooled <- pat_2_breast_1_pooled[, c('location', 'AF')]
-colnames(pat_2_breast_1_pooled) <- c('location', 'AF_breast_1')
+#pat_2_breast_1_pooled <- pat_2_breast_1_pooled[, c('location', 'AF')]
+#colnames(pat_2_breast_1_pooled) <- c('location', 'AF_breast_1')
 
-#pat_2_breast_2_pooled <- pat_2_breast_2_pooled[, c('location', 'AF')]
-#colnames(pat_2_breast_2_pooled) <- c('location', 'AF_breast_2')
-#pat_2_breast_2_pooled$AF_breast_2[4] <- 0.242
-#pat_2_breast_2_pooled$AF_breast_2 <- as.numeric(pat_2_breast_2_pooled$AF_breast_2)
+pat_2_breast_2_pooled <- pat_2_breast_2_pooled[, c('location', 'AF')]
+colnames(pat_2_breast_2_pooled) <- c('location', 'AF_breast_2')
 
 pat_2_plasma_pooled <- pat_2_plasma_pooled[, c('location', 'AF')]
 colnames(pat_2_plasma_pooled) <- c('location', 'AF_plasma')
 
 # put them together
 pat_2_muts_pooled <- merge(pat_2_liver_1_pooled, pat_2_liver_2_pooled, by = 'location', all = TRUE)
-pat_2_muts_pooled <- merge(pat_2_muts_pooled, pat_2_breast_1_pooled, by = 'location', all = TRUE)
-#pat_2_muts_pooled <- merge(pat_2_muts_pooled, pat_2_breast_2_pooled, by = 'location', all = TRUE)
+#pat_2_muts_pooled <- merge(pat_2_muts_pooled, pat_2_breast_1_pooled, by = 'location', all = TRUE)
+pat_2_muts_pooled <- merge(pat_2_muts_pooled, pat_2_breast_2_pooled, by = 'location', all = TRUE)
 pat_2_muts_pooled <- merge(pat_2_muts_pooled, pat_2_plasma_pooled, by = 'location', all = TRUE)
 pat_2_muts_pooled <- pat_2_muts_pooled[order(pat_2_muts_pooled$AF_plasma, decreasing = TRUE), ]
 
@@ -93,15 +91,15 @@ rownames(pat_2_muts_pooled) <- row_muts
 
 #plot 
 
-pat_2_3 <- c(pat_2_muts_pooled$AF_liver_1, pat_2_muts_pooled$AF_liver_2, pat_2_muts_pooled$AF_breast_1)
+pat_2_3 <- c(pat_2_muts_pooled$AF_liver_1, pat_2_muts_pooled$AF_liver_2, pat_2_muts_pooled$AF_breast_2)
 
 #set colors, plasma has its own reds, pooled tumors blues
 cell_cols<-rep("#000000",dim(pat_2_muts_pooled)[1] * dim(pat_2_muts_pooled)[2])
 # plasma reds
-cell_cols[46:60] <- color.scale(pat_2_muts_pooled[, 4], extremes = c('lightpink', 'red'), na.color = '#ffffff')
+cell_cols[22:28] <- color.scale(pat_2_muts_pooled[, 4], extremes = c('lightpink', 'red'), na.color = '#ffffff')
 # tumor blues
-cell_cols[1:45] <- color.scale(pat_2_3, extremes = c('lightblue', 'blue'), na.color = '#ffffff')
-cell_cols <- matrix(cell_cols, nrow = 15, byrow = FALSE)
+cell_cols[1:21] <- color.scale(pat_2_3, extremes = c('lightblue', 'blue'), na.color = '#ffffff')
+cell_cols <- matrix(cell_cols, nrow = 7, byrow = FALSE)
 pat_2_pooled_t <- data.frame(t(pat_2_muts_pooled))
 pat_2_pooled_t <- pat_2_pooled_t[c(4, 1:3), ]
 
@@ -139,7 +137,7 @@ mut_col_labels[6:10] <- c('HNF1A\nG288G', 'FLT1\nc.*265A>G', 'SLX4\np.A1221V', '
 mut_col_labels[11:15] <- c('FGFR4p.R54R', 'FGFR2\nc.*190A>G', 'NOTCH3\np.C846C', 'ROS1\np.L101L', 'ERBB3\np.S1119C')
 axis(3, at = (1:ncol(pat_2_pooled_t)) - 0.6, labels = mut_col_labels, tick = FALSE, cex.axis = 0.8, las = 2, font = 2)
 
-mut_row_labels <- c('Plasma', 'Liver 1', 'Liver 2', 'Breast 1')
+mut_row_labels <- c('Plasma', 'Liver 1', 'Liver 2', 'Breast 2')
 axis(2, at = c(0.5, 1.5, 2.5, 3.5), labels = rev(mut_row_labels), tick = FALSE, cex.axis = 1.1, las = 1, font = 2)
 
 #add points for NA values
@@ -147,12 +145,12 @@ axis(2, at = c(0.5, 1.5, 2.5, 3.5), labels = rev(mut_row_labels), tick = FALSE, 
 points(x = which(is.na(pat_2_muts_pooled$AF_liver_1)) - 0.5, 
        y = rep(2.5, sum(is.na(pat_2_muts_pooled$AF_liver_1))), 
        pch = 16)
-
+#liver 2 points
 points(x = which(is.na(pat_2_muts_pooled$AF_liver_2)) - 0.5, 
        y = rep(1.5, sum(is.na(pat_2_muts_pooled$AF_liver_2))), 
        pch = 16)
-# liver 2 points
-points(x = which(is.na(pat_2_muts_pooled$AF_breast_1)) - 0.5, 
+# breast 2 points
+points(x = which(is.na(pat_2_muts_pooled$AF_breast_2)) - 0.5, 
        y = rep(0.5, sum(is.na(pat_2_muts_pooled$AF_breast_1))), 
        pch = 16)
 
@@ -168,9 +166,9 @@ par(mar=c(5.1,4.1,4.1,2.1))
 
 pat_2_liver_1_met_stats <- pat_2_liver_1[, c('location', 'AF')]
 pat_2_liver_2_met_stats <- pat_2_liver_2[, c('location', 'AF')]
-pat_2_breast_1_met_stats <- pat_2_breast_1[, c('location', 'AF')]
+pat_2_breast_2_met_stats <- pat_2_breast_2[, c('location', 'AF')]
 pat_2_all <- rbind(pat_2_liver_1_met_stats, pat_2_liver_2_met_stats)
-pat_2_all <- rbind(pat_2_all, pat_2_breast_1_met_stats)
+pat_2_all <- rbind(pat_2_all, pat_2_breast_2_met_stats)
 pat_2_all$AF <- as.numeric(pat_2_all$AF)
 pat_2_all <- pat_2_all[order(pat_2_all$AF, decreasing = TRUE), ]
 pat_2_all$color <- ifelse(pat_2_all$location %in% pat_2_plasma$location, 'red', 'black')
