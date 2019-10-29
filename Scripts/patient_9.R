@@ -128,7 +128,7 @@ mtext('Mutation\n     Not Present', side=1, line=2.85, at=13.9, cex = 1.1, font 
 legend(x=15.025,y=-0.47,legend='',pch=16,bty="n",xpd = NA)
 
 #plot labels
-#mut_col_labels <- rownames(pat_9_muts_pooled)
+mut_col_labels <- rownames(pat_9_muts_pooled)
 mut_col_labels[1:5] <- c('MTOR\np.N999N', 'CCND1\nc.*687C>G', 'VAT1L\nc.*5485A>G', 'ERBB2\np.P1170A', 'ALK\np.P234P')
 mut_col_labels[6:10] <- c('ESR1\np.R245R', 'EGFR\np.T903T', 'TP53\nc.-123C>G', 'NOTCH3\np.P1521P', 'FLT1\nc.*1999G>A')
 mut_col_labels[11:16] <- c('NOTCH1\np.D1698D', 'NRG1\np.M349T', 'FLT3\np.D324N', 'MIR6759\nn.-389G>T', 'BRIP1\np.Y1137Y', 'FGFR2\nc.*303G>A')

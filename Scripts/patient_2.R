@@ -160,7 +160,64 @@ points(x = which(is.na(pat_2_muts_pooled$AF_breast_2)) - 0.5,
 par(mar=c(5.1,4.1,4.1,2.1))
 
 
+##upset
+pat_2_liver_1_met_muts <- pat_2_liver_1$location
+pat_2_liver_1_met_muts <- as.data.frame(pat_2_liver_1_met_muts)
+pat_2_liver_1_met_muts$mutation <- rep(1, nrow(pat_2_liver_1_met_muts))
+colnames(pat_2_liver_1_met_muts) <- c('mutation', 'Liver_1_Met')
 
+pat_2_liver_2_met_muts <- pat_2_liver_2$location
+pat_2_liver_2_met_muts <- as.data.frame(pat_2_liver_2_met_muts)
+pat_2_liver_2_met_muts$mutation <- rep(1, nrow(pat_2_liver_2_met_muts))
+colnames(pat_2_liver_2_met_muts) <- c('mutation', 'Liver_2_Met')
+
+pat_2_breast_2_met_muts <- pat_2_breast_2$location
+pat_2_breast_2_met_muts <- as.data.frame(pat_2_breast_2_met_muts)
+pat_2_breast_2_met_muts$mutation <- rep(1, nrow(pat_2_breast_2_met_muts))
+colnames(pat_2_breast_2_met_muts) <- c('mutation', 'Breast_2_Met')
+
+pat_2_plasma_muts <- pat_2_plasma$location
+pat_2_plasma_muts <- as.data.frame(pat_2_plasma_muts)
+pat_2_plasma_muts$mutation <- rep(1, nrow(pat_2_plasma_muts))
+colnames(pat_2_plasma_muts) <- c('mutation', 'Plasma')
+
+#merge them all together
+upset_df <- merge(pat_2_liver_1_met_muts, pat_2_liver_2_met_muts, by = 'mutation', all = TRUE)
+upset_df <- merge(upset_df, pat_2_breast_2_met_muts, by = 'mutation', all = TRUE)
+upset_df <- merge(upset_df, pat_2_plasma_muts, by = 'mutation', all = TRUE)
+upset_df$mutation <- as.character(upset_df$mutation)
+
+rownames(upset_df) <- upset_df$mutation
+row_muts <- rownames(upset_df)
+upset_df <- upset_df[, -1]
+upset_df <- sapply(upset_df, function(x) ifelse (is.na(x), 0, x))
+upset_df <- as.data.frame(upset_df)
+rownames(upset_df) <- row_muts
+
+
+#set up dummy metadata for later features
+sets_order <- colnames(upset_df[1:4])
+randomnumber <- round(runif(4, min = 0, max = 90))
+metadata <- as.data.frame(cbind(sets_order, randomnumber))
+names(metadata) <- c("sets", "randomnumber")
+
+blue_pal <- pal_material('blue', n = 8, alpha = 1, reverse = TRUE)
+blue_pal <- blue_pal(8)
+orange_pal <- pal_material('orange', n = 8, alpha = 1, reverse = TRUE)
+orange_pal <- orange_pal(8)
+purple_pal <- pal_material('purple', n= 8, alpha = 1, reverse = TRUE)
+purple_pal <- purple_pal(8)
+bar_colors <- c(blue_pal[c(1,4,5)], orange_pal[c(1,3,3,3)], purple_pal[c(1,2,4)])
+
+upset(upset_df, set.metadata = list(data = metadata, 
+                                    plots = list(list(type = 'matrix_rows', column = 'sets', 
+                                                      colors = c(Plasma = 'gray60', Liver_1_Met = 'white', Liver_2_Met = 'white', 
+                                                                 Breast_2_Met = 'white')))),
+      
+      nsets = 4, nintersects = NA, sets = rev(sets_order), keep.order = FALSE, sets.x.label = 'Number of Mutations', 
+      sets.bar.color = c('gray60', 'goldenrod4', 'aquamarine3', 'chocolate3'), matrix.color = 'midnightblue', matrix.dot.alpha = 0.8, 
+      mainbar.y.label = 'Number of Mutations\nin Common', 
+      text.scale = c(2.5, 1.5, 1.3, 1.3, 1.3, 2.0))
 
 #red/black figures to look at how far down plasma can detect
 

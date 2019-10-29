@@ -116,7 +116,7 @@ mtext('Mutation\n     Not Present', side=1, line=2.8, at=6.1, cex = 1.1, font = 
 legend(x=6.75,y=-0.47,legend='',pch=16,bty="n",xpd = NA)
 
 #plot labels
-#mut_col_labels <- rownames(pat_10_muts_pooled)
+mut_col_labels <- rownames(pat_10_muts_pooled)
 mut_col_labels[1:8] <- c('ERG\nc.*2652G>A', 'ERBB3\np.R1116R', 'TP53\nc.-123C>G', 'BARD1\nc.1518T>C', 'FLT1\nc.*1999G>A', 'HNF1A\np.G288G', 'SLX4\np.N457K', 'AR\np.G457G')
 axis(3, at = (1:ncol(pat_10_pooled_t)) - 0.6, labels = mut_col_labels, tick = FALSE, cex.axis = 0.8, las = 2, font = 2)
 
@@ -141,7 +141,64 @@ points(x = which(is.na(pat_10_muts_pooled$AF_liver_5)) - 0.5,
 
 par(mar=c(5.1,4.1,4.1,2.1))
 
+##upset
+pat_10_liver_1_met_muts <- pat_10_liver_1$location
+pat_10_liver_1_met_muts <- as.data.frame(pat_10_liver_1_met_muts)
+pat_10_liver_1_met_muts$mutation <- rep(1, nrow(pat_10_liver_1_met_muts))
+colnames(pat_10_liver_1_met_muts) <- c('mutation', 'Liver_1_Met')
 
+pat_10_liver_2a_met_muts <- pat_10_liver_2a$location
+pat_10_liver_2a_met_muts <- as.data.frame(pat_10_liver_2a_met_muts)
+pat_10_liver_2a_met_muts$mutation <- rep(1, nrow(pat_10_liver_2a_met_muts))
+colnames(pat_10_liver_2a_met_muts) <- c('mutation', 'Liver_2a_Met')
+
+pat_10_liver_5_met_muts <- pat_10_liver_5$location
+pat_10_liver_5_met_muts <- as.data.frame(pat_10_liver_5_met_muts)
+pat_10_liver_5_met_muts$mutation <- rep(1, nrow(pat_10_liver_5_met_muts))
+colnames(pat_10_liver_5_met_muts) <- c('mutation', 'Liver_5_Met')
+
+pat_10_plasma_muts <- pat_10_plasma$location
+pat_10_plasma_muts <- as.data.frame(pat_10_plasma_muts)
+pat_10_plasma_muts$mutation <- rep(1, nrow(pat_10_plasma_muts))
+colnames(pat_10_plasma_muts) <- c('mutation', 'Plasma')
+
+#merge them all together
+upset_df <- merge(pat_10_liver_1_met_muts, pat_10_liver_2a_met_muts, by = 'mutation', all = TRUE)
+upset_df <- merge(upset_df, pat_10_liver_5_met_muts, by = 'mutation', all = TRUE)
+upset_df <- merge(upset_df, pat_10_plasma_muts, by = 'mutation', all = TRUE)
+upset_df$mutation <- as.character(upset_df$mutation)
+
+rownames(upset_df) <- upset_df$mutation
+row_muts <- rownames(upset_df)
+upset_df <- upset_df[, -1]
+upset_df <- sapply(upset_df, function(x) ifelse (is.na(x), 0, x))
+upset_df <- as.data.frame(upset_df)
+rownames(upset_df) <- row_muts
+
+
+#set up dummy metadata for later features
+sets_order <- colnames(upset_df[1:4])
+randomnumber <- round(runif(4, min = 0, max = 90))
+metadata <- as.data.frame(cbind(sets_order, randomnumber))
+names(metadata) <- c("sets", "randomnumber")
+
+blue_pal <- pal_material('blue', n = 8, alpha = 1, reverse = TRUE)
+blue_pal <- blue_pal(8)
+orange_pal <- pal_material('orange', n = 8, alpha = 1, reverse = TRUE)
+orange_pal <- orange_pal(8)
+purple_pal <- pal_material('purple', n= 8, alpha = 1, reverse = TRUE)
+purple_pal <- purple_pal(8)
+bar_colors <- c(blue_pal[c(1,4,5)], orange_pal[c(1,3,3,3)], purple_pal[c(1,2,4)])
+
+upset(upset_df, set.metadata = list(data = metadata, 
+                                    plots = list(list(type = 'matrix_rows', column = 'sets', 
+                                                      colors = c(Plasma = 'gray60', Liver_1_Met = 'white', Liver_2a_Met = 'white', 
+                                                                 Liver_5_Met = 'white')))),
+      
+      nsets = 4, nintersects = NA, sets = rev(sets_order), keep.order = FALSE, sets.x.label = 'Number of Mutations', 
+      sets.bar.color = c('gray60', 'goldenrod4', 'aquamarine3', 'chocolate3'), matrix.color = 'midnightblue', matrix.dot.alpha = 0.8, 
+      mainbar.y.label = 'Number of Mutations\nin Common', 
+      text.scale = c(2.5, 1.5, 1.3, 1.3, 1.3, 2.0))
 
 
 
