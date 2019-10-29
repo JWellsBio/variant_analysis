@@ -330,11 +330,9 @@ pat_ema_pl_h <- rownames(pat_ema_pl_h)
 
 pat_ema_heart_new <- pat_ema_heart[pat_ema_heart$location %in% pat_ema_pl_h, ]
 pat_ema_heart_new <- pat_ema_heart_new[, c('location', 'AF')]
-pat_ema_heart_new$AF[c(4, 7, 8, 9, 12)] <- c(0.279, 0.302, 0.241, 0.256, 0.164)
 
 pat_ema_plasma_new <- pat_ema_plasma[pat_ema_plasma$location %in% pat_ema_pl_h, ]
 pat_ema_plasma_new <- pat_ema_plasma_new[, c('location', 'AF')]
-pat_ema_plasma_new$AF[c(2, 3, 4, 5, 6, 7, 8, 9, 12)] <- c(0.049, 0.026, 0.424, 0.101, 0.664, 0.320, 0.236, 0.258, 0.197)
 
 pat_ema_pl_h_bind <- merge(pat_ema_plasma_new, pat_ema_heart_new, by = 'location', all = TRUE)
 pat_ema_pl_h_bind <- pat_ema_pl_h_bind[, -1]
