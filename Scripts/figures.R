@@ -274,3 +274,23 @@ par(mar = c(5.1, 4.1, 4.1, 2.1))
 
 pat_9_ln_first <- pat_9_ln[match(unique(pat_9_ln$gene_name), pat_9_ln$gene_name),]
 pat_9_ln_effects <- pat_9_ln_first$effect
+
+
+## percent found figure ----
+samples <- c('pat_9_ln', 'pat_9_oment', 'pat_9_ovary', 'pat_ema_heart', 'pat_ema_l_kidney', 'pat_ema_r_kidney', 'pat_ema_liver_1', 
+             'pat_ema_liver_2', 'pat_ema_oment_1', 'pat_ema_oment_2', 'pat_10_liver_1', 'pat_10_liver_2a', 'pat_10_liver_5', 'pat_8_axillary', 
+             'pat_8_breast_1', 'pat_8_breast_2', 'pat_2_breast_2', 'pat_2_liver_1', 'pat_2_liver_2')
+number_muts <- c(154, 30, 15, 11, 7, 6, 4, 4, 4, 6, 14, 9, 10, 23, 35, 512, 23, 20, 27)
+percent_found <- c(11/154, 11/30, 3/15, 4/11, 3/7, 2/6, 1/4, 2/4, 2/4, 3/6, 7/14, 5/9, 5/10, 7/23, 8/35, 42/512, 7/23, 4/20, 4/27)
+
+
+mean_maf <- c(mean(pat_9_ln$AF), mean(pat_9_oment$AF), mean(pat_9_ovary$AF), mean(pat_ema_heart$AF), mean(pat_ema_l_kidney$AF), 
+              mean(pat_ema_r_kidney$AF), mean(pat_ema_liver_1$AF), mean(pat_ema_liver_2$AF), mean(pat_ema_oment_1$AF), mean(pat_ema_oment_2$AF), 
+              mean(pat_10_liver_1$AF), mean(pat_10_liver_2a$AF), mean(pat_10_liver_5$AF), mean(pat_8_axillary$AF), mean(pat_8_breast_1$AF), 
+              mean(pat_8_breast_2$AF), mean(pat_2_breast_2$AF), mean(pat_2_liver_1$AF), mean(pat_2_liver_2$AF))
+patient <- c(rep('patient_9', 3), rep('patient_ema', 7), rep('patient_10', 3), rep('patient_8', 3), rep('patient_2', 3))
+
+found_df <- data.frame(number_muts, percent_found, mean_maf, patient)
+found_df <- found_df[-16, ]
+ggplot(found_df, aes(x = number_muts, y = percent_found)) +
+  geom_point(aes(size = found_df$mean_maf, shape = as.factor(found_df$patient)))

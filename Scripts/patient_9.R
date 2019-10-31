@@ -39,7 +39,7 @@ pat_9_plasma <- read.delim('Data/Patient_9/pat_9_plasma_fresh_mutect_filt_hg19_a
 pat_9_plasma <- mutect_process(pat_9_plasma, sample_type = 'plasma') #506
 
 ## looking at how well plasma detects tumor mutations ----
-length(intersect(pat_9_ln$location, pat_9_plasma$location)) #11/150
+length(intersect(pat_9_ln$location, pat_9_plasma$location)) #11/154
 length(intersect(pat_9_oment$location, pat_9_plasma$location)) #11/30
 length(intersect(pat_9_ovary$location, pat_9_plasma$location)) #3/15
 
