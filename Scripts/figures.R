@@ -280,8 +280,8 @@ heatmap.2(t(df2_copy), col = heat_colors, trace = 'none', Rowv = FALSE, Colv = F
           sepcolor="gray", colsep=1:nrow(df2_copy), rowsep=1:ncol(df2_copy))
 par(mar = c(5.1, 4.1, 4.1, 2.1))
 
-pat_9_ln_first <- pat_9_ln[match(unique(pat_9_ln$gene_name), pat_9_ln$gene_name),]
-pat_9_ln_effects <- pat_9_ln_first$effect
+# pat_9_ln_first <- pat_9_ln[match(unique(pat_9_ln$gene_name), pat_9_ln$gene_name),]
+# pat_9_ln_effects <- pat_9_ln_first$effect
 
 
 ## percent found figure ----
