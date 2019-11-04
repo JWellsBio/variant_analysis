@@ -83,6 +83,12 @@ tst_genes <- c('AKT1', 'BRIP1', 'CREBBP', 'FANCI', 'FGFR2', 'JAK3', 'MSH3', 'PAL
 length(intersect(names(all_freqs_ordered), tst_genes))
 names(all_freqs_ordered)[names(all_freqs_ordered) %!in% tst_genes]
 
+# [1] "VAT1L"        "FGF19"        "CASC11"       "LAMP1"        "MIR6759"      "MYCL"         "CCND3"        "CD3EAP"       "MYCNOS"       "TFRC"         "RAF1"        
+# [12] "TRIM5"        "GRTP1"        "HSPA12A"      "LOC100130075" "MIR641"       "MROH6"        "SDCCAG8"      "SDK1"         "TAF8"         "CSDE1"        "FGF10-AS1"   
+# [23] "GNB3"         "KLLN"         "LOC401177"    "NUDT6"        "PTN"          "SYNE1"        "SYNE1-AS1"    "TOE1"         "UBAC2"
+
+
+
 ## missense/nonsense/silent ratios (from snpEff) ----
 
 pat_9_ln_ratios <- c(51.465, 2.93, 45.604)
@@ -222,7 +228,9 @@ colnames(all_effects)[21] <- 'pat_2_liver_1'
 all_effects <- merge(all_effects, pat_2_breast_2_effects, by = 'gene', all = TRUE)
 colnames(all_effects)[22] <- 'pat_2_breast_2'
 
-
+# a more condensed way to do this?
+#Reduce(function(x,y) merge(x = x, y = y, by = "Character"), 
+       #list(height, gender, eyeColour))
 
 rownames(all_effects) <- all_effects$gene
 all_effects <- all_effects[, -c(1,2)]
