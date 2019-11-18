@@ -39,7 +39,7 @@ length(intersect(pat_9_oment$location, pat_9_ovary$location)) #6
 ## plasma ----
 pat_9_plasma <- read.delim('Data/Patient_9/pat_9_plasma_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                            stringsAsFactors = FALSE, sep = '\t')
-pat_9_plasma <- mutect_process(pat_9_plasma, sample_type = 'plasma') #505
+pat_9_plasma <- mutect_process(pat_9_plasma, sample_type = 'plasma') #486
 
 
 
@@ -438,6 +438,11 @@ barplot(pat_9_all$AF, col = pat_9_all$color, ylab = 'Mutant Allele Frequency in 
         xlab = 'Variant', main = 'Patient 9\n(3 tumors)', ylim = c(0,1.0))
 
 
-
+pat_9_plasma_met_stats <- pat_9_plasma[, c('location', 'AF')]
+pat_9_plasma_met_stats$AF <- as.numeric(pat_9_plasma_met_stats$AF)
+pat_9_plasma_met_stats <- pat_9_plasma_met_stats[order(pat_9_plasma_met_stats$AF, decreasing = TRUE), ]
+pat_9_plasma_met_stats$color <- ifelse(pat_9_plasma_met_stats$location %in% pat_9_all$location, 'red', 'black')
+barplot(pat_9_plasma_met_stats$AF, col = pat_9_plasma_met_stats$color, ylab = 'Mutant Allele Frequency in Plasma', 
+        xlab = 'Variant', main = 'Patient 9\n(3 tumors)', ylim = c(0,1.0))
 
 
