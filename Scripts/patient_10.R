@@ -10,21 +10,21 @@ library(plotrix)
 library(stringr)
 
 ## PATIENT 10 ----
-pat_10_liver_1 <- read.delim('Data/Patient_10/pat_10_liver_1_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
+pat_10_liver_1 <- read.delim('Data/Patient_10/pat_10_liver_1_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                              stringsAsFactors = FALSE, sep = '\t')
 pat_10_liver_1 <- mutect_process(pat_10_liver_1) #14
 
-pat_10_liver_2a <- read.delim('Data/Patient_10/pat_10_liver_2a_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
+pat_10_liver_2a <- read.delim('Data/Patient_10/pat_10_liver_2a_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                               stringsAsFactors = FALSE, sep = '\t')
 pat_10_liver_2a <- mutect_process(pat_10_liver_2a) #9
 
-pat_10_liver_5 <- read.delim('Data/Patient_10/pat_10_liver_5_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
+pat_10_liver_5 <- read.delim('Data/Patient_10/pat_10_liver_5_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                              stringsAsFactors = FALSE, sep = '\t')
 pat_10_liver_5 <- mutect_process(pat_10_liver_5) #10
 
-pat_10_plasma <- read.delim('Data/Patient_10/pat_10_plasma_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
+pat_10_plasma <- read.delim('Data/Patient_10/pat_10_plasma_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                             stringsAsFactors = FALSE, sep = '\t')
-pat_10_plasma <- mutect_process(pat_10_plasma, sample_type = 'plasma') #3554
+pat_10_plasma <- mutect_process(pat_10_plasma, sample_type = 'plasma') #3477
 
 ## looking at how well plasma detects tumor mutations ----
 length(intersect(pat_10_liver_1$location, pat_10_plasma$location)) #7/14

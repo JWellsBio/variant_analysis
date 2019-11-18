@@ -10,41 +10,41 @@ library(plotrix)
 library(stringr)
 
 ## Patient 2 ----
-pat_2_liver_1 <- read.delim('Data/Patient_2/pat_2_liver_1_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
+pat_2_liver_1 <- read.delim('Data/Patient_2/pat_2_liver_1_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                             stringsAsFactors = FALSE, sep = '\t')
 pat_2_liver_1 <- mutect_process(pat_2_liver_1) #20
 
-pat_2_liver_2 <- read.delim('Data/Patient_2/pat_2_liver_2_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
+pat_2_liver_2 <- read.delim('Data/Patient_2/pat_2_liver_2_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                             stringsAsFactors = FALSE, sep = '\t')
-pat_2_liver_2 <- mutect_process(pat_2_liver_2) #27
+pat_2_liver_2 <- mutect_process(pat_2_liver_2) #26
 
-pat_2_breast_1 <- read.delim('Data/Patient_2/pat_2_breast_1_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
+pat_2_breast_1 <- read.delim('Data/Patient_2/pat_2_breast_1_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                              stringsAsFactors = FALSE, sep = '\t')
 pat_2_breast_1 <- mutect_process(pat_2_breast_1) #25
 
-pat_2_breast_2 <- read.delim('Data/Patient_2/pat_2_breast_2_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
+pat_2_breast_2 <- read.delim('Data/Patient_2/pat_2_breast_2_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                              stringsAsFactors = FALSE, sep = '\t')
 pat_2_breast_2 <- mutect_process(pat_2_breast_2) #23
 
-pat_2_plasma <- read.delim('Data/Patient_2/pat_2_plasma_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
+pat_2_plasma <- read.delim('Data/Patient_2/pat_2_plasma_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                            stringsAsFactors = FALSE, sep = '\t')
 pat_2_plasma <- mutect_process(pat_2_plasma, sample_type = 'plasma') #88
 
 
 ## looking at how well plasma detects tumor mutations ----
-length(intersect(pat_2_breast_1$location, pat_2_plasma$location)) #7/25
-length(intersect(pat_2_breast_2$location, pat_2_plasma$location)) #7/23
+length(intersect(pat_2_breast_1$location, pat_2_plasma$location)) #6/25
+length(intersect(pat_2_breast_2$location, pat_2_plasma$location)) #6/23
 length(intersect(pat_2_liver_1$location, pat_2_plasma$location)) #4/20
-length(intersect(pat_2_liver_2$location, pat_2_plasma$location)) #4/27
+length(intersect(pat_2_liver_2$location, pat_2_plasma$location)) #4/26
 
 
 
 #pool mutations from 3 mets
 #use breast 1 or breast 2
-pat_2_met_pool <- unique(c(pat_2_liver_1$location, pat_2_liver_2$location, pat_2_breast_2$location)) #44 unique mutations w br 1 or 37 w br 2 
+pat_2_met_pool <- unique(c(pat_2_liver_1$location, pat_2_liver_2$location, pat_2_breast_2$location)) #42 unique mutations w br 1 or 36 w br 2 
 
 
-pat_2_plasma_found <- pat_2_plasma[pat_2_plasma$location %in% pat_2_met_pool, ] #7 mutations w br 1 or 7 w br 2
+pat_2_plasma_found <- pat_2_plasma[pat_2_plasma$location %in% pat_2_met_pool, ] #6 mutations w br 1 or 6 w br 2
 pat_2_plasma_found_vars <- (pat_2_plasma_found$location)
 
 
@@ -96,10 +96,10 @@ pat_2_3 <- c(pat_2_muts_pooled$AF_liver_1, pat_2_muts_pooled$AF_liver_2, pat_2_m
 #set colors, plasma has its own reds, pooled tumors blues
 cell_cols<-rep("#000000",dim(pat_2_muts_pooled)[1] * dim(pat_2_muts_pooled)[2])
 # plasma reds
-cell_cols[22:28] <- color.scale(pat_2_muts_pooled[, 4], extremes = c('lightpink', 'red'), na.color = '#ffffff')
+cell_cols[19:24] <- color.scale(pat_2_muts_pooled[, 4], extremes = c('lightpink', 'red'), na.color = '#ffffff')
 # tumor blues
-cell_cols[1:21] <- color.scale(pat_2_3, extremes = c('lightblue', 'blue'), na.color = '#ffffff')
-cell_cols <- matrix(cell_cols, nrow = 7, byrow = FALSE)
+cell_cols[1:18] <- color.scale(pat_2_3, extremes = c('lightblue', 'blue'), na.color = '#ffffff')
+cell_cols <- matrix(cell_cols, nrow = 6, byrow = FALSE)
 pat_2_pooled_t <- data.frame(t(pat_2_muts_pooled))
 pat_2_pooled_t <- pat_2_pooled_t[c(4, 1:3), ]
 
@@ -132,9 +132,7 @@ legend(x=13.55,y=-0.45,legend='',pch=16,bty="n",xpd = NA)
 
 #plot labels
 mut_col_labels <- rownames(pat_2_muts_pooled)
-mut_col_labels[1:5] <- c('VAT1L\nc.*5442C>A', 'VAT1L\nc.*5453C>T', 'VAT1L\nc.*5459C>T', 'VAT1L\nc.*5485A>G', 'SLX4\np.N457K')
-mut_col_labels[6:10] <- c('HNF1A\nG288G', 'FLT1\nc.*265A>G', 'SLX4\np.A1221V', 'SLX4\np.A952V', 'SLX4\np.A952T')
-mut_col_labels[11:15] <- c('FGFR4p.R54R', 'FGFR2\nc.*190A>G', 'NOTCH3\np.C846C', 'ROS1\np.L101L', 'ERBB3\np.S1119C')
+mut_col_labels[1:6] <- c('BARD1\nc.1519G>A', 'BARD1\nc.1518T>C', 'FLT1\nc.*1999G>A', 'FGFR2\nc.*313G>A', 'HNF1Ap.S581G', 'FGFR2\nc.*303G>A')
 axis(3, at = (1:ncol(pat_2_pooled_t)) - 0.6, labels = mut_col_labels, tick = FALSE, cex.axis = 0.8, las = 2, font = 2)
 
 mut_row_labels <- c('Plasma', 'Liver 1', 'Liver 2', 'Breast 2')

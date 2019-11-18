@@ -14,40 +14,45 @@ library(stringr)
 ## PATIENT 9 ----
 ## import data ----
 #lymph node met
-pat_9_ln    <- read.delim('Data/Patient_9/pat_9_ln_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
+pat_9_ln    <- read.delim('Data/Patient_9/pat_9_ln_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                           stringsAsFactors = FALSE, sep = '\t')
-pat_9_ln    <- mutect_process(pat_9_ln) #154
+pat_9_ln    <- mutect_process(pat_9_ln) #156
 
 #omental met
-pat_9_oment <- read.delim('Data/Patient_9/pat_9_oment_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
+pat_9_oment <- read.delim('Data/Patient_9/pat_9_oment_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                           stringsAsFactors = FALSE, sep = '\t')
-pat_9_oment <- mutect_process(pat_9_oment) #30
+pat_9_oment <- mutect_process(pat_9_oment) #27
 
 #ovarian met
-pat_9_ovary <- read.delim('Data/Patient_9/pat_9_ovary_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
+pat_9_ovary <- read.delim('Data/Patient_9/pat_9_ovary_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                           stringsAsFactors = FALSE, sep = '\t')
 pat_9_ovary <- mutect_process(pat_9_ovary) #15
 
+
+
+
 ## how much in common between samples? ----
-length(intersect(pat_9_ln$location, pat_9_oment$location)) #9
+length(intersect(pat_9_ln$location, pat_9_oment$location)) #8
 length(intersect(pat_9_ln$location, pat_9_ovary$location)) #1
 length(intersect(pat_9_oment$location, pat_9_ovary$location)) #6
 
 ## plasma ----
-pat_9_plasma <- read.delim('Data/Patient_9/pat_9_plasma_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
+pat_9_plasma <- read.delim('Data/Patient_9/pat_9_plasma_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                            stringsAsFactors = FALSE, sep = '\t')
-pat_9_plasma <- mutect_process(pat_9_plasma, sample_type = 'plasma') #506
+pat_9_plasma <- mutect_process(pat_9_plasma, sample_type = 'plasma') #505
+
+
 
 ## looking at how well plasma detects tumor mutations ----
-length(intersect(pat_9_ln$location, pat_9_plasma$location)) #11/154
-length(intersect(pat_9_oment$location, pat_9_plasma$location)) #11/30
+length(intersect(pat_9_ln$location, pat_9_plasma$location)) #9/156
+length(intersect(pat_9_oment$location, pat_9_plasma$location)) #10/27
 length(intersect(pat_9_ovary$location, pat_9_plasma$location)) #3/15
 
 #pool mutations from 3 mets
 pat_9_met_pool <- unique(c(pat_9_ln$location, pat_9_oment$location, pat_9_ovary$location)) #184 unique mutations
 
 
-pat_9_plasma_found <- pat_9_plasma[pat_9_plasma$location %in% pat_9_met_pool, ] #16 mutations
+pat_9_plasma_found <- pat_9_plasma[pat_9_plasma$location %in% pat_9_met_pool, ] #13 mutations
 pat_9_plasma_found_vars <- (pat_9_plasma_found$location) 
 
 # subset to pooled plasma and take a look
@@ -87,16 +92,15 @@ pat_9_muts_pooled <- as.data.frame(pat_9_muts_pooled)
 rownames(pat_9_muts_pooled) <- row_muts
 
 #plot 
-
 pat_9_3 <- c(pat_9_muts_pooled$AF_ln, pat_9_muts_pooled$AF_oment, pat_9_muts_pooled$AF_ovary)
 
 #set colors, plasma has its own reds, pooled tumors blues
 cell_cols<-rep("#000000",dim(pat_9_muts_pooled)[1] * dim(pat_9_muts_pooled)[2])
 # plasma reds
-cell_cols[49:64] <- color.scale(pat_9_muts_pooled[, 4], extremes = c('lightpink', 'red'), na.color = '#ffffff')
+cell_cols[40:52] <- color.scale(pat_9_muts_pooled[, 4], extremes = c('lightpink', 'red'), na.color = '#ffffff')
 # tumor blues
-cell_cols[1:48] <- color.scale(pat_9_3, extremes = c('lightblue', 'blue'), na.color = '#ffffff')
-cell_cols <- matrix(cell_cols, nrow = 16, byrow = FALSE)
+cell_cols[1:39] <- color.scale(pat_9_3, extremes = c('lightblue', 'blue'), na.color = '#ffffff')
+cell_cols <- matrix(cell_cols, nrow = 13, byrow = FALSE)
 pat_9_pooled_t <- data.frame(t(pat_9_muts_pooled))
 pat_9_pooled_t <- pat_9_pooled_t[c(4, 1:3), ]
 
@@ -129,9 +133,9 @@ legend(x=15.025,y=-0.47,legend='',pch=16,bty="n",xpd = NA)
 
 #plot labels
 mut_col_labels <- rownames(pat_9_muts_pooled)
-mut_col_labels[1:5] <- c('MTOR\np.N999N', 'CCND1\nc.*687C>G', 'VAT1L\nc.*5485A>G', 'ERBB2\np.P1170A', 'ALK\np.P234P')
-mut_col_labels[6:10] <- c('ESR1\np.R245R', 'EGFR\np.T903T', 'TP53\nc.-123C>G', 'NOTCH3\np.P1521P', 'FLT1\nc.*1999G>A')
-mut_col_labels[11:16] <- c('NOTCH1\np.D1698D', 'NRG1\np.M349T', 'FLT3\np.D324N', 'MIR6759\nn.-389G>T', 'BRIP1\np.Y1137Y', 'FGFR2\nc.*303G>A')
+mut_col_labels[1:5] <- c('MTOR\np.N999N', 'VAT1L\nc*5485A>G', 'ERBB2\np.P1170A', 'ALK\np.P234P', 'ESR1\np.R245R')
+mut_col_labels[6:10] <- c('EGFR\np.T903T', 'TP53\nc.-123C>G', 'NOTCH3\np.P1521P', 'FLT1\nc.*1999G>A', 'NOTCH1\np.D1698D')
+mut_col_labels[11:13] <- c('FLT3\np.D324N', 'BRIP1\np.Y1137Y', 'FGFR2\nc.*303G>A')
 axis(3, at = (1:ncol(pat_9_pooled_t)) - 0.6, labels = mut_col_labels, tick = FALSE, cex.axis = 0.7, las = 2, font = 2)
 
 mut_row_labels <- c('Plasma', 'Lymph\nMet   ', 'Omental\nMet   ', 'Ovary\nMet  ')

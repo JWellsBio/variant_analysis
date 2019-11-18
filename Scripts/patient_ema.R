@@ -10,51 +10,51 @@ library(plotrix)
 library(stringr)
 
 ## PATIENT EMA ----
-pat_ema_heart <- read.delim('Data/Patient_EMA/pat_ema_heart_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
+pat_ema_heart <- read.delim('Data/Patient_EMA/pat_ema_heart_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                             stringsAsFactors = FALSE, sep = '\t')
-pat_ema_heart <- mutect_process(pat_ema_heart) #39 or 11
+pat_ema_heart <- mutect_process(pat_ema_heart) #11
 
-pat_ema_l_kidney <- read.delim('Data/Patient_EMA/pat_ema_l_kidney_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
+pat_ema_l_kidney <- read.delim('Data/Patient_EMA/pat_ema_l_kidney_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                                stringsAsFactors = FALSE, sep = '\t')
-pat_ema_l_kidney <- mutect_process(pat_ema_l_kidney) #36 or 7
+pat_ema_l_kidney <- mutect_process(pat_ema_l_kidney) #7
 
-pat_ema_r_kidney <- read.delim('Data/Patient_EMA/pat_ema_r_kidney_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
+pat_ema_r_kidney <- read.delim('Data/Patient_EMA/pat_ema_r_kidney_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                                stringsAsFactors = FALSE, sep = '\t')
-pat_ema_r_kidney <- mutect_process(pat_ema_r_kidney) #43 or 6
+pat_ema_r_kidney <- mutect_process(pat_ema_r_kidney) #6
 
-pat_ema_liver_1 <- read.delim('Data/Patient_EMA/pat_ema_liver_1_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
+pat_ema_liver_1 <- read.delim('Data/Patient_EMA/pat_ema_liver_1_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                               stringsAsFactors = FALSE, sep = '\t')
-pat_ema_liver_1 <- mutect_process(pat_ema_liver_1) #36 or 4
+pat_ema_liver_1 <- mutect_process(pat_ema_liver_1) #7
 
-pat_ema_liver_2 <- read.delim('Data/Patient_EMA/pat_ema_liver_2_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
+pat_ema_liver_2 <- read.delim('Data/Patient_EMA/pat_ema_liver_2_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                               stringsAsFactors = FALSE, sep = '\t')
-pat_ema_liver_2 <- mutect_process(pat_ema_liver_2) #29 or 4
+pat_ema_liver_2 <- mutect_process(pat_ema_liver_2) #4
 
-pat_ema_oment_1 <- read.delim('Data/Patient_EMA/pat_ema_oment_1_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
+pat_ema_oment_1 <- read.delim('Data/Patient_EMA/pat_ema_oment_1_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                               stringsAsFactors = FALSE, sep = '\t')
-pat_ema_oment_1 <- mutect_process(pat_ema_oment_1) #34 or 4
+pat_ema_oment_1 <- mutect_process(pat_ema_oment_1) #4
 
-pat_ema_oment_2 <- read.delim('Data/Patient_EMA/pat_ema_oment_2_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
+pat_ema_oment_2 <- read.delim('Data/Patient_EMA/pat_ema_oment_2_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                               stringsAsFactors = FALSE, sep = '\t')
-pat_ema_oment_2 <- mutect_process(pat_ema_oment_2) #42 or 6
+pat_ema_oment_2 <- mutect_process(pat_ema_oment_2) #6
 
-pat_ema_plasma <- read.delim('Data/Patient_EMA/pat_ema_plasma_fresh_mutect_filt_hg19_ann.tsv', header = TRUE, 
+pat_ema_plasma <- read.delim('Data/Patient_EMA/pat_ema_plasma_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                              stringsAsFactors = FALSE, sep = '\t')
-pat_ema_plasma <- mutect_process(pat_ema_plasma, sample_type = 'plasma') #1104
+pat_ema_plasma <- mutect_process(pat_ema_plasma, sample_type = 'plasma') #1068
 
 ## looking at how well plasma detects tumor mutations ----
-length(intersect(pat_ema_heart$location, pat_ema_plasma$location)) #4/39 or 4/11
-length(intersect(pat_ema_l_kidney$location, pat_ema_plasma$location)) #3/36 or 3/7
-length(intersect(pat_ema_r_kidney$location, pat_ema_plasma$location)) #2/43 or 2/6
-length(intersect(pat_ema_liver_1$location, pat_ema_plasma$location)) #1/36 or 1/4
-length(intersect(pat_ema_liver_2$location, pat_ema_plasma$location)) #2/29 or 2/4
-length(intersect(pat_ema_oment_1$location, pat_ema_plasma$location)) #2/34 or 2/4
-length(intersect(pat_ema_oment_2$location, pat_ema_plasma$location)) #3/42 or 3/6
+length(intersect(pat_ema_heart$location, pat_ema_plasma$location)) #4/11
+length(intersect(pat_ema_l_kidney$location, pat_ema_plasma$location)) #3/7
+length(intersect(pat_ema_r_kidney$location, pat_ema_plasma$location)) #2/6
+length(intersect(pat_ema_liver_1$location, pat_ema_plasma$location)) #1/7
+length(intersect(pat_ema_liver_2$location, pat_ema_plasma$location)) #2/4
+length(intersect(pat_ema_oment_1$location, pat_ema_plasma$location)) #2/4
+length(intersect(pat_ema_oment_2$location, pat_ema_plasma$location)) #3/6
 
 #pool mutations from 3 mets
 pat_ema_met_pool <- unique(c(pat_ema_heart$location, pat_ema_l_kidney$location, pat_ema_r_kidney$location, 
                              pat_ema_liver_1$location, pat_ema_liver_2$location, pat_ema_oment_1$location, 
-                             pat_ema_oment_2$location)) #74 unique mutations or 15
+                             pat_ema_oment_2$location)) #18
 
 
 pat_ema_plasma_found <- pat_ema_plasma[pat_ema_plasma$location %in% pat_ema_met_pool, ] #4 mutations
