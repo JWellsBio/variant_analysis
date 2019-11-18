@@ -36,8 +36,9 @@ Plasma
 
 ### Filters used on variant calls
 - Indels removed
-- Intron variants removed
+- Intron and intergenic variants removed
 - All Phred-scale quality measures > 20 (99.9% accuracy)
 - Plasma calls must have MAF > 0.01
-- Tumor calls must have AF > 0.05 (except EMA > 0.01)
+- Tumor calls must have MAF > 0.05
+- All Mutect2 calls must also be similarly called by Varscan or Freebayes
 
