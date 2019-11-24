@@ -16,7 +16,7 @@ average_depths <- function(depth_table) {
 
 
 ## patient 9 ----
-pat_9_buffy_depth <- read.delim('/Volumes/T5_2TB/depth_files/pat_9_buffy_TST170_all_depth.txt', header = FALSE, stringsAsFactors = TRUE, sep = '\t')
+pat_9_buffy_depth <- read.delim('G:/depth_files/pat_9_buffy_TST170_all_depth.txt', header = FALSE, stringsAsFactors = TRUE, sep = '\t')
 pat_9_buffy_depths <- average_depths(pat_9_buffy_depth)
 
 pat_9_ln_depth <- read.delim('/Volumes/T5_2TB/depth_files/pat_9_ln_TST170_all_depth.txt', header = FALSE, stringsAsFactors = TRUE, sep = '\t')

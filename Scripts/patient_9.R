@@ -16,40 +16,33 @@ library(stringr)
 #lymph node met
 pat_9_ln    <- read.delim('Data/Patient_9/pat_9_ln_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                           stringsAsFactors = FALSE, sep = '\t')
-pat_9_ln    <- mutect_process(pat_9_ln) #156
+pat_9_ln    <- mutect_process(pat_9_ln) #32
 
 #omental met
 pat_9_oment <- read.delim('Data/Patient_9/pat_9_oment_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                           stringsAsFactors = FALSE, sep = '\t')
-pat_9_oment <- mutect_process(pat_9_oment) #27
+pat_9_oment <- mutect_process(pat_9_oment) #5
 
 #ovarian met
 pat_9_ovary <- read.delim('Data/Patient_9/pat_9_ovary_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                           stringsAsFactors = FALSE, sep = '\t')
-pat_9_ovary <- mutect_process(pat_9_ovary) #15
+pat_9_ovary <- mutect_process(pat_9_ovary) #3
 
-
-
-
-## how much in common between samples? ----
-length(intersect(pat_9_ln$location, pat_9_oment$location)) #8
-length(intersect(pat_9_ln$location, pat_9_ovary$location)) #1
-length(intersect(pat_9_oment$location, pat_9_ovary$location)) #6
 
 ## plasma ----
 pat_9_plasma <- read.delim('Data/Patient_9/pat_9_plasma_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                            stringsAsFactors = FALSE, sep = '\t')
-pat_9_plasma <- mutect_process(pat_9_plasma, sample_type = 'plasma') #486
+pat_9_plasma <- mutect_process(pat_9_plasma, sample_type = 'plasma') #98
 
 
 
 ## looking at how well plasma detects tumor mutations ----
-length(intersect(pat_9_ln$location, pat_9_plasma$location)) #9/156
-length(intersect(pat_9_oment$location, pat_9_plasma$location)) #10/27
-length(intersect(pat_9_ovary$location, pat_9_plasma$location)) #3/15
+length(intersect(pat_9_ln$location, pat_9_plasma$location)) #9/136
+length(intersect(pat_9_oment$location, pat_9_plasma$location)) #10/24
+length(intersect(pat_9_ovary$location, pat_9_plasma$location)) #1/9
 
 #pool mutations from 3 mets
-pat_9_met_pool <- unique(c(pat_9_ln$location, pat_9_oment$location, pat_9_ovary$location)) #184 unique mutations
+pat_9_met_pool <- unique(c(pat_9_ln$location, pat_9_oment$location, pat_9_ovary$location)) #158 unique mutations
 
 
 pat_9_plasma_found <- pat_9_plasma[pat_9_plasma$location %in% pat_9_met_pool, ] #13 mutations
@@ -109,34 +102,34 @@ cell_cols <- cell_cols[c(4, 1:3), ]
 
 # plot it
 # extra space
-par(mar=c(6,5.5,6,2.1))
+par(mar=c(6,28.5,6,2.1))
 #par(mar=c(6,15.5,6,12.1))
 color2D.matplot(pat_9_pooled_t, cellcolors=cell_cols, xlab = '', ylab = '', border='black', axes = FALSE)
 
 #add legends
 legval<-seq(min(pat_9_muts_pooled[, 4], na.rm = TRUE),max(pat_9_muts_pooled[, 4], na.rm = TRUE),length.out = 100)
 legcol<-color.scale(legval, extremes = c('lightpink', 'red'))
-color.legend(1,-0.9,6,-0.5,round(c(min(pat_9_muts_pooled[, 4], na.rm = TRUE), max(pat_9_muts_pooled[, 4], na.rm = TRUE)),2),rect.col=legcol)
-mtext('Plasma', side=1, line=2.4, at=1.55, cex = 1.1, font = 2)
+color.legend(0.5,-0.9,5,-0.5,round(c(min(pat_9_muts_pooled[, 4], na.rm = TRUE), max(pat_9_muts_pooled[, 4], na.rm = TRUE)),2),rect.col=legcol)
+mtext('Plasma', side=1, line=2.4, at=1.25, cex = 1.1, font = 2)
 
 # add tumor legend
 legval<-seq(min(pat_9_muts_pooled[, 1:3], na.rm = TRUE),max(pat_9_muts_pooled[, 1:3], na.rm = TRUE),length.out = 100)
 legcol<-color.scale(legval, extremes = c('lightblue', 'blue'))
-color.legend(7,-0.9,12,-0.5,round(c(min(pat_9_muts_pooled[, 1:3], na.rm = TRUE), max(pat_9_muts_pooled[, 1:3], na.rm = TRUE)),2),rect.col=legcol)
-mtext('Tumor', side=1, line=2.4, at=7.5, cex = 1.1, font = 2)
-mtext('Mutant Allele Frequency', side = 1, line = 4.3, at = 6.5, cex = 1.1, font = 2)
+color.legend(5.5,-0.9,10,-0.5,round(c(min(pat_9_muts_pooled[, 1:3], na.rm = TRUE), max(pat_9_muts_pooled[, 1:3], na.rm = TRUE)),2),rect.col=legcol)
+mtext('Tumor', side=1, line=2.4, at=6.15, cex = 1.1, font = 2)
+mtext('Mutant Allele Frequency', side = 1, line = 4.3, at = 5.4, cex = 1.1, font = 2)
 
 # add NA legend
-color.legend(15, -0.9, 15.5, -0.5, legend = '', rect.col = '#ffffff')
-mtext('Mutation\n     Not Present', side=1, line=2.85, at=13.9, cex = 1.1, font = 2)
-legend(x=15.025,y=-0.47,legend='',pch=16,bty="n",xpd = NA)
+color.legend(12, -0.9, 12.75, -0.5, legend = '', rect.col = '#ffffff')
+mtext('Mutation\nNot\nPresent', side=1, line= 3.2, at=11.1, cex = 0.8, font = 2)
+legend(x=12.07,y=-0.47,legend='',pch=16,bty="n",xpd = NA)
 
 #plot labels
 mut_col_labels <- rownames(pat_9_muts_pooled)
 mut_col_labels[1:5] <- c('MTOR\np.N999N', 'VAT1L\nc*5485A>G', 'ERBB2\np.P1170A', 'ALK\np.P234P', 'ESR1\np.R245R')
 mut_col_labels[6:10] <- c('EGFR\np.T903T', 'TP53\nc.-123C>G', 'NOTCH3\np.P1521P', 'FLT1\nc.*1999G>A', 'NOTCH1\np.D1698D')
 mut_col_labels[11:13] <- c('FLT3\np.D324N', 'BRIP1\np.Y1137Y', 'FGFR2\nc.*303G>A')
-axis(3, at = (1:ncol(pat_9_pooled_t)) - 0.6, labels = mut_col_labels, tick = FALSE, cex.axis = 0.7, las = 2, font = 2)
+axis(3, at = (1:ncol(pat_9_pooled_t)) - 0.6, labels = mut_col_labels, tick = FALSE, cex.axis = 0.8, las = 2, font = 2)
 
 mut_row_labels <- c('Plasma', 'Lymph\nMet   ', 'Omental\nMet   ', 'Ovary\nMet  ')
 axis(2, at = c(0.5, 1.5, 2.5, 3.5), labels = rev(mut_row_labels), tick = FALSE, cex.axis = 1.1, las = 1, font = 2)
@@ -194,6 +187,12 @@ upset_df <- sapply(upset_df, function(x) ifelse (is.na(x), 0, x))
 upset_df <- as.data.frame(upset_df)
 rownames(upset_df) <- row_muts
 
+# another way to build df?
+location_list <- list(pat_9_ln$location, pat_9_oment$location, pat_9_ovary$location, pat_9_plasma$location)
+upset_df <- fromList(location_list)
+colnames(upset_df) <- c('Lymph_Met', 'Omental_Met', 'Ovary_Met', 'Plasma')
+#head(upset_df)
+head(upset_df)
 
 #set up dummy metadata for later features
 sets_order <- colnames(upset_df[1:4])
@@ -213,19 +212,10 @@ upset(upset_df, set.metadata = list(data = metadata,
                                     plots = list(list(type = 'matrix_rows', column = 'sets', 
                                                       colors = c(Plasma = 'gray60', Lymph_Met = 'white', Omental_Met = 'white', 
                                                                  Ovary_Met = 'white')))),
-      intersections = list(list('Lymph_Met'), 
-                           list('Ovary_Met'), 
-                           list('Omental_Met'), 
-                           list('Lymph_Met', 'Plasma'), 
-                           list('Ovary_Met', 'Omental_Met'), 
-                           list('Omental_Met', 'Lymph_Met'), 
-                           list('Omental_Met', 'Plasma'), 
-                           list('Omental_Met', 'Lymph_Met', 'Plasma'), 
-                           list('Ovary_Met', 'Omental_Met', 'Plasma'), 
-                           list('Ovary_Met', 'Omental_Met', 'Lymph_Met')),
-      nsets = 4, nintersects = NA, sets = rev(sets_order), keep.order = FALSE, sets.x.label = 'Number of Mutations', 
+      
+      nsets = 4, nintersects = NA, sets = rev(sets_order), keep.order = TRUE, sets.x.label = 'Number of Mutations', 
       sets.bar.color = c('gray60', 'goldenrod4', 'aquamarine3', 'chocolate3'), matrix.color = 'midnightblue', matrix.dot.alpha = 0.8, 
-      main.bar.color = bar_colors, mainbar.y.label = 'Number of Mutations\nin Common', 
+      mainbar.y.label = 'Number of Mutations\nin Common', 
       text.scale = c(2.5, 1.5, 1.3, 1.3, 1.3, 2.0))
 
 

@@ -20,20 +20,20 @@ pat_10_liver_2a <- mutect_process(pat_10_liver_2a) #9
 
 pat_10_liver_5 <- read.delim('Data/Patient_10/pat_10_liver_5_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                              stringsAsFactors = FALSE, sep = '\t')
-pat_10_liver_5 <- mutect_process(pat_10_liver_5) #10
+pat_10_liver_5 <- mutect_process(pat_10_liver_5) #7
 
 pat_10_plasma <- read.delim('Data/Patient_10/pat_10_plasma_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                             stringsAsFactors = FALSE, sep = '\t')
-pat_10_plasma <- mutect_process(pat_10_plasma, sample_type = 'plasma') #3477
+pat_10_plasma <- mutect_process(pat_10_plasma, sample_type = 'plasma') #247
 
 ## looking at how well plasma detects tumor mutations ----
 length(intersect(pat_10_liver_1$location, pat_10_plasma$location)) #7/14
 length(intersect(pat_10_liver_2a$location, pat_10_plasma$location)) #5/9
-length(intersect(pat_10_liver_5$location, pat_10_plasma$location)) #5/10
+length(intersect(pat_10_liver_5$location, pat_10_plasma$location)) #5/7
 
 
 #pool mutations from 3 mets
-pat_10_met_pool <- unique(c(pat_10_liver_1$location, pat_10_liver_2a$location, pat_10_liver_5$location)) #19 unique mutations
+pat_10_met_pool <- unique(c(pat_10_liver_1$location, pat_10_liver_2a$location, pat_10_liver_5$location)) #17 unique mutations
 
 
 pat_10_plasma_found <- pat_10_plasma[pat_10_plasma$location %in% pat_10_met_pool, ] #8 mutations
@@ -93,7 +93,7 @@ cell_cols <- cell_cols[c(4, 1:3), ]
 
 # plot it
 # extra space
-par(mar=c(6,5.5,6,2.1))
+par(mar=c(6,40.5,6,2.1))
 #par(mar=c(6,15.5,6,12.1))
 color2D.matplot(pat_10_pooled_t, cellcolors=cell_cols, xlab = '', ylab = '', border='black', axes = FALSE)
 
@@ -117,7 +117,7 @@ legend(x=6.75,y=-0.47,legend='',pch=16,bty="n",xpd = NA)
 
 #plot labels
 mut_col_labels <- rownames(pat_10_muts_pooled)
-mut_col_labels[1:8] <- c('ERG\nc.*2652G>A', 'ERBB3\np.R1116R', 'TP53\nc.-123C>G', 'BARD1\nc.1518T>C', 'FLT1\nc.*1999G>A', 'HNF1A\np.G288G', 'SLX4\np.N457K', 'AR\np.G457G')
+mut_col_labels[1:8] <- c('ERG\nc.*2652G>A', 'ERBB3\np.R1116R', 'BARD1\nc.1518T>C', 'TP53\nc.-123C>G', 'FLT1\nc.*1999G>A', 'HNF1A\np.G288G', 'SLX4\np.N457K', 'AR\np.G457G')
 axis(3, at = (1:ncol(pat_10_pooled_t)) - 0.6, labels = mut_col_labels, tick = FALSE, cex.axis = 0.8, las = 2, font = 2)
 
 mut_row_labels <- c('Plasma', 'Liver 1', 'Liver 2a', 'Liver 5')

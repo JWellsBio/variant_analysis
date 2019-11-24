@@ -103,7 +103,7 @@ mutect_process <- function(mutect_calls, sample_type = 'tumor') {
   #all calls with trusight genes and add location and remove ANN column
   mutect_calls$X.CHROM <- gsub('chr', '', mutect_calls$X.CHROM)
   mutect_calls$location <- paste0(mutect_calls$X.CHROM, ':', mutect_calls$POS)
-  mutect_calls <- mutect_calls[, -which(names(mutect_calls) %in% c('ANN', 'QUAL', 'FILTER', 'TLOD', 'gene_id', 'feature_id', 'cdna_pos'))]
+  mutect_calls <- mutect_calls[, -which(names(mutect_calls) %in% c('ANN', 'QUAL', 'TLOD', 'gene_id', 'feature_id', 'cdna_pos'))]
   mutect_calls <- mutect_calls[mutect_calls$effect != 'intron_variant', ]
   mutect_calls <- mutect_calls[mutect_calls$effect != 'intergenic_region', ]
   mutect_calls$AF <- as.numeric(mutect_calls$AF)
@@ -115,10 +115,10 @@ mutect_process <- function(mutect_calls, sample_type = 'tumor') {
   mutect_calls <- mutect_calls[mutect_calls$GERMQ >= 20, ]
   mutect_calls <- mutect_calls[mutect_calls$SEQQ >= 20, ]
   if (sample_type == 'plasma') {
-    mutect_calls <- mutect_calls[mutect_calls$AF >= 0.01, ]
+    mutect_calls <- mutect_calls[mutect_calls$AF >= 0.05, ]
   }
   else {
-    mutect_calls <- mutect_calls[mutect_calls$AF >= 0.05, ]
+    mutect_calls <- mutect_calls[mutect_calls$AF >= 0.10, ]
   }
   return(mutect_calls)
 }

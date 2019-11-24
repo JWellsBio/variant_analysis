@@ -12,36 +12,36 @@ library(stringr)
 ## Patient 2 ----
 pat_2_liver_1 <- read.delim('Data/Patient_2/pat_2_liver_1_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                             stringsAsFactors = FALSE, sep = '\t')
-pat_2_liver_1 <- mutect_process(pat_2_liver_1) #20
+pat_2_liver_1 <- mutect_process(pat_2_liver_1) #15
 
 pat_2_liver_2 <- read.delim('Data/Patient_2/pat_2_liver_2_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                             stringsAsFactors = FALSE, sep = '\t')
-pat_2_liver_2 <- mutect_process(pat_2_liver_2) #26
+pat_2_liver_2 <- mutect_process(pat_2_liver_2) #25
 
 pat_2_breast_1 <- read.delim('Data/Patient_2/pat_2_breast_1_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                              stringsAsFactors = FALSE, sep = '\t')
-pat_2_breast_1 <- mutect_process(pat_2_breast_1) #25
+pat_2_breast_1 <- mutect_process(pat_2_breast_1) #19
 
 pat_2_breast_2 <- read.delim('Data/Patient_2/pat_2_breast_2_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                              stringsAsFactors = FALSE, sep = '\t')
-pat_2_breast_2 <- mutect_process(pat_2_breast_2) #23
+pat_2_breast_2 <- mutect_process(pat_2_breast_2) #22
 
 pat_2_plasma <- read.delim('Data/Patient_2/pat_2_plasma_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                            stringsAsFactors = FALSE, sep = '\t')
-pat_2_plasma <- mutect_process(pat_2_plasma, sample_type = 'plasma') #88
+pat_2_plasma <- mutect_process(pat_2_plasma, sample_type = 'plasma') #87
 
 
 ## looking at how well plasma detects tumor mutations ----
-length(intersect(pat_2_breast_1$location, pat_2_plasma$location)) #6/25
-length(intersect(pat_2_breast_2$location, pat_2_plasma$location)) #6/23
-length(intersect(pat_2_liver_1$location, pat_2_plasma$location)) #4/20
-length(intersect(pat_2_liver_2$location, pat_2_plasma$location)) #4/26
+length(intersect(pat_2_breast_1$location, pat_2_plasma$location)) #6/19
+length(intersect(pat_2_breast_2$location, pat_2_plasma$location)) #6/22
+length(intersect(pat_2_liver_1$location, pat_2_plasma$location)) #4/15
+length(intersect(pat_2_liver_2$location, pat_2_plasma$location)) #4/25
 
 
 
 #pool mutations from 3 mets
 #use breast 1 or breast 2
-pat_2_met_pool <- unique(c(pat_2_liver_1$location, pat_2_liver_2$location, pat_2_breast_2$location)) #42 unique mutations w br 1 or 36 w br 2 
+pat_2_met_pool <- unique(c(pat_2_liver_1$location, pat_2_liver_2$location, pat_2_breast_2$location)) #36 unique mutations w br 1 or 34 w br 2 
 
 
 pat_2_plasma_found <- pat_2_plasma[pat_2_plasma$location %in% pat_2_met_pool, ] #6 mutations w br 1 or 6 w br 2
@@ -108,7 +108,7 @@ cell_cols <- cell_cols[c(4, 1:3), ]
 
 # plot it
 # extra space
-par(mar=c(6,5.5,6,2.1))
+par(mar=c(6,44.5,6,2.1))
 #par(mar=c(6,15.5,6,12.1))
 color2D.matplot(pat_2_pooled_t, cellcolors=cell_cols, xlab = '', ylab = '', border='black', axes = FALSE)
 
@@ -132,7 +132,7 @@ legend(x=13.55,y=-0.45,legend='',pch=16,bty="n",xpd = NA)
 
 #plot labels
 mut_col_labels <- rownames(pat_2_muts_pooled)
-mut_col_labels[1:6] <- c('BARD1\nc.1519G>A', 'BARD1\nc.1518T>C', 'FLT1\nc.*1999G>A', 'FGFR2\nc.*313G>A', 'HNF1Ap.S581G', 'FGFR2\nc.*303G>A')
+mut_col_labels[1:6] <- c('BARD1\nc.1519G>A', 'BARD1\nc.1518T>C', 'FLT1\nc.*1999G>A', 'FGFR2\nc.*313G>A', 'HNF1A\np.S581G', 'FGFR2\nc.*303G>A')
 axis(3, at = (1:ncol(pat_2_pooled_t)) - 0.6, labels = mut_col_labels, tick = FALSE, cex.axis = 0.8, las = 2, font = 2)
 
 mut_row_labels <- c('Plasma', 'Liver 1', 'Liver 2', 'Breast 2')
