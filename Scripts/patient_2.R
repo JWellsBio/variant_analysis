@@ -30,12 +30,15 @@ pat_2_plasma <- read.delim('Data/Patient_2/pat_2_plasma_exon_only_mutect_filtere
                            stringsAsFactors = FALSE, sep = '\t')
 pat_2_plasma <- mutect_process(pat_2_plasma, sample_type = 'plasma') #87
 
+#all in common?
+Reduce(intersect, list(pat_2_liver_1$location, pat_2_liver_2$location, pat_2_breast_2$location)) #11 but plasma found 3
+
 
 ## looking at how well plasma detects tumor mutations ----
-length(intersect(pat_2_breast_1$location, pat_2_plasma$location)) #6/19
-length(intersect(pat_2_breast_2$location, pat_2_plasma$location)) #6/22
-length(intersect(pat_2_liver_1$location, pat_2_plasma$location)) #4/15
-length(intersect(pat_2_liver_2$location, pat_2_plasma$location)) #4/25
+length(intersect(pat_2_breast_1$location, pat_2_plasma$location)) #6/19 31.6%
+length(intersect(pat_2_breast_2$location, pat_2_plasma$location)) #6/22 27.3%
+length(intersect(pat_2_liver_1$location, pat_2_plasma$location)) #4/15 26.7%
+length(intersect(pat_2_liver_2$location, pat_2_plasma$location)) #4/25 16.0%
 
 
 
@@ -135,7 +138,7 @@ mut_col_labels <- rownames(pat_2_muts_pooled)
 mut_col_labels[1:6] <- c('BARD1\nc.1519G>A', 'BARD1\nc.1518T>C', 'FLT1\nc.*1999G>A', 'FGFR2\nc.*313G>A', 'HNF1A\np.S581G', 'FGFR2\nc.*303G>A')
 axis(3, at = (1:ncol(pat_2_pooled_t)) - 0.6, labels = mut_col_labels, tick = FALSE, cex.axis = 0.8, las = 2, font = 2)
 
-mut_row_labels <- c('Plasma', 'Liver 1', 'Liver 2', 'Breast 2')
+mut_row_labels <- c('Plasma', 'Liver 1\n(4/15)', 'Liver 2\n(4/25)', 'Breast 2\n(6/22)')
 axis(2, at = c(0.5, 1.5, 2.5, 3.5), labels = rev(mut_row_labels), tick = FALSE, cex.axis = 1.1, las = 1, font = 2)
 
 #add points for NA values

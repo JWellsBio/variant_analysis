@@ -21,25 +21,26 @@ pat_9_ln    <- mutect_process(pat_9_ln) #32
 #omental met
 pat_9_oment <- read.delim('Data/Patient_9/pat_9_oment_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                           stringsAsFactors = FALSE, sep = '\t')
-pat_9_oment <- mutect_process(pat_9_oment) #5
+pat_9_oment <- mutect_process(pat_9_oment) #24
 
 #ovarian met
 pat_9_ovary <- read.delim('Data/Patient_9/pat_9_ovary_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                           stringsAsFactors = FALSE, sep = '\t')
-pat_9_ovary <- mutect_process(pat_9_ovary) #3
+pat_9_ovary <- mutect_process(pat_9_ovary) #9
 
 
 ## plasma ----
 pat_9_plasma <- read.delim('Data/Patient_9/pat_9_plasma_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                            stringsAsFactors = FALSE, sep = '\t')
-pat_9_plasma <- mutect_process(pat_9_plasma, sample_type = 'plasma') #98
+pat_9_plasma <- mutect_process(pat_9_plasma, sample_type = 'plasma') #48
 
-
+# all in common?
+Reduce(intersect, list(pat_9_ln$location, pat_9_oment$location, pat_9_ovary$location))
 
 ## looking at how well plasma detects tumor mutations ----
-length(intersect(pat_9_ln$location, pat_9_plasma$location)) #9/136
-length(intersect(pat_9_oment$location, pat_9_plasma$location)) #10/24
-length(intersect(pat_9_ovary$location, pat_9_plasma$location)) #1/9
+length(intersect(pat_9_ln$location, pat_9_plasma$location)) #9/32 28.1%
+length(intersect(pat_9_oment$location, pat_9_plasma$location)) #10/24 41.7%
+length(intersect(pat_9_ovary$location, pat_9_plasma$location)) #1/9 11.1%
 
 #pool mutations from 3 mets
 pat_9_met_pool <- unique(c(pat_9_ln$location, pat_9_oment$location, pat_9_ovary$location)) #158 unique mutations
@@ -131,7 +132,7 @@ mut_col_labels[6:10] <- c('EGFR\np.T903T', 'TP53\nc.-123C>G', 'NOTCH3\np.P1521P'
 mut_col_labels[11:13] <- c('FLT3\np.D324N', 'BRIP1\np.Y1137Y', 'FGFR2\nc.*303G>A')
 axis(3, at = (1:ncol(pat_9_pooled_t)) - 0.6, labels = mut_col_labels, tick = FALSE, cex.axis = 0.8, las = 2, font = 2)
 
-mut_row_labels <- c('Plasma', 'Lymph\nMet   ', 'Omental\nMet   ', 'Ovary\nMet  ')
+mut_row_labels <- c('Plasma', 'Lymph\n(9/32) ', 'Omental\n(10/24) ', 'Ovary\n(1/9) ')
 axis(2, at = c(0.5, 1.5, 2.5, 3.5), labels = rev(mut_row_labels), tick = FALSE, cex.axis = 1.1, las = 1, font = 2)
 
 #add points for NA values

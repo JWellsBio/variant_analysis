@@ -26,10 +26,14 @@ pat_10_plasma <- read.delim('Data/Patient_10/pat_10_plasma_exon_only_mutect_filt
                             stringsAsFactors = FALSE, sep = '\t')
 pat_10_plasma <- mutect_process(pat_10_plasma, sample_type = 'plasma') #247
 
+# all in common?
+Reduce(intersect, list(pat_10_liver_1$location, pat_10_liver_2a$location, pat_10_liver_5$location)) #FOUND
+
+
 ## looking at how well plasma detects tumor mutations ----
-length(intersect(pat_10_liver_1$location, pat_10_plasma$location)) #7/14
-length(intersect(pat_10_liver_2a$location, pat_10_plasma$location)) #5/9
-length(intersect(pat_10_liver_5$location, pat_10_plasma$location)) #5/7
+length(intersect(pat_10_liver_1$location, pat_10_plasma$location)) #7/14 50.0%
+length(intersect(pat_10_liver_2a$location, pat_10_plasma$location)) #5/9 55.6%
+length(intersect(pat_10_liver_5$location, pat_10_plasma$location)) #5/7 71.4%
 
 
 #pool mutations from 3 mets
@@ -120,7 +124,7 @@ mut_col_labels <- rownames(pat_10_muts_pooled)
 mut_col_labels[1:8] <- c('ERG\nc.*2652G>A', 'ERBB3\np.R1116R', 'BARD1\nc.1518T>C', 'TP53\nc.-123C>G', 'FLT1\nc.*1999G>A', 'HNF1A\np.G288G', 'SLX4\np.N457K', 'AR\np.G457G')
 axis(3, at = (1:ncol(pat_10_pooled_t)) - 0.6, labels = mut_col_labels, tick = FALSE, cex.axis = 0.8, las = 2, font = 2)
 
-mut_row_labels <- c('Plasma', 'Liver 1', 'Liver 2a', 'Liver 5')
+mut_row_labels <- c('Plasma', 'Liver 1\n(7/14)', 'Liver 2a\n(5/9)', 'Liver 5\n(5/7)')
 axis(2, at = c(0.5, 1.5, 2.5, 3.5), labels = rev(mut_row_labels), tick = FALSE, cex.axis = 1.1, las = 1, font = 2)
 
 #add points for NA values

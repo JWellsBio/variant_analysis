@@ -42,14 +42,18 @@ pat_ema_plasma <- read.delim('Data/Patient_EMA/pat_ema_plasma_exon_only_mutect_f
                              stringsAsFactors = FALSE, sep = '\t')
 pat_ema_plasma <- mutect_process(pat_ema_plasma, sample_type = 'plasma') #122
 
+# all in common?
+Reduce(intersect, list(pat_ema_heart$location, pat_ema_l_kidney$location, pat_ema_r_kidney$location, pat_ema_liver_1$location, 
+                       pat_ema_liver_2$location, pat_ema_oment_1$location, pat_ema_oment_2$location)) #FOUND
+
 ## looking at how well plasma detects tumor mutations ----
-length(intersect(pat_ema_heart$location, pat_ema_plasma$location)) #4/10
-length(intersect(pat_ema_l_kidney$location, pat_ema_plasma$location)) #3/6
-length(intersect(pat_ema_r_kidney$location, pat_ema_plasma$location)) #2/5
-length(intersect(pat_ema_liver_1$location, pat_ema_plasma$location)) #1/4
-length(intersect(pat_ema_liver_2$location, pat_ema_plasma$location)) #2/2
-length(intersect(pat_ema_oment_1$location, pat_ema_plasma$location)) #2/2
-length(intersect(pat_ema_oment_2$location, pat_ema_plasma$location)) #3/5
+length(intersect(pat_ema_heart$location, pat_ema_plasma$location)) #4/10 40.0%
+length(intersect(pat_ema_l_kidney$location, pat_ema_plasma$location)) #3/6 50.0%
+length(intersect(pat_ema_r_kidney$location, pat_ema_plasma$location)) #2/5 40.0%
+length(intersect(pat_ema_liver_1$location, pat_ema_plasma$location)) #1/4 25.0%
+length(intersect(pat_ema_liver_2$location, pat_ema_plasma$location)) #2/2 100.0%
+length(intersect(pat_ema_oment_1$location, pat_ema_plasma$location)) #2/2 100.0%
+length(intersect(pat_ema_oment_2$location, pat_ema_plasma$location)) #3/5 60.0%
 
 #pool mutations from 3 mets
 pat_ema_met_pool <- unique(c(pat_ema_heart$location, pat_ema_l_kidney$location, pat_ema_r_kidney$location, 
@@ -165,7 +169,7 @@ mut_col_labels <- rownames(pat_ema_muts_pooled)
 mut_col_labels <- c('TP53\nc.-123C>G', 'FLT1\nc.*1999G>A', 'FLT3\np.D324N', 'FGFR2\nc.*303G>A')
 axis(3, at = (1:ncol(pat_ema_pooled_t)) - 0.6, labels = mut_col_labels, tick = FALSE, cex.axis = 0.8, las = 2, font = 2)
 
-mut_row_labels <- c('Plasma', 'Heart', 'L Kidney', 'R Kidney', 'Liver 1', 'Liver 2', 'Omental 1', 'Omental 2')
+mut_row_labels <- c('Plasma', 'Heart (4/10)', 'L Kidney (3/6)', 'R Kidney (2/5)', 'Liver 1 (1/4)', 'Liver 2 (2/2)', 'Omental 1 (2/2)', 'Omental 2 (3/5)')
 axis(2, at = c(0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5), labels = rev(mut_row_labels), tick = FALSE, cex.axis = 1.1, las = 1, font = 2, hadj = 0.9)
 
 #add points for NA values

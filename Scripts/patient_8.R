@@ -27,11 +27,13 @@ pat_8_plasma <- read.delim('Data/Patient_8/pat_8_plasma_exon_only_mutect_filtere
                            stringsAsFactors = FALSE, sep = '\t')
 pat_8_plasma <- mutect_process(pat_8_plasma, sample_type = 'plasma') #137
 
+#all in common?
+Reduce(intersect, list(pat_8_axillary$location, pat_8_breast_1$location, pat_8_breast_2$location)) #8 found NONE
 
 ## looking at how well plasma detects tumor mutations ----
-length(intersect(pat_8_axillary$location, pat_8_plasma$location)) #7/17
-length(intersect(pat_8_breast_1$location, pat_8_plasma$location)) #8/29
-length(intersect(pat_8_breast_2$location, pat_8_plasma$location)) #16/85
+length(intersect(pat_8_axillary$location, pat_8_plasma$location)) #7/17 41.2%
+length(intersect(pat_8_breast_1$location, pat_8_plasma$location)) #8/29 27.6%
+length(intersect(pat_8_breast_2$location, pat_8_plasma$location)) #16/85 18.8%
 
 
 #pool mutations from 3 mets
@@ -127,7 +129,7 @@ mut_col_labels[16:20] <- c('FANCI\np.C742S', 'CDH1\np.A692A', 'MUTYH\np.Q338H', 
 mut_col_labels[21:23] <- c('CHEK2\nc.1116C>T', 'ERBB3\np.S1119C', 'ROS1\np.R167Q')
 axis(3, at = (1:ncol(pat_8_pooled_t)) - 0.6, labels = mut_col_labels, tick = FALSE, cex.axis = 0.8, las = 2, font = 2)
 
-mut_row_labels <- c('Plasma', 'Axillary', 'Breast 1', 'Breast 2')
+mut_row_labels <- c('Plasma', 'Axillary\n(7/17)', 'Breast 1\n(8/29)', 'Breast 2\n(16/85)')
 axis(2, at = c(0.5, 1.5, 2.5, 3.5), labels = rev(mut_row_labels), tick = FALSE, cex.axis = 1.1, las = 1, font = 2)
 
 #add points for NA values
