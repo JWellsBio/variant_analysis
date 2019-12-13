@@ -120,6 +120,7 @@ mutect_process <- function(mutect_calls, sample_type = 'tumor') {
   else {
     mutect_calls <- mutect_calls[mutect_calls$AF >= 0.10, ]
   }
+  mutect_calls <- mutect_calls[, which(colnames(mutect_calls) %in% c('location', 'hgvs_c', 'hgvs_p', 'gene_name', 'impact', 'effect', 'AF', 'DP', 'DP.1'))]
   return(mutect_calls)
 }
 
