@@ -436,4 +436,27 @@ pat_9_plasma_met_stats$color <- ifelse(pat_9_plasma_met_stats$location %in% pat_
 barplot(pat_9_plasma_met_stats$AF, col = pat_9_plasma_met_stats$color, ylab = 'Mutant Allele Frequency in Plasma', 
         xlab = 'Variant', main = 'Patient 9\n(3 tumors)', ylim = c(0,1.0))
 
+all_common <- Reduce(intersect, list(pat_9_ln$location, pat_9_oment$location, pat_9_ovary$location))
+ln_next <- pat_9_ln[pat_9_ln$location %!in% all_common, ]
+om_next <- pat_9_oment[pat_9_oment$location %!in% all_common, ]
+ov_next <- pat_9_ovary[pat_9_ovary$location %!in% all_common, ]
 
+intersect(ln_next$location, om_next$location) #7
+intersect(ln_next$location, ov_next$location) #NONE
+intersect(om_next$location, ov_next$location) #2
+
+## correlations ----
+pat_9_ln_plasma <- intersect(pat_9_ln$location, pat_9_plasma$location)
+ln_corr <- pat_9_ln[pat_9_ln$location %in% pat_9_ln_plasma, ]
+plasma_corr <- pat_9_plasma[pat_9_plasma$location %in% pat_9_ln_plasma, ]
+cor.test(ln_corr$AF, plasma_corr$AF, method = 'spearman') #cor = 0.73 p = 0.025
+
+pat_9_oment_plasma <- intersect(pat_9_oment$location, pat_9_plasma$location)
+oment_corr <- pat_9_oment[pat_9_oment$location %in% pat_9_oment_plasma, ]
+plasma_corr <- pat_9_plasma[pat_9_plasma$location %in% pat_9_oment_plasma, ]
+cor.test(oment_corr$AF, plasma_corr$AF, method = 'spearman') #cor = 0.90 p = 4.04e-4
+
+pat_9_ovary_plasma <- intersect(pat_9_ovary$location, pat_9_plasma$location)
+ovary_corr <- pat_9_ovary[pat_9_ovary$location %in% pat_9_ovary_plasma, ]
+plasma_corr <- pat_9_plasma[pat_9_plasma$location %in% pat_9_ovary_plasma, ]
+cor.test(ovary_corr$AF, plasma_corr$AF, method = 'spearman') #NOT ENOUGH VALUES

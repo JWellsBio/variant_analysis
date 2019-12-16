@@ -239,3 +239,20 @@ pat_2_plasma_met_stats <- pat_2_plasma_met_stats[order(pat_2_plasma_met_stats$AF
 pat_2_plasma_met_stats$color <- ifelse(pat_2_plasma_met_stats$location %in% pat_2_all$location, 'red', 'black')
 barplot(pat_2_plasma_met_stats$AF, col = pat_2_plasma_met_stats$color, ylab = 'Mutant Allele Frequency in Plasma', 
         xlab = 'Variant', main = 'Patient 2\n(3 tumors)', ylim = c(0,1.0))
+
+
+## correlations ----
+pat_2_liver_1_plasma <- intersect(pat_2_liver_1$location, pat_2_plasma$location)
+liver_1_corr <- pat_2_liver_1[pat_2_liver_1$location %in% pat_2_liver_1_plasma, ]
+plasma_corr <- pat_2_plasma[pat_2_plasma$location %in% pat_2_liver_1_plasma, ]
+cor.test(liver_1_corr$AF, plasma_corr$AF, method = 'spearman') #cor = 1.0 p = < 2.2e-16
+
+pat_2_liver_2_plasma <- intersect(pat_2_liver_2$location, pat_2_plasma$location)
+liver_2_corr <- pat_2_liver_2[pat_2_liver_2$location %in% pat_2_liver_2_plasma, ]
+plasma_corr <- pat_2_plasma[pat_2_plasma$location %in% pat_2_liver_2_plasma, ]
+cor.test(liver_2_corr$AF, plasma_corr$AF, method = 'spearman') #cor = 1.0 p = < 2.2e-16
+
+pat_2_breast_2_plasma <- intersect(pat_2_breast_2$location, pat_2_plasma$location)
+breast_2_corr <- pat_2_breast_2[pat_2_breast_2$location %in% pat_2_breast_2_plasma, ]
+plasma_corr <- pat_2_plasma[pat_2_plasma$location %in% pat_2_breast_2_plasma, ]
+cor.test(breast_2_corr$AF, plasma_corr$AF, method = 'spearman') #cor = 0.82 p = 0.044

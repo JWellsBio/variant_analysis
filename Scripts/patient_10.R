@@ -226,3 +226,21 @@ pat_10_plasma_met_stats <- pat_10_plasma_met_stats[order(pat_10_plasma_met_stats
 pat_10_plasma_met_stats$color <- ifelse(pat_10_plasma_met_stats$location %in% pat_10_all$location, 'red', 'black')
 barplot(pat_10_plasma_met_stats$AF, col = pat_10_plasma_met_stats$color, ylab = 'Mutant Allele Frequency in Plasma', 
         xlab = 'Variant', main = 'Patient 10\n(3 tumors)', ylim = c(0,1.0))
+
+
+
+## correlations ----
+pat_10_liver_1_plasma <- intersect(pat_10_liver_1$location, pat_10_plasma$location)
+liver_1_corr <- pat_10_liver_1[pat_10_liver_1$location %in% pat_10_liver_1_plasma, ]
+plasma_corr <- pat_10_plasma[pat_10_plasma$location %in% pat_10_liver_1_plasma, ]
+cor.test(liver_1_corr$AF, plasma_corr$AF, method = 'spearman') #cor = 0.96 p = 0.0028
+
+pat_10_liver_2a_plasma <- intersect(pat_10_liver_2a$location, pat_10_plasma$location)
+liver_2a_corr <- pat_10_liver_2a[pat_10_liver_2a$location %in% pat_10_liver_2a_plasma, ]
+plasma_corr <- pat_10_plasma[pat_10_plasma$location %in% pat_10_liver_2a_plasma, ]
+cor.test(liver_2a_corr$AF, plasma_corr$AF, method = 'spearman') #cor = 0.90 p = 0.083
+
+pat_10_liver_5_plasma <- intersect(pat_10_liver_5$location, pat_10_plasma$location)
+liver_5_corr <- pat_10_liver_5[pat_10_liver_5$location %in% pat_10_liver_5_plasma, ]
+plasma_corr <- pat_10_plasma[pat_10_plasma$location %in% pat_10_liver_5_plasma, ]
+cor.test(liver_5_corr$AF, plasma_corr$AF, method = 'spearman') #cor = 0.68 p = 0.20

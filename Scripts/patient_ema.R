@@ -332,5 +332,40 @@ barplot(pat_ema_plasma_met_stats$AF, col = pat_ema_plasma_met_stats$color, ylab 
 
 
 
+## correlations ----
+pat_ema_heart_plasma <- intersect(pat_ema_heart$location, pat_ema_plasma$location)
+heart_corr <- pat_ema_heart[pat_ema_heart$location %in% pat_ema_heart_plasma, ]
+plasma_corr <- pat_ema_plasma[pat_ema_plasma$location %in% pat_ema_heart_plasma, ]
+cor.test(heart_corr$AF, plasma_corr$AF, method = 'spearman') #cor = 0.60 p = 0.42
 
+pat_ema_l_kidney_plasma <- intersect(pat_ema_l_kidney$location, pat_ema_plasma$location)
+l_kidney_corr <- pat_ema_l_kidney[pat_ema_l_kidney$location %in% pat_ema_l_kidney_plasma, ]
+plasma_corr <- pat_ema_plasma[pat_ema_plasma$location %in% pat_ema_l_kidney_plasma, ]
+cor.test(l_kidney_corr$AF, plasma_corr$AF, method = 'spearman') #cor = 0.50 p = 1.0
+
+pat_ema_r_kidney_plasma <- intersect(pat_ema_r_kidney$location, pat_ema_plasma$location)
+r_kidney_corr <- pat_ema_r_kidney[pat_ema_r_kidney$location %in% pat_ema_r_kidney_plasma, ]
+plasma_corr <- pat_ema_plasma[pat_ema_plasma$location %in% pat_ema_r_kidney_plasma, ]
+cor.test(r_kidney_corr$AF, plasma_corr$AF, method = 'spearman') #cor = -1.0 p = 1.0
+
+pat_ema_liver_1_plasma <- intersect(pat_ema_liver_1$location, pat_ema_plasma$location)
+liver_1_corr <- pat_ema_liver_1[pat_ema_liver_1$location %in% pat_ema_liver_1_plasma, ]
+plasma_corr <- pat_ema_plasma[pat_ema_plasma$location %in% pat_ema_liver_1_plasma, ]
+cor.test(liver_1_corr$AF, plasma_corr$AF, method = 'spearman') #NOT ENOUGH VALUES
+
+pat_ema_liver_2_plasma <- intersect(pat_ema_liver_2$location, pat_ema_plasma$location)
+liver_2_corr <- pat_ema_liver_2[pat_ema_liver_2$location %in% pat_ema_liver_2_plasma, ]
+plasma_corr <- pat_ema_plasma[pat_ema_plasma$location %in% pat_ema_liver_2_plasma, ]
+cor.test(liver_2_corr$AF, plasma_corr$AF, method = 'spearman') #cor = 1.0 p = 1.0
+
+pat_ema_oment_1_plasma <- intersect(pat_ema_oment_1$location, pat_ema_plasma$location)
+oment_1_corr <- pat_ema_oment_1[pat_ema_oment_1$location %in% pat_ema_oment_1_plasma, ]
+oment_1_corr$AF[1] <- 0.995
+plasma_corr <- pat_ema_plasma[pat_ema_plasma$location %in% pat_ema_oment_1_plasma, ]
+cor.test(oment_1_corr$AF, plasma_corr$AF, method = 'spearman') #cor = 1.0 p = 1.0
+
+pat_ema_oment_2_plasma <- intersect(pat_ema_oment_2$location, pat_ema_plasma$location)
+oment_2_corr <- pat_ema_oment_2[pat_ema_oment_2$location %in% pat_ema_oment_2_plasma, ]
+plasma_corr <- pat_ema_plasma[pat_ema_plasma$location %in% pat_ema_oment_2_plasma, ]
+cor.test(oment_2_corr$AF, plasma_corr$AF, method = 'spearman') #cor = 1.0 p = 0.33
 
