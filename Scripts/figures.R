@@ -490,13 +490,13 @@ oment_size <- 10.64
 ovary_size <- 7.92
 kidney_size <- 2.07
 liver_size <- 2.0
-
+tumor_size <- c(ln_size, oment_size, ovary_size, kidney_size, liver_size)
 mean_plasma <- c(0.3102, 0.2987, 0.2013, 0.2285, 0.7834)
 tumor_graph_df <- data.frame(tumor_size, mean_plasma)
 plot(tumor_graph_df$tumor_size, tumor_graph_df$mean_plasma, ylim = c(0, max(tumor_graph_df$mean_plasma)), xlim = c(0, max(tumor_graph_df$tumor_size)), 
      col = c('blue', 'orange', 'dodgerblue', 'purple', 'green'), pch = 16, cex = 1.2, xlab = expression(paste('Tumor Size (cm' ^ 2, ')')), ylab = 'Mean MAF in Plasma')
 fit <- lm(tumor_graph_df$mean_plasma ~ tumor_graph_df$tumor_size)
-abline(a = 0.25429, b = 0.01514)
+abline(a = 0.54597, b = -0.02789)
 summary(fit)
 legend(x = 0.0, y = 0.75, legend = c('Kidney', 'Lymph', 'Liver', 'Omental', 'Ovary'), pch = 16, cex = 1.2, col = c('blue', 'green', 'orange', 'purple', 'dodgerblue'), bty = 'n')
 legend(x = 6.5, y = 0.6, legend = expression(paste('R'^2, '= 0.08')), bty = 'n')
