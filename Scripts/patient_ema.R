@@ -149,13 +149,13 @@ color2D.matplot(pat_ema_pooled_t, cellcolors=cell_cols, xlab = '', ylab = '', bo
 #add legends
 legval<-seq(min(pat_ema_muts_pooled[, 8], na.rm = TRUE),max(pat_ema_muts_pooled[, 8], na.rm = TRUE),length.out = 100)
 legcol<-color.scale(legval, extremes = c('lightpink', 'red'))
-color.legend(0.5,-1.7,2.5,-0.9,round(c(min(pat_ema_muts_pooled[, 8], na.rm = TRUE), max(pat_ema_muts_pooled[, 8], na.rm = TRUE)),2),rect.col=legcol)
+color.legend(0.5,-1.7,1.5,-0.9,round(c(min(pat_ema_muts_pooled[, 8], na.rm = TRUE), max(pat_ema_muts_pooled[, 8], na.rm = TRUE)),2),rect.col=legcol)
 mtext('Plasma', side=1, line=2.2, at=0.75, cex = 1.1, font = 2)
 
 # add tumor legend
 legval<-seq(min(pat_ema_muts_pooled[, 1:7], na.rm = TRUE),max(pat_ema_muts_pooled[, 1:7], na.rm = TRUE),length.out = 100)
 legcol<-color.scale(legval, extremes = c('lightblue', 'blue'))
-color.legend(3,-1.7,5,-0.9,round(c(min(pat_ema_muts_pooled[, 1:7], na.rm = TRUE), max(pat_ema_muts_pooled[, 1:7], na.rm = TRUE)),2),rect.col=legcol)
+color.legend(2,-1.7,3,-0.9,round(c(min(pat_ema_muts_pooled[, 1:7], na.rm = TRUE), max(pat_ema_muts_pooled[, 1:7], na.rm = TRUE)),2),rect.col=legcol)
 mtext('Tumor', side=1, line=2.2, at=3.225, cex = 1.1, font = 2)
 mtext('Mutant Allele Frequency', side = 1, line = 4.3, at = 2.8, cex = 1.1, font = 2)
 

@@ -476,13 +476,13 @@ pat_9_pl_ly_lm <- lm(AF.x ~ ., data = pat_9_pl_ln_bind)
 
 
 plot(1, type="n", xlab="Mutant Allele Frequency in Tumor", ylab="Mutant Allele Frequency in Plasma", xlim=c(0, 1.0), ylim=c(0, 1.0))
-abline(a = pat_ema_pl_h_lm$coefficients[1], b = pat_ema_pl_h_lm$coefficients[2], col = 'red') #heart
-abline(a = pat_ema_pl_all_kidney_lm$coefficients[1], b = pat_ema_pl_all_kidney_lm$coefficients[2], col = 'blue') #all kidney
-abline(a = pat_9_pl_ly_lm$coefficients[1], b = pat_9_pl_ly_lm$coefficients[2], col = 'green') #lymph
-abline(a = pat_ema_pl_all_liver_lm$coefficients[1], b = pat_ema_pl_all_liver_lm$coefficients[2], col = 'orange') # all liver
-abline(a = pat_9_pl_all_oment_lm$coefficients[1], b = pat_9_pl_all_oment_lm$coefficients[2], col = 'purple') # all oment
+abline(a = pat_ema_pl_h_lm$coefficients[1], b = pat_ema_pl_h_lm$coefficients[2], col = 'red', lwd = 2) #heart
+abline(a = pat_ema_pl_all_kidney_lm$coefficients[1], b = pat_ema_pl_all_kidney_lm$coefficients[2], col = 'orange', lwd = 2) #all kidney
+abline(a = pat_9_pl_ly_lm$coefficients[1], b = pat_9_pl_ly_lm$coefficients[2], col = 'purple', lwd = 2) #lymph
+abline(a = pat_ema_pl_all_liver_lm$coefficients[1], b = pat_ema_pl_all_liver_lm$coefficients[2], col = 'forestgreen', lwd = 2) # all liver
+abline(a = pat_9_pl_all_oment_lm$coefficients[1], b = pat_9_pl_all_oment_lm$coefficients[2], col = 'dodgerblue', lwd = 2) # all oment
 #abline(a = 0.1029, b = 0.5760, col = 'dodgerblue') #ovary
-legend(x = 0.0, y = 0.9, legend = c('Heart', 'Kidney', 'Lymph', 'Liver', 'Omental', 'Ovary'), col = c('red', 'blue', 'green', 'orange', 'purple', 'dodgerblue'), lty = 1, bty = 'n')
+legend(x = 0.0, y = 0.9, legend = c('Heart', 'Kidney', 'Lymph', 'Liver', 'Omental'), col = c('red', 'orange', 'purple', 'forestgreen', 'dodgerblue'), lwd = 2, lty = 1, bty = 'n')
 
 ## correlation plots ---
 # tumor size (cm^2)
@@ -492,7 +492,7 @@ ovary_size <- 7.92
 kidney_size <- 2.07
 liver_size <- 2.0
 tumor_size <- c(ln_size, oment_size, ovary_size, kidney_size, liver_size)
-mean_plasma <- c(0.3102, 0.2987, 0.2013, 0.2285, 0.7834)
+mean_plasma <- c(mean(pat_9_pl_ln_bind$AF.x), mean(pat_ema_all_oment$AF.x), mean(pat_9_pl_ov_bind$AF.x), mean(pat_ema_all_kidney$AF.x), mean(pat_ema_all_liver$AF.x))
 tumor_graph_df <- data.frame(tumor_size, mean_plasma)
 plot(tumor_graph_df$tumor_size, tumor_graph_df$mean_plasma, ylim = c(0, max(tumor_graph_df$mean_plasma)), xlim = c(0, max(tumor_graph_df$tumor_size)), 
      col = c('blue', 'orange', 'dodgerblue', 'purple', 'green'), pch = 16, cex = 1.2, xlab = expression(paste('Tumor Size (cm' ^ 2, ')')), ylab = 'Mean MAF in Plasma')
@@ -514,7 +514,7 @@ heart_mean <- mean(pat_ema_pl_h_bind$AF.x)
 ln_mean <- mean(pat_9_pl_ln_bind$AF.x)
 oment_mean <- mean(pat_ema_all_oment$AF.x)
 ovary_mean <- mean(pat_9_pl_ov_bind$AF.x)
-kidney_mean <- mean(pat_ema_all_liver$AF.x)
+kidney_mean <- mean(pat_ema_all_kidney$AF.x)
 liver_mean <- mean(pat_ema_all_liver$AF.x)
 
 mean_plasma <- c(heart_mean, ln_mean, oment_mean, ovary_mean, kidney_mean, liver_mean)
