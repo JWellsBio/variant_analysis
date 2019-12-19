@@ -323,6 +323,7 @@ pat_ema_pl_h_bind <- pat_ema_pl_h_bind[, -1]
 pat_ema_pl_h_bind[, 1] <- as.numeric(pat_ema_pl_h_bind[, 1])
 pat_ema_pl_h_bind[, 2] <- as.numeric(pat_ema_pl_h_bind[, 2])
 pat_ema_pl_h_lm <- lm(AF.x ~ ., data = pat_ema_pl_h_bind)
+summary(pat_ema_pl_h_lm)
 
 pat_ema_pl_lk <- upset_df[upset_df$L_Kidney == 1 & upset_df$Plasma == 1, ] #12
 pat_ema_pl_lk <- rownames(pat_ema_pl_lk)
@@ -337,7 +338,7 @@ pat_ema_pl_lk_bind <- merge(pat_ema_plasma_new, pat_ema_l_kidney_new, by = 'loca
 pat_ema_pl_lk_bind <- pat_ema_pl_lk_bind[, -1]
 pat_ema_pl_lk_bind[, 1] <- as.numeric(pat_ema_pl_lk_bind[, 1])
 pat_ema_pl_lk_bind[, 2] <- as.numeric(pat_ema_pl_lk_bind[, 2])
-lm(AF.x ~ ., data = pat_ema_pl_lk_bind)
+pat_ema_pl_lk_lm <- lm(AF.x ~ ., data = pat_ema_pl_lk_bind)
 
 pat_ema_pl_rk <- upset_df[upset_df$R_Kidney == 1 & upset_df$Plasma == 1, ] #12
 pat_ema_pl_rk <- rownames(pat_ema_pl_rk)
@@ -352,7 +353,7 @@ pat_ema_pl_rk_bind <- merge(pat_ema_plasma_new, pat_ema_r_kidney_new, by = 'loca
 pat_ema_pl_rk_bind <- pat_ema_pl_rk_bind[, -1]
 pat_ema_pl_rk_bind[, 1] <- as.numeric(pat_ema_pl_rk_bind[, 1])
 pat_ema_pl_rk_bind[, 2] <- as.numeric(pat_ema_pl_rk_bind[, 2])
-lm(AF.x ~ ., data = pat_ema_pl_rk_bind)
+pat_ema_pl_rk_lm <- lm(AF.x ~ ., data = pat_ema_pl_rk_bind)
 
 pat_ema_pl_l1 <- upset_df[upset_df$Liver_1 == 1 & upset_df$Plasma == 1, ] #12
 pat_ema_pl_l1 <- rownames(pat_ema_pl_l1)
@@ -367,7 +368,7 @@ pat_ema_pl_l1_bind <- merge(pat_ema_plasma_new, pat_ema_liver_1_new, by = 'locat
 pat_ema_pl_l1_bind <- pat_ema_pl_l1_bind[, -1]
 pat_ema_pl_l1_bind[, 1] <- as.numeric(pat_ema_pl_l1_bind[, 1])
 pat_ema_pl_l1_bind[, 2] <- as.numeric(pat_ema_pl_l1_bind[, 2])
-lm(AF.x ~ ., data = pat_ema_pl_l1_bind)
+pat_ema_pl_l1_lm <- lm(AF.x ~ ., data = pat_ema_pl_l1_bind)
 
 pat_ema_l2 <- upset_df[upset_df$Liver_2 == 1 & upset_df$Plasma == 1, ] #12
 pat_ema_l2 <- rownames(pat_ema_l2)
@@ -382,13 +383,14 @@ pat_ema_l2_bind <- merge(pat_ema_plasma_new, pat_ema_liver_2_new, by = 'location
 pat_ema_l2_bind <- pat_ema_l2_bind[, -1]
 pat_ema_l2_bind[, 1] <- as.numeric(pat_ema_l2_bind[, 1])
 pat_ema_l2_bind[, 2] <- as.numeric(pat_ema_l2_bind[, 2])
-lm(AF.x ~ ., data = pat_ema_l2_bind)
+pat_ema_pl_l2_lm <- lm(AF.x ~ ., data = pat_ema_l2_bind)
 
 pat_ema_pl_om1 <- upset_df[upset_df$Oment_1 == 1 & upset_df$Plasma == 1, ] #12
 pat_ema_pl_om1 <- rownames(pat_ema_pl_om1)
 
 pat_ema_oment_1_new <- pat_ema_oment_1[pat_ema_oment_1$location %in% pat_ema_pl_om1, ]
 pat_ema_oment_1_new <- pat_ema_oment_1_new[, c('location', 'AF')]
+pat_ema_oment_1_new$AF[1] <- 0.995
 
 pat_ema_plasma_new <- pat_ema_plasma[pat_ema_plasma$location %in% pat_ema_pl_om1, ]
 pat_ema_plasma_new <- pat_ema_plasma_new[, c('location', 'AF')]
@@ -397,7 +399,7 @@ pat_ema_pl_om1_bind <- merge(pat_ema_plasma_new, pat_ema_oment_1_new, by = 'loca
 pat_ema_pl_om1_bind <- pat_ema_pl_om1_bind[, -1]
 pat_ema_pl_om1_bind[, 1] <- as.numeric(pat_ema_pl_om1_bind[, 1])
 pat_ema_pl_om1_bind[, 2] <- as.numeric(pat_ema_pl_om1_bind[, 2])
-lm(AF.x ~ ., data = pat_ema_pl_om1_bind)
+pat_ema_pl_om1_lm <- lm(AF.x ~ ., data = pat_ema_pl_om1_bind)
 
 pat_ema_pl_om2 <- upset_df[upset_df$Oment_2 == 1 & upset_df$Plasma == 1, ] #12
 pat_ema_pl_om2 <- rownames(pat_ema_pl_om2)
@@ -412,15 +414,15 @@ pat_ema_pl_om2_bind <- merge(pat_ema_plasma_new, pat_ema_oment_2_new, by = 'loca
 pat_ema_pl_om2_bind <- pat_ema_pl_om2_bind[, -1]
 pat_ema_pl_om2_bind[, 1] <- as.numeric(pat_ema_pl_om2_bind[, 1])
 pat_ema_pl_om2_bind[, 2] <- as.numeric(pat_ema_pl_om2_bind[, 2])
-lm(AF.x ~ ., data = pat_ema_pl_om2_bind)
+pat_ema_pl_om2_lm <- lm(AF.x ~ ., data = pat_ema_pl_om2_bind)
 
 # all kidney
 pat_ema_all_kidney <- rbind(pat_ema_pl_lk_bind, pat_ema_pl_rk_bind)
-lm(pat_ema_all_kidney$AF.x ~ pat_ema_all_kidney$AF.y)
+pat_ema_pl_all_kidney_lm <- lm(pat_ema_all_kidney$AF.x ~ pat_ema_all_kidney$AF.y)
 
 # all liver
 pat_ema_all_liver <- rbind(pat_ema_pl_l1_bind, pat_ema_l2_bind)
-lm(pat_ema_all_liver$AF.x ~ pat_ema_all_liver$AF.y)
+pat_ema_pl_all_liver_lm <- lm(pat_ema_all_liver$AF.x ~ pat_ema_all_liver$AF.y)
 
 #need to add pat 9 to oment plus ovary and lymph THIS CAN ONLY BE DONE WITH PAT 9 UPSET DF IN ENVIRON!!!!!!!!!!!!!!!!!!!!!!!!!!
 pat_9_pl_om <- upset_df[upset_df$Omental_Met == 1 & upset_df$Plasma == 1, ] #12
@@ -440,7 +442,7 @@ lm(AF.x ~ ., data = pat_9_pl_om_bind)
 
 pat_ema_all_oment <- rbind(pat_ema_pl_om1_bind, pat_ema_pl_om2_bind)
 pat_ema_all_oment <- rbind(pat_ema_all_oment, pat_9_pl_om_bind)
-lm(pat_ema_all_oment$AF.x ~ pat_ema_all_oment$AF.y)
+pat_9_pl_all_oment_lm <- lm(pat_ema_all_oment$AF.x ~ pat_ema_all_oment$AF.y)
 
 pat_9_pl_ov <- upset_df[upset_df$Ovary_Met == 1 & upset_df$Plasma == 1, ] #12
 pat_9_pl_ov <- rownames(pat_9_pl_ov)
@@ -455,7 +457,7 @@ pat_9_pl_ov_bind <- merge(pat_9_plasma_new, pat_9_ovary_new, by = 'location', al
 pat_9_pl_ov_bind <- pat_9_pl_ov_bind[, -1]
 pat_9_pl_ov_bind[, 1] <- as.numeric(pat_9_pl_ov_bind[, 1])
 pat_9_pl_ov_bind[, 2] <- as.numeric(pat_9_pl_ov_bind[, 2])
-lm(AF.x ~ ., data = pat_9_pl_ov_bind)
+pat_9_pl_ov_lm <- lm(AF.x ~ ., data = pat_9_pl_ov_bind)
 
 pat_9_pl_ln <- upset_df[upset_df$Lymph_Met == 1 & upset_df$Plasma == 1, ] #12
 pat_9_pl_ln <- rownames(pat_9_pl_ln)
@@ -470,17 +472,16 @@ pat_9_pl_ln_bind <- merge(pat_9_plasma_new, pat_9_ln_new, by = 'location', all =
 pat_9_pl_ln_bind <- pat_9_pl_ln_bind[, -1]
 pat_9_pl_ln_bind[, 1] <- as.numeric(pat_9_pl_ln_bind[, 1])
 pat_9_pl_ln_bind[, 2] <- as.numeric(pat_9_pl_ln_bind[, 2])
-lm(AF.x ~ ., data = pat_9_pl_ln_bind)
+pat_9_pl_ly_lm <- lm(AF.x ~ ., data = pat_9_pl_ln_bind)
 
 
 plot(1, type="n", xlab="Mutant Allele Frequency in Tumor", ylab="Mutant Allele Frequency in Plasma", xlim=c(0, 1.0), ylim=c(0, 1.0))
-abline(a = 0.06224, b = 1.01361, col = 'red') #heart
-abline(a = 0.1177, b = 0.4953, col = 'blue') #all kidney
-abline(a = 0.1152, b = 0.8010, col = 'green') #lymph
-abline(a = 0.05954, b = 0.66369, col = 'orange') # all liver
-#abline(a = 0.07176, b = 0.61002, col = 'purple') # liver 2
-abline(a = 0.04582, b = 0.88119, col = 'purple') # all oment
-abline(a = 0.1029, b = 0.5760, col = 'dodgerblue') #ovary
+abline(a = pat_ema_pl_h_lm$coefficients[1], b = pat_ema_pl_h_lm$coefficients[2], col = 'red') #heart
+abline(a = pat_ema_pl_all_kidney_lm$coefficients[1], b = pat_ema_pl_all_kidney_lm$coefficients[2], col = 'blue') #all kidney
+abline(a = pat_9_pl_ly_lm$coefficients[1], b = pat_9_pl_ly_lm$coefficients[2], col = 'green') #lymph
+abline(a = pat_ema_pl_all_liver_lm$coefficients[1], b = pat_ema_pl_all_liver_lm$coefficients[2], col = 'orange') # all liver
+abline(a = pat_9_pl_all_oment_lm$coefficients[1], b = pat_9_pl_all_oment_lm$coefficients[2], col = 'purple') # all oment
+#abline(a = 0.1029, b = 0.5760, col = 'dodgerblue') #ovary
 legend(x = 0.0, y = 0.9, legend = c('Heart', 'Kidney', 'Lymph', 'Liver', 'Omental', 'Ovary'), col = c('red', 'blue', 'green', 'orange', 'purple', 'dodgerblue'), lty = 1, bty = 'n')
 
 ## correlation plots ---
@@ -496,7 +497,7 @@ tumor_graph_df <- data.frame(tumor_size, mean_plasma)
 plot(tumor_graph_df$tumor_size, tumor_graph_df$mean_plasma, ylim = c(0, max(tumor_graph_df$mean_plasma)), xlim = c(0, max(tumor_graph_df$tumor_size)), 
      col = c('blue', 'orange', 'dodgerblue', 'purple', 'green'), pch = 16, cex = 1.2, xlab = expression(paste('Tumor Size (cm' ^ 2, ')')), ylab = 'Mean MAF in Plasma')
 fit <- lm(tumor_graph_df$mean_plasma ~ tumor_graph_df$tumor_size)
-abline(a = 0.54597, b = -0.02789)
+abline(a = fit$coefficients[1], b = fit$coefficients[2])
 summary(fit)
 legend(x = 0.0, y = 0.75, legend = c('Kidney', 'Lymph', 'Liver', 'Omental', 'Ovary'), pch = 16, cex = 1.2, col = c('blue', 'green', 'orange', 'purple', 'dodgerblue'), bty = 'n')
 legend(x = 6.5, y = 0.6, legend = expression(paste('R'^2, '= 0.08')), bty = 'n')
@@ -525,7 +526,7 @@ perf_graph_df <- data.frame(mean_plasma, perfusion)
 plot(perf_graph_df$perfusion, perf_graph_df$mean_plasma, ylim = c(0,1.0), ylab = 'Mean MAF in Plasma', xlab = 'Relative Blood Perfusion of Organ')
 fit2 <- lm(perf_graph_df$mean_plasma ~ perf_graph_df$perfusion)
 fit2
-abline(a = 0.8823, b = 0.4102)
+abline(a = fit2$coefficients[1], b = fit2$coefficients[2])
 summary(fit2)
 
 # comparing pat 9 plasma w ema plasma
