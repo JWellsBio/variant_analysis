@@ -16,7 +16,7 @@ average_depths <- function(depth_table) {
 
 
 ## patient 9 ----
-pat_9_buffy_depth <- read.delim('/Volumes/T5_2TB/depth_files/pat_9_buffy_TST170_all_depth.txt', header = FALSE, stringsAsFactors = TRUE, sep = '\t')
+pat_9_buffy_depth <- read.delim('G:/depth_files/pat_9_buffy_TST170_all_depth.txt', header = FALSE, stringsAsFactors = TRUE, sep = '\t')
 pat_9_buffy_depths <- average_depths(pat_9_buffy_depth)
 mean(pat_9_buffy_depths, na.rm = TRUE) #2224.41
 
@@ -36,24 +36,24 @@ pat_9_plasma_depth <- read.delim('/Volumes/T5_2TB/depth_files/pat_9_plasma_TST17
 pat_9_plasma_depths <- average_depths(pat_9_plasma_depth)
 mean(pat_9_plasma_depths, na.rm = TRUE) #1142.788
 
-## look at specific genes not found in these samples ----
-# TP53
-# pat_9_buffy_TP53 <- pat_9_buffy_depths[grep('TP53', names(pat_9_buffy_depths))]
-# pat_9_ln_TP53 <- pat_9_ln_depths[grep('TP53', names(pat_9_ln_depths))]
-# pat_9_oment_TP53 <- pat_9_oment_depths[grep('TP53', names(pat_9_oment_depths))]
-# pat_9_ovary_TP53 <- pat_9_ovary_depths[grep('TP53', names(pat_9_ovary_depths))]
-# pat_9_plasma_TP53 <- pat_9_plasma_depths[grep('TP53', names(pat_9_plasma_depths))]
-# 
-# pat_9_TP53 <- data.frame(pat_9_buffy_TP53, pat_9_ln_TP53, pat_9_oment_TP53, pat_9_ovary_TP53, pat_9_plasma_TP53)
-# 
-# # BRCA1
-# pat_9_buffy_BRCA1 <- pat_9_buffy_depths[grep('BRCA1', names(pat_9_buffy_depths))]
-# pat_9_ln_BRCA1 <- pat_9_ln_depths[grep('BRCA1', names(pat_9_ln_depths))]
-# pat_9_oment_BRCA1 <- pat_9_oment_depths[grep('BRCA1', names(pat_9_oment_depths))]
-# pat_9_ovary_BRCA1 <- pat_9_ovary_depths[grep('BRCA1', names(pat_9_ovary_depths))]
-# pat_9_plasma_BRCA1 <- pat_9_plasma_depths[grep('BRCA1', names(pat_9_plasma_depths))]
-# 
-# pat_9_BRCA1 <- data.frame(pat_9_buffy_BRCA1, pat_9_ln_BRCA1, pat_9_oment_BRCA1, pat_9_ovary_BRCA1, pat_9_plasma_BRCA1)
+# look at specific genes not found in these samples ----
+#TP53
+pat_9_buffy_TP53 <- pat_9_buffy_depths[grep('TP53', names(pat_9_buffy_depths))]
+pat_9_ln_TP53 <- pat_9_ln_depths[grep('TP53', names(pat_9_ln_depths))]
+pat_9_oment_TP53 <- pat_9_oment_depths[grep('TP53', names(pat_9_oment_depths))]
+pat_9_ovary_TP53 <- pat_9_ovary_depths[grep('TP53', names(pat_9_ovary_depths))]
+pat_9_plasma_TP53 <- pat_9_plasma_depths[grep('TP53', names(pat_9_plasma_depths))]
+
+pat_9_TP53 <- data.frame(pat_9_buffy_TP53, pat_9_ln_TP53, pat_9_oment_TP53, pat_9_ovary_TP53, pat_9_plasma_TP53)
+
+# BRCA1
+pat_9_buffy_BRCA1 <- pat_9_buffy_depths[grep('BRCA1', names(pat_9_buffy_depths))]
+pat_9_ln_BRCA1 <- pat_9_ln_depths[grep('BRCA1', names(pat_9_ln_depths))]
+pat_9_oment_BRCA1 <- pat_9_oment_depths[grep('BRCA1', names(pat_9_oment_depths))]
+pat_9_ovary_BRCA1 <- pat_9_ovary_depths[grep('BRCA1', names(pat_9_ovary_depths))]
+pat_9_plasma_BRCA1 <- pat_9_plasma_depths[grep('BRCA1', names(pat_9_plasma_depths))]
+
+pat_9_BRCA1 <- data.frame(pat_9_buffy_BRCA1, pat_9_ln_BRCA1, pat_9_oment_BRCA1, pat_9_ovary_BRCA1, pat_9_plasma_BRCA1)
 
 ## pat ema ----
 pat_ema_heart_depth <- read.delim('/Volumes/T5_2TB/depth_files/pat_ema_heart_TST170_all_depth.txt', header = FALSE, stringsAsFactors = TRUE, sep = '\t')

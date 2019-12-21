@@ -40,11 +40,11 @@ pat_ema_oment_2 <- mutect_process(pat_ema_oment_2) #5
 
 pat_ema_plasma <- read.delim('Data/Patient_EMA/pat_ema_plasma_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                              stringsAsFactors = FALSE, sep = '\t')
-pat_ema_plasma <- mutect_process(pat_ema_plasma, sample_type = 'plasma') #122
+pat_ema_plasma <- mutect_process(pat_ema_plasma, sample_type = 'plasma') #122 10 1068 at 0.01 to 66 at 0.10
 
 # all in common?
 Reduce(intersect, list(pat_ema_heart$location, pat_ema_l_kidney$location, pat_ema_r_kidney$location, pat_ema_liver_1$location, 
-                       pat_ema_liver_2$location, pat_ema_oment_1$location, pat_ema_oment_2$location)) #FOUND
+                       pat_ema_liver_2$location, pat_ema_oment_1$location, pat_ema_oment_2$location)) #1 FOUND
 
 ## looking at how well plasma detects tumor mutations ----
 length(intersect(pat_ema_heart$location, pat_ema_plasma$location)) #4/10 40.0%
@@ -61,7 +61,7 @@ pat_ema_met_pool <- unique(c(pat_ema_heart$location, pat_ema_l_kidney$location, 
                              pat_ema_oment_2$location)) #13
 
 
-pat_ema_plasma_found <- pat_ema_plasma[pat_ema_plasma$location %in% pat_ema_met_pool, ] #4 mutations
+pat_ema_plasma_found <- pat_ema_plasma[pat_ema_plasma$location %in% pat_ema_met_pool, ] #4 mutations no add'l at 0.01
 pat_ema_plasma_found_vars <- (pat_ema_plasma_found$location) 
 
 # subset to pooled plasma and take a look

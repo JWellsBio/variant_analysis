@@ -28,7 +28,7 @@ pat_2_breast_2 <- mutect_process(pat_2_breast_2) #22
 
 pat_2_plasma <- read.delim('Data/Patient_2/pat_2_plasma_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                            stringsAsFactors = FALSE, sep = '\t')
-pat_2_plasma <- mutect_process(pat_2_plasma, sample_type = 'plasma') #87
+pat_2_plasma <- mutect_process(pat_2_plasma, sample_type = 'plasma') #87 to 88 at 0.01
 
 #all in common?
 Reduce(intersect, list(pat_2_liver_1$location, pat_2_liver_2$location, pat_2_breast_2$location)) #11 but plasma found 3
@@ -47,7 +47,7 @@ length(intersect(pat_2_liver_2$location, pat_2_plasma$location)) #4/25 16.0%
 pat_2_met_pool <- unique(c(pat_2_liver_1$location, pat_2_liver_2$location, pat_2_breast_2$location)) #36 unique mutations w br 1 or 34 w br 2 
 
 
-pat_2_plasma_found <- pat_2_plasma[pat_2_plasma$location %in% pat_2_met_pool, ] #6 mutations w br 1 or 6 w br 2
+pat_2_plasma_found <- pat_2_plasma[pat_2_plasma$location %in% pat_2_met_pool, ] #6 mutations w br 1 or 6 w br 2 no add'l at 0.01
 pat_2_plasma_found_vars <- (pat_2_plasma_found$location)
 
 

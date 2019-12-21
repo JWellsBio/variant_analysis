@@ -24,10 +24,10 @@ pat_10_liver_5 <- mutect_process(pat_10_liver_5) #7
 
 pat_10_plasma <- read.delim('Data/Patient_10/pat_10_plasma_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                             stringsAsFactors = FALSE, sep = '\t')
-pat_10_plasma <- mutect_process(pat_10_plasma, sample_type = 'plasma') #247
+pat_10_plasma <- mutect_process(pat_10_plasma, sample_type = 'plasma') #247 to 3477 at 0.01
 
 # all in common?
-Reduce(intersect, list(pat_10_liver_1$location, pat_10_liver_2a$location, pat_10_liver_5$location)) #FOUND
+Reduce(intersect, list(pat_10_liver_1$location, pat_10_liver_2a$location, pat_10_liver_5$location)) # 4 FOUND
 
 
 ## looking at how well plasma detects tumor mutations ----
@@ -40,7 +40,7 @@ length(intersect(pat_10_liver_5$location, pat_10_plasma$location)) #5/7 71.4%
 pat_10_met_pool <- unique(c(pat_10_liver_1$location, pat_10_liver_2a$location, pat_10_liver_5$location)) #17 unique mutations
 
 
-pat_10_plasma_found <- pat_10_plasma[pat_10_plasma$location %in% pat_10_met_pool, ] #8 mutations
+pat_10_plasma_found <- pat_10_plasma[pat_10_plasma$location %in% pat_10_met_pool, ] #8 mutations no add'l at 0.01
 pat_10_plasma_found_vars <- (pat_10_plasma_found$location) 
 
 

@@ -25,7 +25,7 @@ pat_8_breast_2 <- pat_8_breast_2[!grepl('clustered_events', pat_8_breast_2$FILTE
 
 pat_8_plasma <- read.delim('Data/Patient_8/pat_8_plasma_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                            stringsAsFactors = FALSE, sep = '\t')
-pat_8_plasma <- mutect_process(pat_8_plasma, sample_type = 'plasma') #137
+pat_8_plasma <- mutect_process(pat_8_plasma, sample_type = 'plasma') #137 to 139 at 0.01
 
 #all in common?
 Reduce(intersect, list(pat_8_axillary$location, pat_8_breast_1$location, pat_8_breast_2$location)) #8 found NONE
@@ -40,7 +40,7 @@ length(intersect(pat_8_breast_2$location, pat_8_plasma$location)) #16/85 18.8%
 pat_8_met_pool <- unique(c(pat_8_axillary$location, pat_8_breast_1$location, pat_8_breast_2$location)) #101 unique mutations
 
 
-pat_8_plasma_found <- pat_8_plasma[pat_8_plasma$location %in% pat_8_met_pool, ] #23 mutations
+pat_8_plasma_found <- pat_8_plasma[pat_8_plasma$location %in% pat_8_met_pool, ] #23 mutations no add'l at 0.01
 pat_8_plasma_found_vars <- (pat_8_plasma_found$location)
 
 

@@ -323,7 +323,7 @@ pat_ema_pl_h_bind <- pat_ema_pl_h_bind[, -1]
 pat_ema_pl_h_bind[, 1] <- as.numeric(pat_ema_pl_h_bind[, 1])
 pat_ema_pl_h_bind[, 2] <- as.numeric(pat_ema_pl_h_bind[, 2])
 pat_ema_pl_h_lm <- lm(AF.x ~ ., data = pat_ema_pl_h_bind)
-summary(pat_ema_pl_h_lm)
+summary(pat_ema_pl_h_lm) # cor 0.9548 beta 0.96251
 
 pat_ema_pl_lk <- upset_df[upset_df$L_Kidney == 1 & upset_df$Plasma == 1, ] #12
 pat_ema_pl_lk <- rownames(pat_ema_pl_lk)
@@ -419,10 +419,12 @@ pat_ema_pl_om2_lm <- lm(AF.x ~ ., data = pat_ema_pl_om2_bind)
 # all kidney
 pat_ema_all_kidney <- rbind(pat_ema_pl_lk_bind, pat_ema_pl_rk_bind)
 pat_ema_pl_all_kidney_lm <- lm(pat_ema_all_kidney$AF.x ~ pat_ema_all_kidney$AF.y)
+summary(pat_ema_pl_all_kidney_lm) #cor 0.9997 beta 0.824506
 
 # all liver
 pat_ema_all_liver <- rbind(pat_ema_pl_l1_bind, pat_ema_l2_bind)
 pat_ema_pl_all_liver_lm <- lm(pat_ema_all_liver$AF.x ~ pat_ema_all_liver$AF.y)
+summary(pat_ema_pl_all_liver_lm) #cor 0.25 beta 0.8750
 
 #need to add pat 9 to oment plus ovary and lymph THIS CAN ONLY BE DONE WITH PAT 9 UPSET DF IN ENVIRON!!!!!!!!!!!!!!!!!!!!!!!!!!
 pat_9_pl_om <- upset_df[upset_df$Omental_Met == 1 & upset_df$Plasma == 1, ] #12
@@ -443,6 +445,7 @@ lm(AF.x ~ ., data = pat_9_pl_om_bind)
 pat_ema_all_oment <- rbind(pat_ema_pl_om1_bind, pat_ema_pl_om2_bind)
 pat_ema_all_oment <- rbind(pat_ema_all_oment, pat_9_pl_om_bind)
 pat_9_pl_all_oment_lm <- lm(pat_ema_all_oment$AF.x ~ pat_ema_all_oment$AF.y)
+summary(pat_9_pl_all_oment_lm) #cor 0.9447 beta 0.83270
 
 pat_9_pl_ov <- upset_df[upset_df$Ovary_Met == 1 & upset_df$Plasma == 1, ] #12
 pat_9_pl_ov <- rownames(pat_9_pl_ov)
@@ -458,6 +461,7 @@ pat_9_pl_ov_bind <- pat_9_pl_ov_bind[, -1]
 pat_9_pl_ov_bind[, 1] <- as.numeric(pat_9_pl_ov_bind[, 1])
 pat_9_pl_ov_bind[, 2] <- as.numeric(pat_9_pl_ov_bind[, 2])
 pat_9_pl_ov_lm <- lm(AF.x ~ ., data = pat_9_pl_ov_bind)
+summary(pat_9_pl_ov_lm) #NOT ENOUGH
 
 pat_9_pl_ln <- upset_df[upset_df$Lymph_Met == 1 & upset_df$Plasma == 1, ] #12
 pat_9_pl_ln <- rownames(pat_9_pl_ln)
@@ -473,7 +477,7 @@ pat_9_pl_ln_bind <- pat_9_pl_ln_bind[, -1]
 pat_9_pl_ln_bind[, 1] <- as.numeric(pat_9_pl_ln_bind[, 1])
 pat_9_pl_ln_bind[, 2] <- as.numeric(pat_9_pl_ln_bind[, 2])
 pat_9_pl_ly_lm <- lm(AF.x ~ ., data = pat_9_pl_ln_bind)
-
+summary(pat_9_pl_ly_lm) #cor 0.8381 beta
 
 plot(1, type="n", xlab="Mutant Allele Frequency in Tumor", ylab="Mutant Allele Frequency in Plasma", xlim=c(0, 1.0), ylim=c(0, 1.0))
 abline(a = pat_ema_pl_h_lm$coefficients[1], b = pat_ema_pl_h_lm$coefficients[2], col = 'red', lwd = 2) #heart
@@ -482,7 +486,7 @@ abline(a = pat_9_pl_ly_lm$coefficients[1], b = pat_9_pl_ly_lm$coefficients[2], c
 abline(a = pat_ema_pl_all_liver_lm$coefficients[1], b = pat_ema_pl_all_liver_lm$coefficients[2], col = 'forestgreen', lwd = 2) # all liver
 abline(a = pat_9_pl_all_oment_lm$coefficients[1], b = pat_9_pl_all_oment_lm$coefficients[2], col = 'dodgerblue', lwd = 2) # all oment
 #abline(a = 0.1029, b = 0.5760, col = 'dodgerblue') #ovary
-legend(x = 0.0, y = 0.9, legend = c('Heart', 'Kidney', 'Lymph', 'Liver', 'Omental'), col = c('red', 'orange', 'purple', 'forestgreen', 'dodgerblue'), lwd = 2, lty = 1, bty = 'n')
+legend(x = 0.0, y = 0.9, legend = c('Heart (0.96)', 'Kidney (1.0)', 'Lymph (0.84)', 'Liver (0.25)', 'Omental (0.95)'), col = c('red', 'orange', 'purple', 'forestgreen', 'dodgerblue'), lwd = 2, lty = 1, bty = 'n')
 
 ## correlation plots ---
 # tumor size (cm^2)
@@ -495,18 +499,19 @@ tumor_size <- c(ln_size, oment_size, ovary_size, kidney_size, liver_size)
 mean_plasma <- c(mean(pat_9_pl_ln_bind$AF.x), mean(pat_ema_all_oment$AF.x), mean(pat_9_pl_ov_bind$AF.x), mean(pat_ema_all_kidney$AF.x), mean(pat_ema_all_liver$AF.x))
 tumor_graph_df <- data.frame(tumor_size, mean_plasma)
 plot(tumor_graph_df$tumor_size, tumor_graph_df$mean_plasma, ylim = c(0, max(tumor_graph_df$mean_plasma)), xlim = c(0, max(tumor_graph_df$tumor_size)), 
-     col = c('blue', 'orange', 'dodgerblue', 'purple', 'green'), pch = 16, cex = 1.2, xlab = expression(paste('Tumor Size (cm' ^ 2, ')')), ylab = 'Mean MAF in Plasma')
+     col = c('purple', 'dodgerblue', 'hotpink', 'orange', 'forestgreen'), pch = 16, cex = 1.2, xlab = expression(paste('Tumor Size (cm' ^ 2, ')')), ylab = 'Mean MAF in Plasma')
 fit <- lm(tumor_graph_df$mean_plasma ~ tumor_graph_df$tumor_size)
 abline(a = fit$coefficients[1], b = fit$coefficients[2])
 summary(fit)
-legend(x = 0.0, y = 0.75, legend = c('Kidney', 'Lymph', 'Liver', 'Omental', 'Ovary'), pch = 16, cex = 1.2, col = c('blue', 'green', 'orange', 'purple', 'dodgerblue'), bty = 'n')
-legend(x = 6.5, y = 0.6, legend = expression(paste('R'^2, '= 0.08')), bty = 'n')
+legend(x = 0.0, y = 0.75, legend = c('Lymph', 'Omental', 'Ovary', 'Kidney', 'Liver'), pch = 16, cex = 1.2, 
+       col = c('purple', 'dodgerblue', 'hotpink', 'orange', 'forestgreen'), bty = 'n')
+legend(x = 6.5, y = 0.8, legend = expression(paste('Spearman R'^2, '= -0.12, p = 0.50')), bty = 'n')
 
 # perfusion
 heart_perf <- 0.62 #260/417 0.62 ml/min/g
 ln_perf <- 0.4 #0.4 ml/min/g
 oment_perf <- 0.048 #0.048 ml/min/g
-ovary_perf <- 0.000491 #STILL NEED
+ovary_perf <- 0.0491 #STILL NEED
 kidney_perf <- 3.03 #1325/438 3.03 ml/min/g
 liver_perf <- 0.13 #423/3257 0.130 ml/min/g
 
@@ -519,15 +524,19 @@ liver_mean <- mean(pat_ema_all_liver$AF.x)
 
 mean_plasma <- c(heart_mean, ln_mean, oment_mean, ovary_mean, kidney_mean, liver_mean)
 perfusion <- c(heart_perf, ln_perf, oment_perf, ovary_perf, kidney_perf, liver_perf)
+perfusion <- perfusion/heart_perf
 
 cor(perfusion, mean_plasma, method = 'spearman')
 
 perf_graph_df <- data.frame(mean_plasma, perfusion)
-plot(perf_graph_df$perfusion, perf_graph_df$mean_plasma, ylim = c(0,1.0), ylab = 'Mean MAF in Plasma', xlab = 'Relative Blood Perfusion of Organ')
+plot(perf_graph_df$perfusion, perf_graph_df$mean_plasma, ylim = c(0,1.0), ylab = 'Mean MAF in Plasma', xlab = 'Relative Blood Perfusion of Organ', 
+     col = c('purple', 'dodgerblue', 'hotpink', 'orange', 'forestgreen'), pch = 16, cex = 1.2)
 fit2 <- lm(perf_graph_df$mean_plasma ~ perf_graph_df$perfusion)
 fit2
 abline(a = fit2$coefficients[1], b = fit2$coefficients[2])
 summary(fit2)
+legend(x = 2.5, y = 0.8, legend = expression(paste('Spearman R'^2, '= -0.22, p = 0.78')), bty = 'n')
+
 
 # comparing pat 9 plasma w ema plasma
 length(intersect(pat_9_plasma$location, pat_ema_plasma$location)) # only 16
@@ -549,4 +558,41 @@ pat_ema_locations <- pat_ema_plasma_not_common$location
 
 venn.diagram(list(Pat_9 = pat_9_plasma$location, Pat_9A = pat_ema_plasma$location), fill = c("dodgerblue", "purple"),
              alpha = c(0.5, 0.5), cex = 2, cat.fontface = 4, lty =1, fontfamily = 3, 
-             filename = '../venn.png')
+             filename = '../venn10.png')
+
+
+
+## plasma 9 vs 9a ----
+intersect(pat_9_plasma$location, pat_9_ln$location)
+intersect(pat_ema_plasma$location, pat_9_ln$location)
+
+intersect(pat_9_plasma$location, pat_9_oment$location)
+intersect(pat_ema_plasma$location, pat_9_oment$location)
+
+intersect(pat_9_plasma$location, pat_9_ovary$location)
+intersect(pat_ema_plasma$location, pat_9_ovary$location)
+
+
+intersect(pat_ema_plasma$location, pat_ema_heart$location)
+intersect(pat_9_plasma$location, pat_ema_heart$location)
+
+
+intersect(pat_ema_plasma$location, pat_ema_l_kidney$location)
+intersect(pat_9_plasma$location, pat_ema_l_kidney$location)
+
+
+intersect(pat_ema_plasma$location, pat_ema_r_kidney$location)
+intersect(pat_9_plasma$location, pat_ema_r_kidney$location)
+
+
+intersect(pat_ema_plasma$location, pat_ema_liver_1$location)
+intersect(pat_9_plasma$location, pat_ema_liver_1$location)
+
+intersect(pat_ema_plasma$location, pat_ema_liver_2$location)
+intersect(pat_9_plasma$location, pat_ema_liver_2$location)
+
+intersect(pat_ema_plasma$location, pat_ema_oment_1$location)
+intersect(pat_9_plasma$location, pat_ema_oment_1$location)
+
+intersect(pat_ema_plasma$location, pat_ema_oment_2$location)
+intersect(pat_9_plasma$location, pat_ema_oment_2$location)

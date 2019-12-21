@@ -32,10 +32,10 @@ pat_9_ovary <- mutect_process(pat_9_ovary) #9
 ## plasma ----
 pat_9_plasma <- read.delim('Data/Patient_9/pat_9_plasma_exon_only_mutect_filtered_hg38_lift_ann.tsv', header = TRUE, 
                            stringsAsFactors = FALSE, sep = '\t')
-pat_9_plasma <- mutect_process(pat_9_plasma, sample_type = 'plasma') #48
+pat_9_plasma <- mutect_process(pat_9_plasma, sample_type = 'plasma') #48 to 486 at 0.01 to 38 at 0.10
 
 # all in common?
-Reduce(intersect, list(pat_9_ln$location, pat_9_oment$location, pat_9_ovary$location))
+Reduce(intersect, list(pat_9_ln$location, pat_9_oment$location, pat_9_ovary$location)) #1 not found
 
 ## looking at how well plasma detects tumor mutations ----
 length(intersect(pat_9_ln$location, pat_9_plasma$location)) #9/32 28.1%
@@ -43,10 +43,10 @@ length(intersect(pat_9_oment$location, pat_9_plasma$location)) #10/24 41.7%
 length(intersect(pat_9_ovary$location, pat_9_plasma$location)) #1/9 11.1%
 
 #pool mutations from 3 mets
-pat_9_met_pool <- unique(c(pat_9_ln$location, pat_9_oment$location, pat_9_ovary$location)) #158 unique mutations
+pat_9_met_pool <- unique(c(pat_9_ln$location, pat_9_oment$location, pat_9_ovary$location)) #58 unique mutations
 
 
-pat_9_plasma_found <- pat_9_plasma[pat_9_plasma$location %in% pat_9_met_pool, ] #13 mutations
+pat_9_plasma_found <- pat_9_plasma[pat_9_plasma$location %in% pat_9_met_pool, ] #13 mutations no add'l at 0.01
 pat_9_plasma_found_vars <- (pat_9_plasma_found$location) 
 
 # subset to pooled plasma and take a look
