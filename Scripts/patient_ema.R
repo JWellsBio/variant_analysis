@@ -143,7 +143,7 @@ cell_cols <- cell_cols[c(8, 1:7), ]
 # plot it
 # extra space
 par(mar=c(6,48.5,6,2.1))
-#par(mar=c(6,15.5,6,12.1))
+par(mar=c(6,15.5,6,12.1))
 color2D.matplot(pat_ema_pooled_t, cellcolors=cell_cols, xlab = '', ylab = '', border='black', axes = FALSE)
 
 #add legends
@@ -156,13 +156,13 @@ mtext('Plasma', side=1, line=2.2, at=0.75, cex = 1.1, font = 2)
 legval<-seq(min(pat_ema_muts_pooled[, 1:7], na.rm = TRUE),max(pat_ema_muts_pooled[, 1:7], na.rm = TRUE),length.out = 100)
 legcol<-color.scale(legval, extremes = c('lightblue', 'blue'))
 color.legend(2,-1.7,3,-0.9,round(c(min(pat_ema_muts_pooled[, 1:7], na.rm = TRUE), max(pat_ema_muts_pooled[, 1:7], na.rm = TRUE)),2),rect.col=legcol)
-mtext('Tumor', side=1, line=2.2, at=3.225, cex = 1.1, font = 2)
-mtext('Mutant Allele Frequency', side = 1, line = 4.3, at = 2.8, cex = 1.1, font = 2)
+mtext('Tumor', side=1, line=2.2, at=2.225, cex = 1.1, font = 2)
+mtext('Mutant Allele Frequency', side = 1, line = 4.3, at = 1.7, cex = 1.1, font = 2)
 
 # add NA legend
-color.legend(6.15, -1.7, 6.35, -0.9, legend = '', rect.col = '#ffffff')
-mtext('Mutation\n     Not Present', side=1, line=2.55, at=5.7, cex = 1.1, font = 2)
-legend(x=6.165,y=-0.83,legend='',pch=16,bty="n",xpd = NA)
+color.legend(3.8, -1.7, 4.0, -0.9, legend = '', rect.col = '#ffffff')
+mtext('Mutation\n     Not Present', side=1, line=2.7, at=3.35, cex = 1.1, font = 2)
+legend(x=3.81,y=-0.83,legend='',pch=16,bty="n",xpd = NA)
 
 #plot labels
 mut_col_labels <- rownames(pat_ema_muts_pooled)
