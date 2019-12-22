@@ -557,9 +557,21 @@ pat_ema_locations <- pat_ema_plasma_not_common$location
 
 
 venn.diagram(list(Pat_9 = pat_9_plasma$location, Pat_9A = pat_ema_plasma$location), fill = c("dodgerblue", "purple"),
-             alpha = c(0.5, 0.5), cex = 2, cat.fontface = 4, lty =1, fontfamily = 3, 
-             filename = '../venn10.png')
+             alpha = c(0.5, 0.5), cex = 1, cat.fontface = 4, lty =1, fontfamily = 3, 
+             filename = '../venn011.png')
+common <- intersect(pat_9_plasma$location, pat_ema_plasma$location)
+pat_9_plasma_common <- pat_9_plasma[pat_9_plasma$location %in% common, ]
+pat_ema_plasma_common <- pat_ema_plasma[pat_ema_plasma$location %in% common, ]
+common_af <- c(pat_9_plasma_common$AF, pat_ema_plasma_common$AF)
+mean(common_af)
 
+
+
+pat_9_plasma_not_common <- pat_9_plasma[pat_9_plasma$location %!in% common, ]
+mean(pat_9_plasma_not_common$AF)
+
+pat_ema_plasma_not_common <- pat_ema_plasma[pat_ema_plasma$location %!in% common, ]
+mean(pat_ema_plasma_not_common$AF)
 
 
 ## plasma 9 vs 9a ----

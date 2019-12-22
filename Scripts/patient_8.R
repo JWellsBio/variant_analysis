@@ -225,14 +225,14 @@ pat_8_all$AF <- as.numeric(pat_8_all$AF)
 pat_8_all <- pat_8_all[order(pat_8_all$AF, decreasing = TRUE), ]
 pat_8_all$color <- ifelse(pat_8_all$location %in% pat_8_plasma$location, 'red', 'black')
 barplot(pat_8_all$AF, col = pat_8_all$color, ylab = 'Mutant Allele Frequency in Tumor', 
-        xlab = 'Variant', main = 'Patient 8\n(3 tumors)', ylim = c(0,1.0))
+        xlab = 'Variants (n = 131)', main = 'Patient 8\n(3 tumors)', ylim = c(0,1.0))
 
 pat_8_plasma_met_stats <- pat_8_plasma[, c('location', 'AF')]
 pat_8_plasma_met_stats$AF <- as.numeric(pat_8_plasma_met_stats$AF)
 pat_8_plasma_met_stats <- pat_8_plasma_met_stats[order(pat_8_plasma_met_stats$AF, decreasing = TRUE), ]
 pat_8_plasma_met_stats$color <- ifelse(pat_8_plasma_met_stats$location %in% pat_8_all$location, 'red', 'black')
 barplot(pat_8_plasma_met_stats$AF, col = pat_8_plasma_met_stats$color, ylab = 'Mutant Allele Frequency in Plasma', 
-        xlab = 'Variant', main = 'Patient 8\n(3 tumors)', ylim = c(0,1.0))
+        xlab = 'Variants (n = 137)', main = 'Patient 8\n(3 tumors)', ylim = c(0,1.0))
 
 
 ## correlations ----

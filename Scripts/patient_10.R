@@ -218,14 +218,14 @@ pat_10_all$AF <- as.numeric(pat_10_all$AF)
 pat_10_all <- pat_10_all[order(pat_10_all$AF, decreasing = TRUE), ]
 pat_10_all$color <- ifelse(pat_10_all$location %in% pat_10_plasma$location, 'red', 'black')
 barplot(pat_10_all$AF, col = pat_10_all$color, ylab = 'Mutant Allele Frequency in Tumor', 
-        xlab = 'Variant', main = 'Patient 10\n(3 tumors)', ylim = c(0,1.0))
+        xlab = 'Variants (n = 30)', main = 'Patient 10\n(3 tumors)', ylim = c(0,1.0))
 
 pat_10_plasma_met_stats <- pat_10_plasma[, c('location', 'AF')]
 pat_10_plasma_met_stats$AF <- as.numeric(pat_10_plasma_met_stats$AF)
 pat_10_plasma_met_stats <- pat_10_plasma_met_stats[order(pat_10_plasma_met_stats$AF, decreasing = TRUE), ]
 pat_10_plasma_met_stats$color <- ifelse(pat_10_plasma_met_stats$location %in% pat_10_all$location, 'red', 'black')
 barplot(pat_10_plasma_met_stats$AF, col = pat_10_plasma_met_stats$color, ylab = 'Mutant Allele Frequency in Plasma', 
-        xlab = 'Variant', main = 'Patient 10\n(3 tumors)', ylim = c(0,1.0))
+        xlab = 'Variants (n = 247)', main = 'Patient 10\n(3 tumors)', ylim = c(0,1.0))
 
 
 
